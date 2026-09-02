@@ -113,6 +113,14 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
   profile. `memory` mode pins `asOf` to `DEMO_DATE`; `database` mode uses
   today. `uiContext()` redirects to `/welcome` when the DB is selected but
   has no profile.
+- Screen mutations go through Server Actions in `src/app/actions.ts`
+  (`'use server'`, zod-validated FormData) → `src/app-services/study-flow.ts`
+  → `revalidatePath` + `redirect`. `logStudy` records the immutable session
+  then stamps `lastStudiedAt` (+ `lastRevisedAt` for `isRevisionSession`
+  types) and recomputes that chapter's readiness — it never infers component
+  scores or advances `state`. `updateChapterSelfAssessment` applies an
+  explicit self-rating patch + recomputes. Recording a session still never
+  mutates progress inside the `session` service itself.
 - The single real student profile is created by `pnpm prep:init` (script →
   `initRealProfile`, `src/app-services/init.ts`) from `config/student.json`
   (gitignored; copy `config/student.example.json`). Idempotent. `getActiveProfile`

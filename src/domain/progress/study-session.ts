@@ -21,6 +21,26 @@ export const STUDY_SESSION_TYPES = [
 ] as const;
 export type StudySessionType = (typeof STUDY_SESSION_TYPES)[number];
 
+/**
+ * Session types that are retrieval / testing practice, i.e. a "revision" for
+ * the readiness recency factor (days since last revision). First-exposure and
+ * drill work (`LEARN`, `PRACTISE`, `ERROR_CORRECTION`, `SCHOOL_HOMEWORK`) is
+ * study but not revision.
+ */
+export const REVISION_SESSION_TYPES: readonly StudySessionType[] = [
+  'ACTIVE_RECALL',
+  'REVISION',
+  'PYQ',
+  'CHAPTER_TEST',
+  'UNIT_TEST',
+  'SAMPLE_PAPER',
+  'FULL_PAPER',
+];
+
+export function isRevisionSession(type: StudySessionType): boolean {
+  return REVISION_SESSION_TYPES.includes(type);
+}
+
 export const SESSION_COMPLETIONS = ['YES', 'PARTIAL', 'NO'] as const;
 export type SessionCompletion = (typeof SESSION_COMPLETIONS)[number];
 

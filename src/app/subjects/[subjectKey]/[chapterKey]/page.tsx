@@ -1,7 +1,12 @@
 import { notFound } from 'next/navigation';
 import { uiContext } from '@/app-services/app-context';
 import { getChapterView } from '@/app-services/chapter-view';
-import { CHAPTER_STATES } from '@/domain/progress/chapter-progress';
+import { updateChapterAction } from '@/app/actions';
+import {
+  CHAPTER_STATES,
+  CONFIDENCE_LEVELS,
+  SCHOOL_CHAPTER_STATUSES,
+} from '@/domain/progress/chapter-progress';
 import { GhostButton, PageHeader, PrimaryButton, SectionLabel, StatTile } from '@/components/ui';
 import { formatDate, titleCase } from '@/lib/format';
 
@@ -160,11 +165,102 @@ export default async function ChapterDetailPage({
       )}
 
       <div className="flex gap-2.5 px-5 pt-6">
-        <PrimaryButton href="/study-now" className="flex-1">
-          Study this
+        <PrimaryButton
+          href={`/session?chapter=${view.chapterKey}&subject=${view.subjectKey}&type=PRACTISE`}
+          className="flex-1"
+        >
+          Log study
         </PrimaryButton>
-        <GhostButton href="/today">Add to Today</GhostButton>
+        <GhostButton href="/today">Back to Today</GhostButton>
       </div>
+
+      <details className="mx-5 mt-4 rounded-2xl border border-line">
+        <summary className="cursor-pointer list-none px-4 py-3 text-[13px] font-semibold text-ink">
+          Update my ratings
+          <span className="ml-1 font-normal text-faint">— after a test or a study block</span>
+        </summary>
+        <form
+          action={updateChapterAction}
+          className="flex flex-col gap-4 border-t border-line px-4 py-4"
+        >
+          <input type="hidden" name="subjectKey" value={view.subjectKey} />
+          <input type="hidden" name="chapterKey" value={view.chapterKey} />
+
+          <label className="flex flex-col gap-1.5">
+            <SectionLabel>School status</SectionLabel>
+            <select
+              name="schoolStatus"
+              defaultValue={progress.schoolStatus}
+              className="h-10 rounded-lg border border-line bg-card px-2 text-[13px]"
+            >
+              {SCHOOL_CHAPTER_STATUSES.map((s) => (
+                <option key={s} value={s}>
+                  {titleCase(s)}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="flex flex-col gap-1.5">
+            <SectionLabel>Chapter stage</SectionLabel>
+            <select
+              name="state"
+              defaultValue={progress.state}
+              className="h-10 rounded-lg border border-line bg-card px-2 text-[13px]"
+            >
+              {CHAPTER_STATES.map((s) => (
+                <option key={s} value={s}>
+                  {titleCase(s)}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="flex flex-col gap-1.5">
+            <SectionLabel>Confidence</SectionLabel>
+            <select
+              name="confidence"
+              defaultValue={progress.confidence ?? ''}
+              className="h-10 rounded-lg border border-line bg-card px-2 text-[13px]"
+            >
+              <option value="">—</option>
+              {CONFIDENCE_LEVELS.map((c) => (
+                <option key={c} value={c}>
+                  {titleCase(c)}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <div className="flex flex-col gap-2.5">
+            <SectionLabel>Component scores (0–100)</SectionLabel>
+            {COMPONENTS.map(({ key, label }) => (
+              <label key={key} className="flex items-center justify-between gap-3">
+                <span className="text-[12px] font-medium text-ink">{label}</span>
+                <input
+                  type="number"
+                  name={key}
+                  min={0}
+                  max={100}
+                  defaultValue={progress[key]}
+                  className="h-9 w-20 rounded-lg border border-line bg-card px-2 text-right font-mono text-[13px]"
+                />
+              </label>
+            ))}
+          </div>
+
+          <button
+            type="submit"
+            className="flex h-11 w-full items-center justify-center rounded-xl bg-ink text-[13px] font-semibold text-paper"
+          >
+            Save &amp; recompute readiness
+          </button>
+          <p className="text-[10px] leading-relaxed text-faint">
+            Objective test and recall scores drive readiness; confidence is context for planning
+            only.
+          </p>
+        </form>
+      </details>
       <div className="h-6" />
     </main>
   );
