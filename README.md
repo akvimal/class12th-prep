@@ -65,15 +65,16 @@ CI runs the same checks plus `pnpm build` on every push and pull request
 
 ### Common commands
 
-| Command                                         | Purpose                                                    |
-| ----------------------------------------------- | ---------------------------------------------------------- |
-| `pnpm dev` / `pnpm build` / `pnpm start`        | Next.js dev server / production build / serve build        |
-| `pnpm db:up` / `pnpm db:down` / `pnpm db:reset` | Start / stop / wipe + recreate the local Postgres          |
-| `pnpm db:generate` / `pnpm db:migrate`          | Generate / apply Drizzle migrations                        |
-| `pnpm db:seed`                                  | Load `fixtures/synthetic-seed.json` (idempotent)           |
-| `pnpm prep:init`                                | Create the real student profile from `config/student.json` |
-| `pnpm test` / `pnpm test:watch`                 | Vitest                                                     |
-| `pnpm lint` / `pnpm typecheck` / `pnpm format`  | Individual quality gates                                   |
+| Command                                         | Purpose                                                           |
+| ----------------------------------------------- | ----------------------------------------------------------------- |
+| `pnpm dev` / `pnpm build` / `pnpm start`        | Next.js dev server / production build / serve build               |
+| `pnpm db:up` / `pnpm db:down` / `pnpm db:reset` | Start / stop / wipe + recreate the local Postgres                 |
+| `pnpm db:generate` / `pnpm db:migrate`          | Generate / apply Drizzle migrations                               |
+| `pnpm db:seed`                                  | Load `fixtures/synthetic-seed.json` (idempotent)                  |
+| `pnpm prep:init`                                | Create the real student profile from `config/student.json`        |
+| `pnpm jobs:daily [YYYY-MM-DD]`                  | Once-a-day worker: reconcile the plan, persist today, emit events |
+| `pnpm test` / `pnpm test:watch`                 | Vitest                                                            |
+| `pnpm lint` / `pnpm typecheck` / `pnpm format`  | Individual quality gates                                          |
 
 ## Running it for real (one student)
 
@@ -114,6 +115,17 @@ HTTPS.
 `PREP_PARENT_PASSCODE` too and that code opens a read-only parent summary and
 nothing else. Both open the same URL; each person enters their own passcode
 once per device.
+
+**Daily worker:** the plan reconciles a passed day (COMPLETED / MISSED), refreshes
+today's tasks and generates notification events. Run it once a day from the host
+crontab:
+
+```cron
+5 3 * * *  cd /path/to/stack && docker compose --profile deploy run --rm app pnpm jobs:daily
+```
+
+It is idempotent and also runs opportunistically when `/today` is opened, so a
+skipped night just catches up.
 
 ## Documents
 

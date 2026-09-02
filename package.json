@@ -26,6 +26,7 @@
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "tsx --env-file-if-exists=.env scripts/seed.ts",
     "prep:init": "tsx --env-file-if-exists=.env scripts/prep-init.ts",
+    "jobs:daily": "tsx --env-file-if-exists=.env scripts/run-daily-jobs.ts",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {

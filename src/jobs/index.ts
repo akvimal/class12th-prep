@@ -1,8 +1,7 @@
 /**
- * Background jobs — revision-due processing, plan-risk evaluation, domain
- * notification-event generation. These run from a worker entrypoint, never
- * the web request path.
- *
- * Populated from Phase 3 (revision engine) onward.
+ * Background jobs — plan reconciliation, daily-plan persistence and domain
+ * notification-event generation. These run from a worker entrypoint
+ * (`scripts/run-daily-jobs.ts`), never the web request path.
  */
-export {};
+export { runDailyJobs, type DailyJobResult } from './daily';
+export { generateDailyEvents } from './generate-events';

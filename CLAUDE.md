@@ -169,8 +169,12 @@ method }`. `revision_schedules` (`drizzle/0010`, one SCHEDULED row per
   (`append` = upsert-by-dedupe), `src/app-services/events.ts`
   (`emitEvent`, `listEvents`, `detectDailyEvents` = SCHOOL_TEST_APPROACHING /
   PREBOARD_APPROACHING / REVISION_DUE / REVISION_OVERDUE / STUDY_BLOCK_MISSED
-  for a day). `src/jobs/generate-events.ts` (worker job).
-  `GET/POST /api/academic-years/[id]/events`. No UI wiring yet.
+  for a day). `GET/POST /api/academic-years/[id]/events`. No UI wiring yet.
+- Daily worker (Phase 3, `src/jobs/`): `runDailyJobs(repos, asOf)` for the active
+  profile — `reconcilePastTasks` → regenerate + `persistDailyPlan` →
+  `detectDailyEvents`. Idempotent. Entrypoint `scripts/run-daily-jobs.ts`
+  (`pnpm jobs:daily [YYYY-MM-DD]`), run from host cron; never on the request path
+  (`/today` calls `syncTodayPlan` for the same effect opportunistically).
 - Study Now (`src/domain/planning/study-now.ts`, ALGORITHMS §4, config
   `planner-v1`): `minutes + candidates → one task + reason codes + timed
 micro-plan`. Deterministic. `src/app-services/study-now.ts` `getStudyNow`;
