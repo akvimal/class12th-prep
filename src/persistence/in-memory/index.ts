@@ -1,6 +1,7 @@
 import type { Repositories } from '../ports';
 import { createInMemoryCurriculumRepository } from './curriculum-repository';
 import { createInMemoryPlanningRepository } from './planning-repository';
+import { createInMemoryProgressRepository } from './progress-repository';
 import { createInMemorySchoolCalendarRepository } from './school-calendar-repository';
 
 /**
@@ -15,5 +16,6 @@ export function createInMemoryRepositories(): Repositories {
     planning: createInMemoryPlanningRepository(),
     curriculum: createInMemoryCurriculumRepository(),
     schoolCalendar: createInMemorySchoolCalendarRepository(),
+    progress: createInMemoryProgressRepository(),
   };
 }

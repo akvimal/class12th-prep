@@ -133,6 +133,23 @@ export function createDrizzlePlanningRepository(
       return { id: row!.id };
     },
 
+    async getAcademicYear(academicYearId: string) {
+      const [row] = await db
+        .select()
+        .from(academicYears)
+        .where(eq(academicYears.id, academicYearId));
+      return row
+        ? {
+            id: row.id,
+            studentId: row.studentId,
+            yearLabel: row.yearLabel,
+            curriculumVersionId: row.curriculumVersionId,
+            startDate: row.startDate,
+            endDate: row.endDate,
+          }
+        : null;
+    },
+
     async setAcademicYearCurriculum(academicYearId: string, curriculumVersionId: string) {
       const updated = await db
         .update(academicYears)

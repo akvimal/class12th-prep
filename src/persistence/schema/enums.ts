@@ -42,3 +42,26 @@ export const weightSourceType = pgEnum('weight_source_type', [
 
 /** How a weight's numeric value should be read. */
 export const weightUnit = pgEnum('weight_unit', ['PERCENT', 'MARKS', 'COUNT', 'RELATIVE']);
+
+// --- Student chapter progress (TASK-007) ---
+
+export const chapterState = pgEnum('chapter_state', [
+  'NOT_STARTED',
+  'LEARNING',
+  'LEARNED',
+  'PRACTISED',
+  'TESTED',
+  'REVISED',
+  'EXAM_READY',
+]);
+
+export const confidenceLevel = pgEnum('confidence_level', ['WEAK', 'MODERATE', 'STRONG']);
+
+export const interestLevel = pgEnum('interest_level', ['DISLIKE', 'NEUTRAL', 'LIKE']);
+
+export const schoolChapterStatus = pgEnum('school_chapter_status', [
+  'NOT_TAUGHT',
+  'CURRENTLY_TEACHING',
+  'COMPLETED',
+  'REVISING',
+]);

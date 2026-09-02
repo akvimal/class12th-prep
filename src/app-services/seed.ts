@@ -1,8 +1,9 @@
+import type { ChapterState } from '@/domain/progress/chapter-progress';
 import { syntheticSeedSpec, type SeedSpec } from '@/persistence/seed/spec';
 import type { Repositories } from '@/persistence/ports';
 import { importCurriculum } from './curriculum-import';
 
-type SeedRepos = Pick<Repositories, 'planning' | 'curriculum' | 'schoolCalendar'>;
+type SeedRepos = Pick<Repositories, 'planning' | 'curriculum' | 'schoolCalendar' | 'progress'>;
 
 export interface SeedResult {
   /** false when the seed data was already present (idempotent no-op). */
@@ -12,7 +13,23 @@ export interface SeedResult {
   studentId?: string;
   academicYearId?: string;
   planId?: string;
-  counts?: { subjects: number; chapters: number; enrollments: number; calendarEvents: number };
+  counts?: {
+    subjects: number;
+    chapters: number;
+    enrollments: number;
+    calendarEvents: number;
+    chapterProgress: number;
+  };
+}
+
+/** Rough placeholder state until the readiness engine (TASK-009) recomputes it. */
+function seedState(readiness: number): ChapterState {
+  if (readiness <= 0) return 'NOT_STARTED';
+  if (readiness >= 85) return 'REVISED';
+  if (readiness >= 65) return 'TESTED';
+  if (readiness >= 45) return 'PRACTISED';
+  if (readiness >= 25) return 'LEARNED';
+  return 'LEARNING';
 }
 
 /**
@@ -46,8 +63,10 @@ export async function seedSynthetic(
     ...spec.academicYear,
   });
 
-  const subjectIdByKey = new Map(
-    (await repos.curriculum.getHierarchy(versionId)).map((s) => [s.key, s.id]),
+  const hierarchy = await repos.curriculum.getHierarchy(versionId);
+  const subjectIdByKey = new Map(hierarchy.map((s) => [s.key, s.id]));
+  const chapterIdByKey = new Map(
+    hierarchy.flatMap((s) => s.units.flatMap((u) => u.chapters.map((c) => [c.key, c.id] as const))),
   );
 
   let enrollments = 0;
@@ -91,6 +110,22 @@ export async function seedSynthetic(
     });
   }
 
+  let chapterProgressCount = 0;
+  for (const cp of spec.chapterProgress) {
+    const chapterId = chapterIdByKey.get(cp.chapterKey);
+    if (!chapterId) throw new Error(`seed: chapter key "${cp.chapterKey}" not found in curriculum`);
+    await repos.progress.setChapterProgress(academicYear.id, chapterId, {
+      schoolStatus: cp.schoolStatus,
+      state: seedState(cp.readiness),
+      conceptScore: cp.readiness,
+      practiceScore: cp.readiness,
+      testScore: cp.readiness,
+      recallScore: cp.readiness,
+      revisionScore: cp.readiness,
+    });
+    chapterProgressCount += 1;
+  }
+
   return {
     created: true,
     curriculumVersionId: versionId,
@@ -103,6 +138,7 @@ export async function seedSynthetic(
       chapters: curriculum.counts.chapters,
       enrollments,
       calendarEvents: spec.calendarEvents.length,
+      chapterProgress: chapterProgressCount,
     },
   };
 }

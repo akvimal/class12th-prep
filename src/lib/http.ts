@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import type { ZodType } from 'zod';
 import { PlanDateOrderError } from '@/domain/planning/plan-dates';
 import { WeightProvenanceError } from '@/domain/curriculum/provenance';
+import { ChapterProgressError } from '@/domain/progress/chapter-progress';
 
 export type ParseResult<T> = { ok: true; data: T } | { ok: false; response: NextResponse };
 
@@ -45,6 +46,9 @@ export function domainErrorResponse(err: unknown): NextResponse {
     return NextResponse.json({ error: err.message, violations: err.violations }, { status: 400 });
   }
   if (err instanceof WeightProvenanceError) {
+    return NextResponse.json({ error: err.message, violations: err.violations }, { status: 400 });
+  }
+  if (err instanceof ChapterProgressError) {
     return NextResponse.json({ error: err.message, violations: err.violations }, { status: 400 });
   }
   throw err;
