@@ -46,7 +46,7 @@ test('more menu reaches the planning and trajectory screens', async ({ page }) =
   await page.goto('/more');
   await page.getByRole('link', { name: 'Impact on your goal' }).click();
   await expect(page).toHaveURL(/\/trajectory$/);
-  await expect(page.getByText('Projected board readiness')).toBeVisible();
+  await expect(page.getByText('Projected board score')).toBeVisible();
 
   await page.goto('/more');
   await page.getByRole('link', { name: 'Plan & dates' }).click();
