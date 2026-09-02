@@ -3,6 +3,13 @@ import type { PhaseSpec } from '@/domain/planning/plan-phases';
 import type { CalendarEvent, SchoolEventType } from '@/domain/planning/school-calendar';
 import type { CurriculumVersionView, SubjectNode } from '@/domain/curriculum/hierarchy';
 import type { WeightSourceType, WeightUnit } from '@/domain/curriculum/provenance';
+import type { ChapterProgressView } from '@/domain/progress/view';
+import type {
+  ChapterState,
+  ConfidenceLevel,
+  InterestLevel,
+  SchoolChapterStatus,
+} from '@/domain/progress/chapter-progress';
 
 /**
  * Repository ports.
@@ -96,10 +103,20 @@ export interface SubjectEnrollmentRecord {
   enabled: boolean;
 }
 
+export interface AcademicYearRecord {
+  id: string;
+  studentId: string;
+  yearLabel: string;
+  curriculumVersionId: string | null;
+  startDate: string;
+  endDate: string;
+}
+
 export interface PlanningRepository {
   createFamily(input: NewFamily): Promise<{ id: string }>;
   createStudent(input: NewStudent): Promise<{ id: string }>;
   createAcademicYear(input: NewAcademicYear): Promise<{ id: string }>;
+  getAcademicYear(academicYearId: string): Promise<AcademicYearRecord | null>;
   /** Points an academic year at a published curriculum version. */
   setAcademicYearCurriculum(academicYearId: string, curriculumVersionId: string): Promise<void>;
 
@@ -245,9 +262,41 @@ export interface SchoolCalendarRepository {
   eventsForCapacity(academicYearId: string, from: string, to: string): Promise<CalendarEvent[]>;
 }
 
+// --- Chapter progress (TASK-007) ---
+
+export interface ChapterProgressPatch {
+  state?: ChapterState;
+  confidence?: ConfidenceLevel | null;
+  interest?: InterestLevel | null;
+  schoolStatus?: SchoolChapterStatus;
+  conceptScore?: number;
+  practiceScore?: number;
+  testScore?: number;
+  recallScore?: number;
+  revisionScore?: number;
+  effectiveReadiness?: number | null;
+  lastStudiedAt?: string | null;
+  lastRevisedAt?: string | null;
+}
+
+export interface ProgressRepository {
+  /** Create or update the progress row for (academicYear, chapter). Validates score ranges. */
+  setChapterProgress(
+    academicYearId: string,
+    chapterId: string,
+    patch: ChapterProgressPatch,
+  ): Promise<ChapterProgressView>;
+  getChapterProgress(
+    academicYearId: string,
+    chapterId: string,
+  ): Promise<ChapterProgressView | null>;
+  listChapterProgress(academicYearId: string): Promise<ChapterProgressView[]>;
+}
+
 export interface Repositories {
   health: HealthProbe;
   planning: PlanningRepository;
   curriculum: CurriculumRepository;
   schoolCalendar: SchoolCalendarRepository;
+  progress: ProgressRepository;
 }

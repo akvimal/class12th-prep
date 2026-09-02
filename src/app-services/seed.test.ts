@@ -3,6 +3,7 @@ import { getCapacityRange, getDailyCapacity } from '@/app-services/calendar';
 import { getPlanOverview } from '@/app-services/plan';
 import { createDrizzleCurriculumRepository } from '@/persistence/drizzle/curriculum-repository';
 import { createDrizzlePlanningRepository } from '@/persistence/drizzle/planning-repository';
+import { createDrizzleProgressRepository } from '@/persistence/drizzle/progress-repository';
 import { createDrizzleSchoolCalendarRepository } from '@/persistence/drizzle/school-calendar-repository';
 import type { DrizzleDb } from '@/persistence/drizzle/db';
 import { createInMemoryRepositories } from '@/persistence/in-memory';
@@ -21,6 +22,7 @@ const drizzleRepos = () => ({
   planning: createDrizzlePlanningRepository(db),
   curriculum: createDrizzleCurriculumRepository(db),
   schoolCalendar: createDrizzleSchoolCalendarRepository(db),
+  progress: createDrizzleProgressRepository(db),
 });
 
 describe('seedSynthetic (Drizzle)', () => {
@@ -34,7 +36,13 @@ describe('seedSynthetic (Drizzle)', () => {
       chapters: 12,
       enrollments: 4,
       calendarEvents: 4,
+      chapterProgress: 12,
     });
+
+    // chapter progress from the fixture is loaded
+    const progress = await repos.progress.listChapterProgress(result.academicYearId!);
+    expect(progress).toHaveLength(12);
+    expect(progress.some((p) => p.schoolStatus === 'CURRENTLY_TEACHING')).toBe(true);
 
     const hierarchy = await repos.curriculum.getHierarchy(result.curriculumVersionId);
     expect(hierarchy.map((s) => s.name)).toEqual([

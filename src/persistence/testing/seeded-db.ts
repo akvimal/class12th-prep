@@ -1,6 +1,7 @@
 import { seedSynthetic, type SeedResult } from '@/app-services/seed';
 import { createDrizzleCurriculumRepository } from '@/persistence/drizzle/curriculum-repository';
 import { createDrizzlePlanningRepository } from '@/persistence/drizzle/planning-repository';
+import { createDrizzleProgressRepository } from '@/persistence/drizzle/progress-repository';
 import { createDrizzleSchoolCalendarRepository } from '@/persistence/drizzle/school-calendar-repository';
 import type { DrizzleDb } from '@/persistence/drizzle/db';
 import { createTestDatabase } from './test-db';
@@ -20,6 +21,7 @@ export async function createSeededTestDatabase(): Promise<{
     planning: createDrizzlePlanningRepository(db),
     curriculum: createDrizzleCurriculumRepository(db),
     schoolCalendar: createDrizzleSchoolCalendarRepository(db),
+    progress: createDrizzleProgressRepository(db),
   });
   return { db, seed, close };
 }

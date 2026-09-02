@@ -27,7 +27,17 @@ export function createInMemoryPlanningRepository(
 ): PlanningRepository {
   const families = new Set<string>();
   const students = new Map<string, { id: string; familyId: string; displayName: string }>();
-  const academicYears = new Map<string, { id: string; curriculumVersionId: string | null }>();
+  const academicYears = new Map<
+    string,
+    {
+      id: string;
+      studentId: string;
+      yearLabel: string;
+      curriculumVersionId: string | null;
+      startDate: string;
+      endDate: string;
+    }
+  >();
   const plans = new Map<string, PreparationPlanRecord>();
   const phasesByPlan = new Map<string, PhaseSpec[]>();
   const enrollments = new Map<string, SubjectEnrollmentRecord>();
@@ -56,8 +66,20 @@ export function createInMemoryPlanningRepository(
 
     async createAcademicYear(input: NewAcademicYear) {
       const id = randomUUID();
-      academicYears.set(id, { id, curriculumVersionId: input.curriculumVersionId ?? null });
+      academicYears.set(id, {
+        id,
+        studentId: input.studentId,
+        yearLabel: input.yearLabel,
+        curriculumVersionId: input.curriculumVersionId ?? null,
+        startDate: input.startDate,
+        endDate: input.endDate,
+      });
       return { id };
+    },
+
+    async getAcademicYear(academicYearId: string) {
+      const year = academicYears.get(academicYearId);
+      return year ? { ...year } : null;
     },
 
     async setAcademicYearCurriculum(academicYearId: string, curriculumVersionId: string) {

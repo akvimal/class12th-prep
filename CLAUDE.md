@@ -79,7 +79,14 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
 - Synthetic seed: `fixtures/synthetic-seed.json` (validated by `src/persistence/seed/spec.ts`),
   loaded by `seedSynthetic()` / `pnpm db:seed` — idempotent (skips if the
   curriculum version exists; use `pnpm db:reset` for a clean slate). Tests
-  reuse it via `createSeededTestDatabase()`. Its `chapterProgress` /
-  `assessments` sections are placeholders for Phase 1 / Phase 2.
+  reuse it via `createSeededTestDatabase()`. Its `assessments` section is a
+  placeholder for Phase 2.
+- Chapter progress (`src/persistence/schema/chapter-progress.ts`,
+  `src/domain/progress/`) is student state per (academic year, chapter),
+  entirely separate from curriculum. `state` may move backward — not enforced.
+  `effectiveReadiness` is null until the readiness engine (TASK-009) computes
+  it. Read the hierarchy-with-progress via `getCurriculumProgress`.
+- Integration test suite is ~80s (fresh PGlite per test). A shared-instance +
+  TRUNCATE harness is a known worthwhile follow-up.
 - End a task with a report: files changed, migrations, tests run, acceptance
   criteria status, assumptions, follow-up dependencies.
