@@ -5,6 +5,7 @@ import { createDrizzleCurriculumRepository } from '@/persistence/drizzle/curricu
 import { createDrizzlePlanningRepository } from '@/persistence/drizzle/planning-repository';
 import { createDrizzleProgressRepository } from '@/persistence/drizzle/progress-repository';
 import { createDrizzleSchoolCalendarRepository } from '@/persistence/drizzle/school-calendar-repository';
+import { createDrizzleSessionRepository } from '@/persistence/drizzle/session-repository';
 import type { DrizzleDb } from '@/persistence/drizzle/db';
 import { createInMemoryRepositories } from '@/persistence/in-memory';
 import { createTestDatabase, truncateAll } from '@/persistence/testing/test-db';
@@ -24,6 +25,7 @@ const drizzleRepos = () => ({
   curriculum: createDrizzleCurriculumRepository(db),
   schoolCalendar: createDrizzleSchoolCalendarRepository(db),
   progress: createDrizzleProgressRepository(db),
+  session: createDrizzleSessionRepository(db),
 });
 
 describe('seedSynthetic (Drizzle)', () => {
@@ -38,12 +40,19 @@ describe('seedSynthetic (Drizzle)', () => {
       enrollments: 4,
       calendarEvents: 4,
       chapterProgress: 12,
+      studySessions: 4,
     });
 
     // chapter progress from the fixture is loaded
     const progress = await repos.progress.listChapterProgress(result.academicYearId!);
     expect(progress).toHaveLength(12);
     expect(progress.some((p) => p.schoolStatus === 'CURRENTLY_TEACHING')).toBe(true);
+
+    // study session history is loaded, newest first
+    const sessions = await repos.session.listSessions(result.academicYearId!);
+    expect(sessions).toHaveLength(4);
+    expect(sessions[0]!.sessionDate >= sessions[3]!.sessionDate).toBe(true);
+    expect(sessions.some((s) => s.completion === 'PARTIAL')).toBe(true);
 
     const hierarchy = await repos.curriculum.getHierarchy(result.curriculumVersionId);
     expect(hierarchy.map((s) => s.name)).toEqual([

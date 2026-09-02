@@ -3,7 +3,10 @@ import { syntheticSeedSpec, type SeedSpec } from '@/persistence/seed/spec';
 import type { Repositories } from '@/persistence/ports';
 import { importCurriculum } from './curriculum-import';
 
-type SeedRepos = Pick<Repositories, 'planning' | 'curriculum' | 'schoolCalendar' | 'progress'>;
+type SeedRepos = Pick<
+  Repositories,
+  'planning' | 'curriculum' | 'schoolCalendar' | 'progress' | 'session'
+>;
 
 export interface SeedResult {
   /** false when the seed data was already present (idempotent no-op). */
@@ -19,6 +22,7 @@ export interface SeedResult {
     enrollments: number;
     calendarEvents: number;
     chapterProgress: number;
+    studySessions: number;
   };
 }
 
@@ -67,6 +71,13 @@ export async function seedSynthetic(
   const subjectIdByKey = new Map(hierarchy.map((s) => [s.key, s.id]));
   const chapterIdByKey = new Map(
     hierarchy.flatMap((s) => s.units.flatMap((u) => u.chapters.map((c) => [c.key, c.id] as const))),
+  );
+  const chapterCtxByKey = new Map(
+    hierarchy.flatMap((s) =>
+      s.units.flatMap((u) =>
+        u.chapters.map((c) => [c.key, { chapterId: c.id, subjectId: s.id }] as const),
+      ),
+    ),
   );
 
   let enrollments = 0;
@@ -126,6 +137,27 @@ export async function seedSynthetic(
     chapterProgressCount += 1;
   }
 
+  let studySessionCount = 0;
+  for (const s of spec.studySessions) {
+    const ctx = s.chapterKey ? chapterCtxByKey.get(s.chapterKey) : undefined;
+    const subjectId =
+      ctx?.subjectId ?? (s.subjectKey ? (subjectIdByKey.get(s.subjectKey) ?? null) : null);
+    await repos.session.recordSession({
+      academicYearId: academicYear.id,
+      chapterId: ctx?.chapterId ?? null,
+      subjectId,
+      type: s.type,
+      completion: s.completion,
+      sessionDate: s.sessionDate,
+      plannedMinutes: s.plannedMinutes ?? null,
+      actualMinutes: s.actualMinutes,
+      attempted: s.attempted ?? null,
+      correct: s.correct ?? null,
+      confidenceAfter: s.confidenceAfter ?? null,
+    });
+    studySessionCount += 1;
+  }
+
   return {
     created: true,
     curriculumVersionId: versionId,
@@ -139,6 +171,7 @@ export async function seedSynthetic(
       enrollments,
       calendarEvents: spec.calendarEvents.length,
       chapterProgress: chapterProgressCount,
+      studySessions: studySessionCount,
     },
   };
 }

@@ -3,6 +3,7 @@ import { createInMemoryCurriculumRepository } from './curriculum-repository';
 import { createInMemoryPlanningRepository } from './planning-repository';
 import { createInMemoryProgressRepository } from './progress-repository';
 import { createInMemorySchoolCalendarRepository } from './school-calendar-repository';
+import { createInMemorySessionRepository } from './session-repository';
 
 /**
  * In-memory repository set. Backs the UI shell (before Postgres lands) and
@@ -17,5 +18,6 @@ export function createInMemoryRepositories(): Repositories {
     curriculum: createInMemoryCurriculumRepository(),
     schoolCalendar: createInMemorySchoolCalendarRepository(),
     progress: createInMemoryProgressRepository(),
+    session: createInMemorySessionRepository(),
   };
 }

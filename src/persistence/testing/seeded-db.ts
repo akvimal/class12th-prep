@@ -3,6 +3,7 @@ import { createDrizzleCurriculumRepository } from '@/persistence/drizzle/curricu
 import { createDrizzlePlanningRepository } from '@/persistence/drizzle/planning-repository';
 import { createDrizzleProgressRepository } from '@/persistence/drizzle/progress-repository';
 import { createDrizzleSchoolCalendarRepository } from '@/persistence/drizzle/school-calendar-repository';
+import { createDrizzleSessionRepository } from '@/persistence/drizzle/session-repository';
 import type { DrizzleDb } from '@/persistence/drizzle/db';
 import { createTestDatabase } from './test-db';
 
@@ -13,6 +14,7 @@ export function seedTestDatabase(db: DrizzleDb): Promise<SeedResult> {
     curriculum: createDrizzleCurriculumRepository(db),
     schoolCalendar: createDrizzleSchoolCalendarRepository(db),
     progress: createDrizzleProgressRepository(db),
+    session: createDrizzleSessionRepository(db),
   });
 }
 

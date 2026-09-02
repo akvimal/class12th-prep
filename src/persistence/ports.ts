@@ -10,6 +10,7 @@ import type {
   InterestLevel,
   SchoolChapterStatus,
 } from '@/domain/progress/chapter-progress';
+import type { SessionCompletion, StudySessionType } from '@/domain/progress/study-session';
 
 /**
  * Repository ports.
@@ -293,10 +294,67 @@ export interface ProgressRepository {
   listChapterProgress(academicYearId: string): Promise<ChapterProgressView[]>;
 }
 
+// --- Study session evidence (TASK-008) ---
+
+export interface NewStudySession {
+  academicYearId: string;
+  subjectId?: string | null;
+  chapterId?: string | null;
+  studyTaskId?: string | null;
+  type: StudySessionType;
+  completion: SessionCompletion;
+  sessionDate: string;
+  plannedMinutes?: number | null;
+  actualMinutes: number;
+  attempted?: number | null;
+  correct?: number | null;
+  confidenceAfter?: ConfidenceLevel | null;
+  startedAt?: string | null;
+  endedAt?: string | null;
+  notes?: string | null;
+}
+
+export interface StudySessionRecord {
+  id: string;
+  academicYearId: string;
+  subjectId: string | null;
+  chapterId: string | null;
+  studyTaskId: string | null;
+  type: StudySessionType;
+  completion: SessionCompletion;
+  sessionDate: string;
+  plannedMinutes: number | null;
+  actualMinutes: number;
+  attempted: number | null;
+  correct: number | null;
+  confidenceAfter: ConfidenceLevel | null;
+  startedAt: string | null;
+  endedAt: string | null;
+  notes: string | null;
+  createdAt: string;
+}
+
+export interface SessionFilters {
+  from?: string;
+  to?: string;
+  subjectId?: string;
+  chapterId?: string;
+  type?: StudySessionType;
+}
+
+export interface SessionRepository {
+  /** Append an immutable session. Validates minutes/counts. */
+  recordSession(input: NewStudySession): Promise<StudySessionRecord>;
+  getSession(sessionId: string): Promise<StudySessionRecord | null>;
+  /** History, newest first, filterable by date range / subject / chapter / type. */
+  listSessions(academicYearId: string, filters?: SessionFilters): Promise<StudySessionRecord[]>;
+}
+
 export interface Repositories {
   health: HealthProbe;
   planning: PlanningRepository;
   curriculum: CurriculumRepository;
   schoolCalendar: SchoolCalendarRepository;
   progress: ProgressRepository;
+  session: SessionRepository;
 }

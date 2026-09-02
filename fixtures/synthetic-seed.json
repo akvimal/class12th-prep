@@ -130,6 +130,12 @@
     { "chapterKey": "CS02", "readiness": 78, "schoolStatus": "COMPLETED" },
     { "chapterKey": "CS03", "readiness": 65, "schoolStatus": "CURRENTLY_TEACHING" }
   ],
+  "studySessions": [
+    { "chapterKey": "CHE02", "type": "ACTIVE_RECALL", "completion": "YES", "sessionDate": "2026-08-28", "actualMinutes": 20, "confidenceAfter": "STRONG" },
+    { "chapterKey": "PHY01", "type": "LEARN", "completion": "YES", "sessionDate": "2026-08-30", "actualMinutes": 40, "confidenceAfter": "MODERATE" },
+    { "chapterKey": "PHY01", "type": "PRACTISE", "completion": "PARTIAL", "sessionDate": "2026-09-01", "actualMinutes": 35, "attempted": 8, "correct": 5 },
+    { "chapterKey": "MAT02", "type": "LEARN", "completion": "YES", "sessionDate": "2026-09-01", "actualMinutes": 45 }
+  ],
   "assessments": [
     { "date": "2026-09-07", "type": "SCHOOL_UNIT_TEST", "subjectKey": "PHY", "name": "Physics Unit Test", "chapterKeys": ["PHY01", "PHY02"], "maxMarks": 30 },
     { "date": "2026-09-11", "type": "SCHOOL_CLASS_TEST", "subjectKey": "MAT", "name": "Mathematics Class Test", "chapterKeys": ["MAT02"], "maxMarks": 20 },
