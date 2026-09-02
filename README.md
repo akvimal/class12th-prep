@@ -49,9 +49,9 @@ pnpm dev              # http://localhost:3000
 `pnpm db:reset` drops the volume, restarts Postgres and re-migrates for a clean
 slate; follow it with `pnpm db:seed`.
 
-`http://localhost:3000` and `http://localhost:3000/api/health` both report app
-and database status. There are no product features yet — this is the bootstrap
-shell (`TASK-001`).
+`http://localhost:3000` and `http://localhost:3000/api/health` report app and
+database status. The domain, persistence and API layers exist (Phase 0
+complete); the UI is still the service shell until the coded UI shell milestone.
 
 ### Quality checks
 
@@ -92,12 +92,12 @@ CI runs the same checks plus `pnpm build` on every push and pull request
 Start with Phase 0. Do not ask an agent to implement the entire SRS at once.
 
 1. `tasks/PHASE-00/TASK-001-project-bootstrap.md` ✅
-2. `TASK-002-core-database-schema.md`
-3. `TASK-003-curriculum-model.md`
-4. `TASK-004-student-academic-year-plan.md`
-5. `TASK-005-school-calendar.md`
-6. `TASK-006-seed-validation-data.md`
-7. Continue with Phase 1.
+2. `TASK-002-core-database-schema.md` ✅
+3. `TASK-003-curriculum-model.md` ✅
+4. `TASK-004-student-academic-year-plan.md` ✅
+5. `TASK-005-school-calendar.md` ✅
+6. `TASK-006-seed-validation-data.md` ✅
+7. Continue with Phase 1 (`tasks/PHASE-01/`).
 
 Each task must be implemented independently and pass its acceptance criteria
 before moving forward. The full milestone map is in `design/build-plan.html`.
