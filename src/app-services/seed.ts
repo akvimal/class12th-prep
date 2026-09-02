@@ -7,8 +7,22 @@ import { recalculateAcademicYearReadiness } from './readiness';
 
 type SeedRepos = Pick<
   Repositories,
-  'planning' | 'curriculum' | 'schoolCalendar' | 'progress' | 'session' | 'readiness' | 'assessment'
+  | 'planning'
+  | 'curriculum'
+  | 'schoolCalendar'
+  | 'progress'
+  | 'session'
+  | 'readiness'
+  | 'assessment'
+  | 'studyWindow'
 >;
+
+/** Sensible starter study windows for a new profile. */
+export const DEFAULT_STUDY_WINDOWS = [
+  { dayType: 'WEEKDAY' as const, startTime: '17:00', endTime: '18:30', label: 'After school' },
+  { dayType: 'WEEKDAY' as const, startTime: '20:30', endTime: '21:15', label: 'Recall block' },
+  { dayType: 'WEEKEND' as const, startTime: '09:30', endTime: '13:00', label: 'Deep work' },
+];
 
 export interface SeedResult {
   /** false when the seed data was already present (idempotent no-op). */
@@ -184,6 +198,10 @@ export async function seedSynthetic(
       chapterIds,
     });
     assessmentCount += 1;
+  }
+
+  for (const w of DEFAULT_STUDY_WINDOWS) {
+    await repos.studyWindow.createWindow({ academicYearId: academicYear.id, ...w });
   }
 
   // Compute readiness as of the plan start so the seed is deterministic.

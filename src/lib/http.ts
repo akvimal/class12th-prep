@@ -5,6 +5,7 @@ import { WeightProvenanceError } from '@/domain/curriculum/provenance';
 import { ChapterProgressError } from '@/domain/progress/chapter-progress';
 import { StudySessionError } from '@/domain/progress/study-session';
 import { AssessmentError } from '@/domain/assessment/assessment';
+import { StudyWindowError } from '@/domain/planning/study-window';
 
 export type ParseResult<T> = { ok: true; data: T } | { ok: false; response: NextResponse };
 
@@ -57,6 +58,9 @@ export function domainErrorResponse(err: unknown): NextResponse {
     return NextResponse.json({ error: err.message, violations: err.violations }, { status: 400 });
   }
   if (err instanceof AssessmentError) {
+    return NextResponse.json({ error: err.message, violations: err.violations }, { status: 400 });
+  }
+  if (err instanceof StudyWindowError) {
     return NextResponse.json({ error: err.message, violations: err.violations }, { status: 400 });
   }
   throw err;

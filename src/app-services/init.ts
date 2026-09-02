@@ -4,10 +4,11 @@ import { cbseClass12Curriculum } from '@/persistence/seed/cbse-curriculum';
 import { importCurriculum } from './curriculum-import';
 import { getActiveProfile, type ActiveProfile } from './profile';
 import { recalculateAcademicYearReadiness } from './readiness';
+import { DEFAULT_STUDY_WINDOWS } from './seed';
 
 type InitRepos = Pick<
   Repositories,
-  'planning' | 'curriculum' | 'progress' | 'session' | 'readiness'
+  'planning' | 'curriculum' | 'progress' | 'session' | 'readiness' | 'studyWindow'
 >;
 
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'expected YYYY-MM-DD');
@@ -104,6 +105,10 @@ export async function initRealProfile(
 
   const plan = await repos.planning.createPlan({ academicYearId: year.id, ...config.plan });
   await repos.planning.activatePlan(plan.id);
+
+  for (const w of DEFAULT_STUDY_WINDOWS) {
+    await repos.studyWindow.createWindow({ academicYearId: year.id, ...w });
+  }
 
   await recalculateAcademicYearReadiness(repos, year.id, { asOf: config.plan.startDate });
 

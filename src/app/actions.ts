@@ -7,7 +7,9 @@ import { uiContext } from '@/app-services/app-context';
 import { addAssessment } from '@/app-services/assessment';
 import { chapterIdForKey } from '@/app-services/progress';
 import { logStudy, updateChapterSelfAssessment } from '@/app-services/study-flow';
+import { addStudyWindow, removeStudyWindow, updateStudyWindow } from '@/app-services/study-windows';
 import { ASSESSMENT_TYPES } from '@/domain/assessment/assessment';
+import { STUDY_WINDOW_DAY_TYPES } from '@/domain/planning/study-window';
 import {
   CHAPTER_STATES,
   CONFIDENCE_LEVELS,
@@ -100,6 +102,45 @@ export async function addAssessmentAction(formData: FormData): Promise<void> {
 
   revalidatePath('/', 'layout');
   redirect('/tests');
+}
+
+const hhmm = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/);
+
+export async function addStudyWindowAction(formData: FormData): Promise<void> {
+  const input = z
+    .object({
+      dayType: z.enum(STUDY_WINDOW_DAY_TYPES),
+      startTime: hhmm,
+      endTime: hhmm,
+      label: optional(z.string()),
+    })
+    .parse(fields(formData));
+  const { repos, academicYearId } = await uiContext();
+  await addStudyWindow(repos, { academicYearId, ...input, label: input.label ?? null });
+  revalidatePath('/', 'layout');
+  redirect('/reminders');
+}
+
+export async function toggleStudyWindowAction(formData: FormData): Promise<void> {
+  const { windowId, field, value } = z
+    .object({
+      windowId: z.string().min(1),
+      field: z.enum(['enabled', 'reminderEnabled']),
+      value: z.enum(['0', '1']),
+    })
+    .parse(fields(formData));
+  const { repos } = await uiContext();
+  await updateStudyWindow(repos, windowId, { [field]: value === '1' });
+  revalidatePath('/', 'layout');
+  redirect('/reminders');
+}
+
+export async function deleteStudyWindowAction(formData: FormData): Promise<void> {
+  const { windowId } = z.object({ windowId: z.string().min(1) }).parse(fields(formData));
+  const { repos } = await uiContext();
+  await removeStudyWindow(repos, windowId);
+  revalidatePath('/', 'layout');
+  redirect('/reminders');
 }
 
 export async function updateChapterAction(formData: FormData): Promise<void> {
