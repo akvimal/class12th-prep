@@ -22,6 +22,7 @@ import type {
   StudyTaskSlot,
   StudyTaskStatus,
 } from '@/domain/planning/study-task';
+import type { WeeklyReview } from '@/domain/review/weekly-review';
 
 /**
  * Repository ports.
@@ -700,6 +701,31 @@ export interface StudyTaskRepository {
   missedCountByChapter(academicYearId: string): Promise<Record<string, number>>;
 }
 
+// --- Weekly review (Phase 3) ---
+
+export interface WeeklyReviewRecord {
+  id: string;
+  academicYearId: string;
+  weekStart: string;
+  weekEnd: string;
+  summary: WeeklyReview;
+  algorithmVersion: string;
+  generatedAt: string;
+}
+
+export interface WeeklyReviewRepository {
+  /** Insert or overwrite the review for a week. */
+  upsert(
+    academicYearId: string,
+    weekStart: string,
+    weekEnd: string,
+    summary: WeeklyReview,
+  ): Promise<WeeklyReviewRecord>;
+  get(academicYearId: string, weekStart: string): Promise<WeeklyReviewRecord | null>;
+  /** Newest first. */
+  list(academicYearId: string, filters?: { limit?: number }): Promise<WeeklyReviewRecord[]>;
+}
+
 export interface Repositories {
   health: HealthProbe;
   planning: PlanningRepository;
@@ -714,4 +740,5 @@ export interface Repositories {
   revision: RevisionRepository;
   assessmentResult: AssessmentResultRepository;
   studyTask: StudyTaskRepository;
+  weeklyReview: WeeklyReviewRepository;
 }
