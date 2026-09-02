@@ -1,10 +1,13 @@
 /**
- * Single-passcode gate for the whole app (build-plan "Auth & RBAC" — one family
- * in the MVP). No accounts, no user table. Enabled only when a passcode is
- * configured, so `pnpm dev` and CI are unaffected.
+ * Passcode gate for the single-family MVP — no accounts, no user table.
  *
- * Uses Web Crypto so the same helpers run in middleware (edge) and in server
- * actions (node).
+ * One or two passcodes:
+ *   PREP_PASSCODE         → a `student` session (full access)
+ *   PREP_PARENT_PASSCODE  → a `parent` session (parent summary only)
+ *
+ * Enabled only when a student passcode is configured, so `pnpm dev` and CI are
+ * unaffected. Uses Web Crypto so the same helpers run in middleware (edge) and
+ * server actions (node).
  */
 
 import { env } from './env';
@@ -12,11 +15,17 @@ import { env } from './env';
 const COOKIE_NAME = 'prep_session';
 const MAX_AGE_SECONDS = 60 * 60 * 24 * 30; // 30 days
 
+export type Role = 'student' | 'parent';
+
 const te = new TextEncoder();
 
-/** The gate is on only when a passcode (hash or plaintext) is set. */
+/** The gate is on only when a student passcode (hash or plaintext) is set. */
 export function isLockEnabled(): boolean {
   return env.passcodeHash !== '' || env.passcode !== '';
+}
+
+export function hasParentPasscode(): boolean {
+  return env.parentPasscodeHash !== '' || env.parentPasscode !== '';
 }
 
 async function sha256Hex(value: string): Promise<string> {
@@ -24,16 +33,17 @@ async function sha256Hex(value: string): Promise<string> {
   return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
-async function configuredHash(): Promise<string> {
-  if (env.passcodeHash) return env.passcodeHash;
-  return sha256Hex(env.passcode);
+async function hashFor(role: Role): Promise<string> {
+  if (role === 'parent') {
+    return env.parentPasscodeHash || (env.parentPasscode ? sha256Hex(env.parentPasscode) : '');
+  }
+  return env.passcodeHash || sha256Hex(env.passcode);
 }
 
 async function sessionSecret(): Promise<string> {
   if (env.sessionSecret) return env.sessionSecret;
-  // Fall back to a value derived from the passcode so a token can't be forged
-  // without it. Changing the passcode invalidates existing sessions.
-  return `derived:${await configuredHash()}`;
+  // Derived from the student passcode so a token can't be forged without it.
+  return `derived:${await hashFor('student')}`;
 }
 
 function timingSafeEqual(a: string, b: string): boolean {
@@ -59,28 +69,35 @@ async function hmac(secret: string, data: string): Promise<string> {
   return b64url(await crypto.subtle.sign('HMAC', key, te.encode(data)));
 }
 
-export async function verifyPasscode(input: string): Promise<boolean> {
-  if (!input) return false;
-  return timingSafeEqual(await sha256Hex(input), await configuredHash());
+/** Which role a passcode unlocks, or null if it matches neither. */
+export async function resolveRole(input: string): Promise<Role | null> {
+  if (!input) return null;
+  const supplied = await sha256Hex(input);
+  if (timingSafeEqual(supplied, await hashFor('student'))) return 'student';
+  const parentHash = await hashFor('parent');
+  if (parentHash && timingSafeEqual(supplied, parentHash)) return 'parent';
+  return null;
 }
 
-export async function issueSessionToken(): Promise<string> {
-  const payload = String(Date.now());
+export async function issueSessionToken(role: Role): Promise<string> {
+  const payload = `${role}.${Date.now()}`;
   return `${payload}.${await hmac(await sessionSecret(), payload)}`;
 }
 
-export async function isValidSessionToken(token: string | undefined): Promise<boolean> {
-  if (!token) return false;
-  const dot = token.indexOf('.');
-  if (dot < 1) return false;
-  const payload = token.slice(0, dot);
-  const sig = token.slice(dot + 1);
+/** Verify a session cookie and return its role, or null. */
+export async function readSession(token: string | undefined): Promise<{ role: Role } | null> {
+  if (!token) return null;
+  const parts = token.split('.');
+  if (parts.length !== 3) return null;
+  const [role, ts, sig] = parts as [string, string, string];
+  if (role !== 'student' && role !== 'parent') return null;
 
-  const issuedAt = Number(payload);
-  if (!Number.isFinite(issuedAt)) return false;
-  if ((Date.now() - issuedAt) / 1000 > MAX_AGE_SECONDS) return false;
+  const issuedAt = Number(ts);
+  if (!Number.isFinite(issuedAt)) return null;
+  if ((Date.now() - issuedAt) / 1000 > MAX_AGE_SECONDS) return null;
 
-  return timingSafeEqual(sig, await hmac(await sessionSecret(), payload));
+  const expected = await hmac(await sessionSecret(), `${role}.${ts}`);
+  return timingSafeEqual(sig, expected) ? { role } : null;
 }
 
 /** Only allow same-origin absolute paths as a post-unlock redirect target. */
@@ -88,5 +105,8 @@ export function safeNext(next: string | null | undefined): string {
   if (!next || !next.startsWith('/') || next.startsWith('//')) return '/';
   return next;
 }
+
+/** Paths a `parent` session may reach (everything else redirects to /parent). */
+export const PARENT_ALLOWED = new Set(['/parent']);
 
 export const passcodeCookie = { name: COOKIE_NAME, maxAge: MAX_AGE_SECONDS };

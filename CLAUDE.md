@@ -122,11 +122,17 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
   `db:migrate` / `prep:init` one-off commands) + `docker-compose.yml`
   `deploy` profile (`app` + `caddy`) + `Caddyfile`. `output: 'standalone'`
   was removed. See README "Deploy to a VPS".
-- Optional single-passcode gate (`src/middleware.ts` + `src/lib/passcode.ts`,
-  Web Crypto so it runs on the edge). Enabled only when `PREP_PASSCODE` (plain)
-  or `PREP_PASSCODE_HASH` (sha-256 hex) is set — off for dev/CI. `/unlock` sets
-  a 30-day HMAC-signed httpOnly cookie (`unlockAction`); the matcher lets
-  `/unlock`, `/api/health` and assets through. No accounts.
+- Passcode gate (`src/middleware.ts` + `src/lib/passcode.ts`, Web Crypto for the
+  edge). On only when `PREP_PASSCODE` (student, full access) is set — off for
+  dev/CI. Optional `PREP_PARENT_PASSCODE` opens a `parent` session confined to
+  `/parent` (`PARENT_ALLOWED`); `resolveRole` maps a passcode → role, the
+  30-day HMAC cookie carries the role, `readSession` verifies it. `unlockAction`
+  sets the cookie `secure` only when `x-forwarded-proto` is https (so it works
+  over plain HTTP on a VPS IP). No accounts.
+- Parent view: `src/app-services/parent.ts` `getParentSummary` is a **projection**
+  built from its own shape — readiness, risk, `revisionDays` (studied y/n),
+  upcoming tests. No session logs, timestamps or component scores. `/parent`
+  renders only this.
 - Screen mutations go through Server Actions in `src/app/actions.ts`
   (`'use server'`, zod-validated FormData) → `src/app-services/study-flow.ts`
   → `revalidatePath` + `redirect`. `logStudy` records the immutable session
