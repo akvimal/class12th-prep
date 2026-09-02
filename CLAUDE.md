@@ -144,6 +144,15 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
   ALGORITHMS §3): `raw = weakness · revisionDue · schoolUrgency · importance ·
 backlog`; `prioritize()` ranks + normalises. Pure; consumed by the daily
   planner / Study Now.
+- Daily planner (`src/domain/planning/daily-planner.ts`, config `planner-v1`,
+  ALGORITHMS §3/§5): candidates → `prioritize` → guardrails (prereq eligibility,
+  time-fit, `maxPerSubject`, revision-starvation, school-urgency force ≤3d,
+  low-priority starvation) → ≤3 primary + optional. Pure/deterministic.
+  `src/app-services/candidates.ts` builds `PlannerCandidate[]` from progress +
+  readiness snapshots + `nextSchoolTestDaysByChapter` (interim `revisionDue`
+  heuristic until Phase 3). `src/app-services/today.ts` `getTodayPlan(...,energy)`
+  wires capacity + candidates → `buildDailyPlan`. `/today` renders it;
+  `?energy=low|high` scales the target (never real capacity).
 - Study windows (Phase 2): `study_windows` (`drizzle/0008`),
   `src/domain/planning/study-window.ts` (recurrence WEEKDAY/WEEKEND/DAILY,
   `plannedMinutesOn`), `StudyWindowRepository`, `src/app-services/study-windows.ts`

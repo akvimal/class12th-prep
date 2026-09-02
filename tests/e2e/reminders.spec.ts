@@ -7,12 +7,18 @@ test('reminders shows real windows and adherence, and a window toggles', async (
   await expect(page.getByText('After school')).toBeVisible();
   await expect(page.getByText('Adherence · last 7 days')).toBeVisible();
 
-  const toggle = () => page.getByRole('switch', { name: 'Window enabled' }).first();
-  const before = (await toggle().getAttribute('aria-checked')) ?? 'true';
-  await toggle().click();
+  // Scope to one named window so parallel tests adding windows don't shift positions.
+  const card = page.locator('.rounded-2xl', { hasText: 'After school' }).first();
+  const toggle = card.getByRole('switch', { name: 'Window enabled' });
+  const before = (await toggle.getAttribute('aria-checked')) ?? 'true';
+  await toggle.click();
 
   await expect(page).toHaveURL(/\/reminders$/);
-  await expect(toggle()).not.toHaveAttribute('aria-checked', before);
+  await expect(
+    page.locator('.rounded-2xl', { hasText: 'After school' }).first().getByRole('switch', {
+      name: 'Window enabled',
+    }),
+  ).not.toHaveAttribute('aria-checked', before);
 });
 
 test('adding a study window persists it', async ({ page }) => {
