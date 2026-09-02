@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { addDays, clampDate, daysBetween, maxDate, minDate } from './dates';
+import {
+  addDays,
+  clampDate,
+  currentDateInZone,
+  dayOfWeek,
+  daysBetween,
+  eachDay,
+  maxDate,
+  minDate,
+} from './dates';
 
 describe('date arithmetic', () => {
   it('adds and subtracts days across month and year boundaries without month logic', () => {
@@ -26,5 +35,29 @@ describe('date arithmetic', () => {
 
   it('rejects non-ISO input', () => {
     expect(() => addDays('02-09-2026', 1)).toThrow();
+  });
+
+  it('reports day of week with 0 = Sunday', () => {
+    expect(dayOfWeek('2026-09-06')).toBe(0); // Sunday
+    expect(dayOfWeek('2026-09-05')).toBe(6); // Saturday
+    expect(dayOfWeek('2026-09-02')).toBe(3); // Wednesday
+  });
+
+  it('lists each day inclusively', () => {
+    expect(eachDay('2026-12-30', '2027-01-02')).toEqual([
+      '2026-12-30',
+      '2026-12-31',
+      '2027-01-01',
+      '2027-01-02',
+    ]);
+    expect(eachDay('2026-09-02', '2026-09-02')).toEqual(['2026-09-02']);
+  });
+
+  it('resolves the local date in a timezone for a fixed instant', () => {
+    // 2026-09-02T20:30:00Z is already 2026-09-03 in Asia/Kolkata (+05:30).
+    const instant = new Date('2026-09-02T20:30:00Z');
+    expect(currentDateInZone('Asia/Kolkata', instant)).toBe('2026-09-03');
+    expect(currentDateInZone('UTC', instant)).toBe('2026-09-02');
+    expect(currentDateInZone('America/Los_Angeles', instant)).toBe('2026-09-02');
   });
 });

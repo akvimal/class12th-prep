@@ -2,6 +2,7 @@ import { db, pingDatabase } from '@/lib/db';
 import type { Repositories } from '../ports';
 import { createDrizzleCurriculumRepository } from './curriculum-repository';
 import { createDrizzlePlanningRepository } from './planning-repository';
+import { createDrizzleSchoolCalendarRepository } from './school-calendar-repository';
 
 /**
  * PostgreSQL repository set (via Drizzle), bound to the shared connection pool.
@@ -13,5 +14,6 @@ export function createDrizzleRepositories(): Repositories {
     },
     planning: createDrizzlePlanningRepository(db),
     curriculum: createDrizzleCurriculumRepository(db),
+    schoolCalendar: createDrizzleSchoolCalendarRepository(db),
   };
 }

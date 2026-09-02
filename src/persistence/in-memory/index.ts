@@ -1,6 +1,7 @@
 import type { Repositories } from '../ports';
 import { createInMemoryCurriculumRepository } from './curriculum-repository';
 import { createInMemoryPlanningRepository } from './planning-repository';
+import { createInMemorySchoolCalendarRepository } from './school-calendar-repository';
 
 /**
  * In-memory repository set. Backs the UI shell (before Postgres lands) and
@@ -13,5 +14,6 @@ export function createInMemoryRepositories(): Repositories {
     },
     planning: createInMemoryPlanningRepository(),
     curriculum: createInMemoryCurriculumRepository(),
+    schoolCalendar: createInMemorySchoolCalendarRepository(),
   };
 }

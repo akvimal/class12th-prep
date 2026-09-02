@@ -1,5 +1,6 @@
 import type { PhaseType, PlanStatus } from '@/domain/planning/plan';
 import type { PhaseSpec } from '@/domain/planning/plan-phases';
+import type { CalendarEvent, SchoolEventType } from '@/domain/planning/school-calendar';
 import type { CurriculumVersionView, SubjectNode } from '@/domain/curriculum/hierarchy';
 import type { WeightSourceType, WeightUnit } from '@/domain/curriculum/provenance';
 
@@ -199,8 +200,54 @@ export interface CurriculumRepository {
   getSubjectHierarchy(subjectId: string): Promise<SubjectNode | null>;
 }
 
+// --- School calendar (TASK-005) ---
+
+export interface NewCalendarEvent {
+  academicYearId: string;
+  type: SchoolEventType;
+  title?: string | null;
+  startDate: string;
+  endDate: string;
+  capacityOverride?: number | null;
+  notes?: string | null;
+}
+
+export interface CalendarEventUpdate {
+  type?: SchoolEventType;
+  title?: string | null;
+  startDate?: string;
+  endDate?: string;
+  capacityOverride?: number | null;
+  notes?: string | null;
+}
+
+export interface CalendarEventRecord {
+  id: string;
+  academicYearId: string;
+  type: SchoolEventType;
+  title: string | null;
+  startDate: string;
+  endDate: string;
+  capacityOverride: number | null;
+  notes: string | null;
+}
+
+export interface SchoolCalendarRepository {
+  addEvent(input: NewCalendarEvent): Promise<{ id: string }>;
+  updateEvent(eventId: string, patch: CalendarEventUpdate): Promise<CalendarEventRecord>;
+  deleteEvent(eventId: string): Promise<void>;
+  /** Events for an academic year, optionally overlapping [from, to], ordered by start date. */
+  listEvents(
+    academicYearId: string,
+    range?: { from?: string; to?: string },
+  ): Promise<CalendarEventRecord[]>;
+  /** The subset needed by the capacity engine (id/type/dates/override). */
+  eventsForCapacity(academicYearId: string, from: string, to: string): Promise<CalendarEvent[]>;
+}
+
 export interface Repositories {
   health: HealthProbe;
   planning: PlanningRepository;
   curriculum: CurriculumRepository;
+  schoolCalendar: SchoolCalendarRepository;
 }

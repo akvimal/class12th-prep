@@ -1,0 +1,1437 @@
+{
+  "id": "9da8b451-6ce1-427b-87a2-7de877bd5e45",
+  "prevId": "b7206d1f-8cb5-4bca-a75a-806d94949d91",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.families": {
+      "name": "families",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.students": {
+      "name": "students",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "family_id": {
+          "name": "family_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "display_name": {
+          "name": "display_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "board": {
+          "name": "board",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "grade": {
+          "name": "grade",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timezone": {
+          "name": "timezone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Asia/Kolkata'"
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "students_family_id_families_id_fk": {
+          "name": "students_family_id_families_id_fk",
+          "tableFrom": "students",
+          "tableTo": "families",
+          "columnsFrom": [
+            "family_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "students_grade_range": {
+          "name": "students_grade_range",
+          "value": "\"students\".\"grade\" between 1 and 12"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.chapters": {
+      "name": "chapters",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "curriculum_version_id": {
+          "name": "curriculum_version_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unit_id": {
+          "name": "unit_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "position": {
+          "name": "position",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "chapters_unit_fk": {
+          "name": "chapters_unit_fk",
+          "tableFrom": "chapters",
+          "tableTo": "units",
+          "columnsFrom": [
+            "unit_id",
+            "curriculum_version_id"
+          ],
+          "columnsTo": [
+            "id",
+            "curriculum_version_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "chapters_version_key_unique": {
+          "name": "chapters_version_key_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "curriculum_version_id",
+            "key"
+          ]
+        },
+        "chapters_id_version_unique": {
+          "name": "chapters_id_version_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id",
+            "curriculum_version_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.curriculum_versions": {
+      "name": "curriculum_versions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "board": {
+          "name": "board",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "grade": {
+          "name": "grade",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "academic_year_label": {
+          "name": "academic_year_label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "version": {
+          "name": "version",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_reference": {
+          "name": "source_reference",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "published_at": {
+          "name": "published_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "curriculum_versions_identity_unique": {
+          "name": "curriculum_versions_identity_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "board",
+            "grade",
+            "academic_year_label",
+            "version"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "curriculum_versions_grade_range": {
+          "name": "curriculum_versions_grade_range",
+          "value": "\"curriculum_versions\".\"grade\" between 1 and 12"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.subjects": {
+      "name": "subjects",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "curriculum_version_id": {
+          "name": "curriculum_version_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "position": {
+          "name": "position",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "subjects_curriculum_version_id_curriculum_versions_id_fk": {
+          "name": "subjects_curriculum_version_id_curriculum_versions_id_fk",
+          "tableFrom": "subjects",
+          "tableTo": "curriculum_versions",
+          "columnsFrom": [
+            "curriculum_version_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "subjects_version_key_unique": {
+          "name": "subjects_version_key_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "curriculum_version_id",
+            "key"
+          ]
+        },
+        "subjects_id_version_unique": {
+          "name": "subjects_id_version_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id",
+            "curriculum_version_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.topics": {
+      "name": "topics",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "curriculum_version_id": {
+          "name": "curriculum_version_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "chapter_id": {
+          "name": "chapter_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "position": {
+          "name": "position",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "topics_chapter_fk": {
+          "name": "topics_chapter_fk",
+          "tableFrom": "topics",
+          "tableTo": "chapters",
+          "columnsFrom": [
+            "chapter_id",
+            "curriculum_version_id"
+          ],
+          "columnsTo": [
+            "id",
+            "curriculum_version_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "topics_version_key_unique": {
+          "name": "topics_version_key_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "curriculum_version_id",
+            "key"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.units": {
+      "name": "units",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "curriculum_version_id": {
+          "name": "curriculum_version_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subject_id": {
+          "name": "subject_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "position": {
+          "name": "position",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "units_subject_fk": {
+          "name": "units_subject_fk",
+          "tableFrom": "units",
+          "tableTo": "subjects",
+          "columnsFrom": [
+            "subject_id",
+            "curriculum_version_id"
+          ],
+          "columnsTo": [
+            "id",
+            "curriculum_version_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "units_version_key_unique": {
+          "name": "units_version_key_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "curriculum_version_id",
+            "key"
+          ]
+        },
+        "units_id_version_unique": {
+          "name": "units_id_version_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id",
+            "curriculum_version_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.academic_weights": {
+      "name": "academic_weights",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "curriculum_version_id": {
+          "name": "curriculum_version_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "scope_type": {
+          "name": "scope_type",
+          "type": "curriculum_scope_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subject_id": {
+          "name": "subject_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "unit_id": {
+          "name": "unit_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "chapter_id": {
+          "name": "chapter_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "topic_id": {
+          "name": "topic_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "value": {
+          "name": "value",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unit": {
+          "name": "unit",
+          "type": "weight_unit",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_type": {
+          "name": "source_type",
+          "type": "weight_source_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_reference": {
+          "name": "source_reference",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "confidence": {
+          "name": "confidence",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "effective_from": {
+          "name": "effective_from",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "retrieved_at": {
+          "name": "retrieved_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parser_version": {
+          "name": "parser_version",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "academic_weights_curriculum_version_id_curriculum_versions_id_fk": {
+          "name": "academic_weights_curriculum_version_id_curriculum_versions_id_fk",
+          "tableFrom": "academic_weights",
+          "tableTo": "curriculum_versions",
+          "columnsFrom": [
+            "curriculum_version_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "academic_weights_subject_id_subjects_id_fk": {
+          "name": "academic_weights_subject_id_subjects_id_fk",
+          "tableFrom": "academic_weights",
+          "tableTo": "subjects",
+          "columnsFrom": [
+            "subject_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "academic_weights_unit_id_units_id_fk": {
+          "name": "academic_weights_unit_id_units_id_fk",
+          "tableFrom": "academic_weights",
+          "tableTo": "units",
+          "columnsFrom": [
+            "unit_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "academic_weights_chapter_id_chapters_id_fk": {
+          "name": "academic_weights_chapter_id_chapters_id_fk",
+          "tableFrom": "academic_weights",
+          "tableTo": "chapters",
+          "columnsFrom": [
+            "chapter_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "academic_weights_topic_id_topics_id_fk": {
+          "name": "academic_weights_topic_id_topics_id_fk",
+          "tableFrom": "academic_weights",
+          "tableTo": "topics",
+          "columnsFrom": [
+            "topic_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "academic_weights_exactly_one_scope": {
+          "name": "academic_weights_exactly_one_scope",
+          "value": "num_nonnulls(\"academic_weights\".\"subject_id\", \"academic_weights\".\"unit_id\", \"academic_weights\".\"chapter_id\", \"academic_weights\".\"topic_id\") = 1"
+        },
+        "academic_weights_scope_type_matches": {
+          "name": "academic_weights_scope_type_matches",
+          "value": "(\"academic_weights\".\"scope_type\" = 'SUBJECT' and \"academic_weights\".\"subject_id\" is not null)\n        or (\"academic_weights\".\"scope_type\" = 'UNIT' and \"academic_weights\".\"unit_id\" is not null)\n        or (\"academic_weights\".\"scope_type\" = 'CHAPTER' and \"academic_weights\".\"chapter_id\" is not null)\n        or (\"academic_weights\".\"scope_type\" = 'TOPIC' and \"academic_weights\".\"topic_id\" is not null)"
+        },
+        "academic_weights_official_needs_reference": {
+          "name": "academic_weights_official_needs_reference",
+          "value": "\"academic_weights\".\"source_type\" <> 'OFFICIAL' or \"academic_weights\".\"source_reference\" is not null"
+        },
+        "academic_weights_confidence_range": {
+          "name": "academic_weights_confidence_range",
+          "value": "\"academic_weights\".\"confidence\" is null or (\"academic_weights\".\"confidence\" >= 0 and \"academic_weights\".\"confidence\" <= 1)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.academic_years": {
+      "name": "academic_years",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "student_id": {
+          "name": "student_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "year_label": {
+          "name": "year_label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "curriculum_version_id": {
+          "name": "curriculum_version_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_date": {
+          "name": "end_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "academic_years_student_id_students_id_fk": {
+          "name": "academic_years_student_id_students_id_fk",
+          "tableFrom": "academic_years",
+          "tableTo": "students",
+          "columnsFrom": [
+            "student_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "academic_years_curriculum_version_id_curriculum_versions_id_fk": {
+          "name": "academic_years_curriculum_version_id_curriculum_versions_id_fk",
+          "tableFrom": "academic_years",
+          "tableTo": "curriculum_versions",
+          "columnsFrom": [
+            "curriculum_version_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "academic_years_student_label_unique": {
+          "name": "academic_years_student_label_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "student_id",
+            "year_label"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "academic_years_dates_ordered": {
+          "name": "academic_years_dates_ordered",
+          "value": "\"academic_years\".\"start_date\" < \"academic_years\".\"end_date\""
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.subject_enrollments": {
+      "name": "subject_enrollments",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "academic_year_id": {
+          "name": "academic_year_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subject_id": {
+          "name": "subject_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "theory_max_marks": {
+          "name": "theory_max_marks",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "practical_max_marks": {
+          "name": "practical_max_marks",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "target_marks": {
+          "name": "target_marks",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "board_exam_date": {
+          "name": "board_exam_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "enabled": {
+          "name": "enabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "subject_enrollments_academic_year_id_academic_years_id_fk": {
+          "name": "subject_enrollments_academic_year_id_academic_years_id_fk",
+          "tableFrom": "subject_enrollments",
+          "tableTo": "academic_years",
+          "columnsFrom": [
+            "academic_year_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "subject_enrollments_subject_id_subjects_id_fk": {
+          "name": "subject_enrollments_subject_id_subjects_id_fk",
+          "tableFrom": "subject_enrollments",
+          "tableTo": "subjects",
+          "columnsFrom": [
+            "subject_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "subject_enrollments_year_subject_unique": {
+          "name": "subject_enrollments_year_subject_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "academic_year_id",
+            "subject_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "subject_enrollments_marks_non_negative": {
+          "name": "subject_enrollments_marks_non_negative",
+          "value": "(\"subject_enrollments\".\"theory_max_marks\" is null or \"subject_enrollments\".\"theory_max_marks\" >= 0)\n        and (\"subject_enrollments\".\"practical_max_marks\" is null or \"subject_enrollments\".\"practical_max_marks\" >= 0)\n        and (\"subject_enrollments\".\"target_marks\" is null or \"subject_enrollments\".\"target_marks\" >= 0)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.school_calendar_events": {
+      "name": "school_calendar_events",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "academic_year_id": {
+          "name": "academic_year_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "school_event_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_date": {
+          "name": "end_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "capacity_override": {
+          "name": "capacity_override",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "school_calendar_events_academic_year_id_academic_years_id_fk": {
+          "name": "school_calendar_events_academic_year_id_academic_years_id_fk",
+          "tableFrom": "school_calendar_events",
+          "tableTo": "academic_years",
+          "columnsFrom": [
+            "academic_year_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "school_calendar_events_dates_ordered": {
+          "name": "school_calendar_events_dates_ordered",
+          "value": "\"school_calendar_events\".\"start_date\" <= \"school_calendar_events\".\"end_date\""
+        },
+        "school_calendar_events_capacity_non_negative": {
+          "name": "school_calendar_events_capacity_non_negative",
+          "value": "\"school_calendar_events\".\"capacity_override\" is null or \"school_calendar_events\".\"capacity_override\" >= 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.plan_phases": {
+      "name": "plan_phases",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "preparation_plan_id": {
+          "name": "preparation_plan_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phase_type": {
+          "name": "phase_type",
+          "type": "phase_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_date": {
+          "name": "end_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "config_json": {
+          "name": "config_json",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::jsonb"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "plan_phases_preparation_plan_id_preparation_plans_id_fk": {
+          "name": "plan_phases_preparation_plan_id_preparation_plans_id_fk",
+          "tableFrom": "plan_phases",
+          "tableTo": "preparation_plans",
+          "columnsFrom": [
+            "preparation_plan_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "plan_phases_plan_type_unique": {
+          "name": "plan_phases_plan_type_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "preparation_plan_id",
+            "phase_type"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "plan_phases_dates_ordered": {
+          "name": "plan_phases_dates_ordered",
+          "value": "\"plan_phases\".\"start_date\" <= \"plan_phases\".\"end_date\""
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.preparation_plans": {
+      "name": "preparation_plans",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "academic_year_id": {
+          "name": "academic_year_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "plan_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'DRAFT'"
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "syllabus_target_date": {
+          "name": "syllabus_target_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hard_completion_date": {
+          "name": "hard_completion_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "revision_start_date": {
+          "name": "revision_start_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "exam_window_start": {
+          "name": "exam_window_start",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "exam_window_end": {
+          "name": "exam_window_end",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "weekday_capacity_minutes": {
+          "name": "weekday_capacity_minutes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "weekend_capacity_minutes": {
+          "name": "weekend_capacity_minutes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "preparation_plans_one_active_per_year": {
+          "name": "preparation_plans_one_active_per_year",
+          "columns": [
+            {
+              "expression": "academic_year_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"preparation_plans\".\"status\" = 'ACTIVE'",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "preparation_plans_academic_year_id_academic_years_id_fk": {
+          "name": "preparation_plans_academic_year_id_academic_years_id_fk",
+          "tableFrom": "preparation_plans",
+          "tableTo": "academic_years",
+          "columnsFrom": [
+            "academic_year_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "preparation_plans_dates_ordered": {
+          "name": "preparation_plans_dates_ordered",
+          "value": "\"preparation_plans\".\"start_date\" <= \"preparation_plans\".\"syllabus_target_date\"\n        and \"preparation_plans\".\"syllabus_target_date\" <= \"preparation_plans\".\"hard_completion_date\"\n        and \"preparation_plans\".\"hard_completion_date\" <= \"preparation_plans\".\"revision_start_date\"\n        and \"preparation_plans\".\"revision_start_date\" <= \"preparation_plans\".\"exam_window_start\"\n        and \"preparation_plans\".\"exam_window_start\" <= \"preparation_plans\".\"exam_window_end\""
+        },
+        "preparation_plans_capacity_non_negative": {
+          "name": "preparation_plans_capacity_non_negative",
+          "value": "\"preparation_plans\".\"weekday_capacity_minutes\" >= 0 and \"preparation_plans\".\"weekend_capacity_minutes\" >= 0"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.curriculum_scope_type": {
+      "name": "curriculum_scope_type",
+      "schema": "public",
+      "values": [
+        "SUBJECT",
+        "UNIT",
+        "CHAPTER",
+        "TOPIC"
+      ]
+    },
+    "public.phase_type": {
+      "name": "phase_type",
+      "schema": "public",
+      "values": [
+        "FOUNDATION",
+        "SYLLABUS_COVERAGE",
+        "CONSOLIDATION",
+        "REVISION",
+        "PREBOARD",
+        "BOARD_EXAM"
+      ]
+    },
+    "public.plan_status": {
+      "name": "plan_status",
+      "schema": "public",
+      "values": [
+        "DRAFT",
+        "ACTIVE",
+        "ARCHIVED"
+      ]
+    },
+    "public.weight_source_type": {
+      "name": "weight_source_type",
+      "schema": "public",
+      "values": [
+        "OFFICIAL",
+        "DERIVED_SQP",
+        "DERIVED_PYQ",
+        "SCHOOL_TEACHER",
+        "USER"
+      ]
+    },
+    "public.weight_unit": {
+      "name": "weight_unit",
+      "schema": "public",
+      "values": [
+        "PERCENT",
+        "MARKS",
+        "COUNT",
+        "RELATIVE"
+      ]
+    },
+    "public.school_event_type": {
+      "name": "school_event_type",
+      "schema": "public",
+      "values": [
+        "NORMAL_SCHOOL_DAY",
+        "HOLIDAY",
+        "STUDY_LEAVE",
+        "EXAM_DAY",
+        "PRACTICAL_DAY",
+        "VACATION",
+        "UNAVAILABLE"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
