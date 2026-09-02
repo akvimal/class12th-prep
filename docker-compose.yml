@@ -7,8 +7,11 @@ services:
       POSTGRES_USER: prep
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-prep}
       POSTGRES_DB: prep
-    ports:
-      - '5432:5432'
+    # No host port here: the app container reaches the db over the internal
+    # network, and a VPS should not expose Postgres publicly. `pnpm db:up`
+    # adds a host port via docker-compose.dev.yml for local `pnpm dev`.
+    expose:
+      - '5432'
     volumes:
       - prep_pgdata:/var/lib/postgresql/data
     healthcheck:

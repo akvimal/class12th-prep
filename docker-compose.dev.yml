@@ -1,0 +1,7 @@
+# Local development only — publishes the Postgres port to the host so
+# `pnpm dev` (Next running outside Docker) can connect. Included automatically
+# by `pnpm db:up` / `db:reset`. Set DB_HOST_PORT in .env if 5432 is taken.
+services:
+  db:
+    ports:
+      - '${DB_HOST_PORT:-5432}:5432'

@@ -39,8 +39,8 @@ Prerequisites: **Node 20.11+**, **Docker**, and **pnpm** (via Corepack —
 
 ```bash
 pnpm install
-cp .env.example .env
-pnpm db:up            # start Postgres 16 in Docker
+cp .env.example .env  # if 5432 is taken, set DB_HOST_PORT and match DATABASE_URL
+pnpm db:up            # start Postgres 16 in Docker (host port from DB_HOST_PORT)
 pnpm db:migrate       # apply schema
 pnpm db:seed          # load the synthetic validation data (idempotent)
 pnpm dev              # http://localhost:3000
@@ -99,7 +99,7 @@ cp .env.example .env      # set POSTGRES_PASSWORD, PREP_PASSCODE, PREP_PARENT_PA
 cp config/student.example.json config/student.json   # edit it
 
 docker compose --profile deploy build
-docker compose up -d db
+docker compose up -d db     # no host port published — internal to the stack
 docker compose --profile deploy run --rm app pnpm db:migrate
 docker compose --profile deploy run --rm app pnpm prep:init
 docker compose --profile deploy up -d                # app + Caddy (auto-HTTPS if SITE_ADDRESS is a domain)

@@ -121,7 +121,9 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
 - Deploy: `Dockerfile` (single image, `next start`, full deps for the
   `db:migrate` / `prep:init` one-off commands) + `docker-compose.yml`
   `deploy` profile (`app` + `caddy`) + `Caddyfile`. `output: 'standalone'`
-  was removed. See README "Deploy to a VPS".
+  was removed. The `db` service publishes **no host port** — `app`/migrate/init
+  reach it on the internal network; `pnpm db:up` layers `docker-compose.dev.yml`
+  to expose `${DB_HOST_PORT:-5432}` for local `pnpm dev`. See README "Deploy to a VPS".
 - Passcode gate (`src/middleware.ts` + `src/lib/passcode.ts`, Web Crypto for the
   edge). On only when `PREP_PASSCODE` (student, full access) is set — off for
   dev/CI. Optional `PREP_PARENT_PASSCODE` opens a `parent` session confined to
