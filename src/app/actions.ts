@@ -5,10 +5,12 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { uiContext } from '@/app-services/app-context';
 import { addAssessment } from '@/app-services/assessment';
+import { advanceQuestionError, recordAssessmentResult } from '@/app-services/assessment-results';
 import { chapterIdForKey } from '@/app-services/progress';
 import { logStudy, updateChapterSelfAssessment } from '@/app-services/study-flow';
 import { addStudyWindow, removeStudyWindow, updateStudyWindow } from '@/app-services/study-windows';
 import { ASSESSMENT_TYPES } from '@/domain/assessment/assessment';
+import { ERROR_TRANSITIONS, ERROR_TYPES } from '@/domain/errors/errors';
 import { STUDY_WINDOW_DAY_TYPES } from '@/domain/planning/study-window';
 import {
   CHAPTER_STATES,
@@ -141,6 +143,58 @@ export async function deleteStudyWindowAction(formData: FormData): Promise<void>
   await removeStudyWindow(repos, windowId);
   revalidatePath('/', 'layout');
   redirect('/reminders');
+}
+
+const errorRowRe = /^error\.([A-Za-z0-9-]+)\.marks$/;
+
+export async function recordResultAction(formData: FormData): Promise<void> {
+  const base = z
+    .object({
+      assessmentId: z.string().min(1),
+      score: z.coerce.number().int().min(0),
+      timeTakenMinutes: optional(z.coerce.number().int().min(0)),
+    })
+    .parse(fields(formData));
+
+  const f = fields(formData);
+  const errors: {
+    chapterKey: string;
+    errorType: (typeof ERROR_TYPES)[number];
+    marksLost: number;
+  }[] = [];
+  for (const [key, value] of Object.entries(f)) {
+    const m = key.match(errorRowRe);
+    if (!m) continue;
+    const marksLost = Number(value);
+    if (!Number.isFinite(marksLost) || marksLost <= 0) continue;
+    const chapterKey = m[1]!;
+    const type = f[`error.${chapterKey}.type`];
+    errors.push({
+      chapterKey,
+      errorType: ERROR_TYPES.includes(type as never) ? (type as never) : 'UNKNOWN',
+      marksLost,
+    });
+  }
+
+  const { repos, academicYearId } = await uiContext();
+  await recordAssessmentResult(repos, academicYearId, base.assessmentId, {
+    score: base.score,
+    timeTakenMinutes: base.timeTakenMinutes ?? null,
+    errors,
+  });
+
+  revalidatePath('/', 'layout');
+  redirect('/tests');
+}
+
+export async function advanceErrorAction(formData: FormData): Promise<void> {
+  const { errorId, transition } = z
+    .object({ errorId: z.string().min(1), transition: z.enum(ERROR_TRANSITIONS) })
+    .parse(fields(formData));
+  const { repos } = await uiContext();
+  await advanceQuestionError(repos, errorId, transition);
+  revalidatePath('/', 'layout');
+  redirect('/tests');
 }
 
 export async function updateChapterAction(formData: FormData): Promise<void> {

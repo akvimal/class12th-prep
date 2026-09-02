@@ -16,6 +16,7 @@ import type { AssessmentStatus, AssessmentType } from '@/domain/assessment/asses
 import type { StudyWindowDayType } from '@/domain/planning/study-window';
 import type { DeliveryStatus, DomainEventType } from '@/domain/events/events';
 import type { RevisionMethod, RevisionOutcome, RevisionStatus } from '@/domain/revision/revision';
+import type { ErrorState, ErrorTransition, ErrorType } from '@/domain/errors/errors';
 
 /**
  * Repository ports.
@@ -573,6 +574,64 @@ export interface RevisionRepository {
   setStatus(scheduleId: string, status: RevisionStatus): Promise<RevisionScheduleRecord>;
 }
 
+// --- Assessment results & question errors (Phase 3) ---
+
+export interface NewQuestionError {
+  subjectId: string;
+  chapterId: string;
+  marksLost: number;
+  errorType: ErrorType;
+  notes?: string | null;
+  retestDueDate?: string | null;
+}
+
+export interface NewAssessmentResult {
+  assessmentId: string;
+  score: number;
+  maxMarks: number;
+  timeTakenMinutes?: number | null;
+  errors: NewQuestionError[];
+}
+
+export interface QuestionErrorRecord {
+  id: string;
+  assessmentResultId: string;
+  subjectId: string;
+  chapterId: string;
+  marksLost: number;
+  errorType: ErrorType;
+  state: ErrorState;
+  notes: string | null;
+  retestDueDate: string | null;
+  createdAt: string;
+}
+
+export interface AssessmentResultRecord {
+  id: string;
+  assessmentId: string;
+  score: number;
+  maxMarks: number;
+  timeTakenMinutes: number | null;
+  recordedAt: string;
+  errors: QuestionErrorRecord[];
+}
+
+export interface AssessmentResultRepository {
+  /** Create the result and its errors. Throws if the assessment already has a result. */
+  recordResult(input: NewAssessmentResult): Promise<AssessmentResultRecord>;
+  getResult(assessmentId: string): Promise<AssessmentResultRecord | null>;
+  /** Question errors across the academic year, newest first. */
+  listErrors(
+    academicYearId: string,
+    filters?: { state?: ErrorState; chapterId?: string; limit?: number },
+  ): Promise<QuestionErrorRecord[]>;
+  advanceError(
+    errorId: string,
+    transition: ErrorTransition,
+    opts?: { retestDueDate?: string | null },
+  ): Promise<QuestionErrorRecord>;
+}
+
 export interface Repositories {
   health: HealthProbe;
   planning: PlanningRepository;
@@ -585,4 +644,5 @@ export interface Repositories {
   studyWindow: StudyWindowRepository;
   events: EventRepository;
   revision: RevisionRepository;
+  assessmentResult: AssessmentResultRepository;
 }

@@ -1,5 +1,6 @@
 import type { Repositories } from '../ports';
 import { createInMemoryAssessmentRepository } from './assessment-repository';
+import { createInMemoryAssessmentResultRepository } from './assessment-result-repository';
 import { createInMemoryStudyWindowRepository } from './study-window-repository';
 import { createInMemoryEventRepository } from './event-repository';
 import { createInMemoryRevisionRepository } from './revision-repository';
@@ -15,6 +16,7 @@ import { createInMemorySessionRepository } from './session-repository';
  * unit tests. Progress/session repositories are added from Phase 1 onward.
  */
 export function createInMemoryRepositories(): Repositories {
+  const assessment = createInMemoryAssessmentRepository();
   return {
     health: {
       isReachable: async () => true,
@@ -25,9 +27,12 @@ export function createInMemoryRepositories(): Repositories {
     progress: createInMemoryProgressRepository(),
     session: createInMemorySessionRepository(),
     readiness: createInMemoryReadinessRepository(),
-    assessment: createInMemoryAssessmentRepository(),
+    assessment,
     studyWindow: createInMemoryStudyWindowRepository(),
     events: createInMemoryEventRepository(),
     revision: createInMemoryRevisionRepository(),
+    assessmentResult: createInMemoryAssessmentResultRepository(
+      async (id) => (await assessment.getAssessment(id))?.academicYearId ?? null,
+    ),
   };
 }

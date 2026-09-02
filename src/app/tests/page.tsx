@@ -1,15 +1,34 @@
 import Link from 'next/link';
 import { uiContext } from '@/app-services/app-context';
 import { listUpcomingAssessments } from '@/app-services/assessment';
+import { listQuestionErrors } from '@/app-services/assessment-results';
+import { advanceErrorAction } from '@/app/actions';
 import { Card, Chip, SectionLabel } from '@/components/ui';
 import { PlusIcon } from '@/components/icons';
 import { formatDate, titleCase } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
+const NEXT_LABEL: Record<string, string> = {
+  NEW: 'Mark reviewed',
+  REVIEWED: 'Mark corrected',
+  CORRECTED: 'Schedule retest',
+  RETEST_DUE: 'Passed retest',
+};
+const NEXT_TRANSITION: Record<string, string> = {
+  NEW: 'REVIEW',
+  REVIEWED: 'CORRECT',
+  CORRECTED: 'SCHEDULE_RETEST',
+  RETEST_DUE: 'PASS_RETEST',
+};
+
 export default async function TestsPage() {
   const { repos, academicYearId, asOf } = await uiContext();
-  const upcoming = await listUpcomingAssessments(repos, academicYearId, asOf);
+  const [upcoming, openErrors] = await Promise.all([
+    listUpcomingAssessments(repos, academicYearId, asOf),
+    listQuestionErrors(repos, academicYearId, { limit: 12 }),
+  ]);
+  const unmastered = openErrors.filter((e) => e.state !== 'MASTERED');
 
   return (
     <main>
@@ -62,7 +81,7 @@ export default async function TestsPage() {
                 {a.chapters.map((c) => c.name).join(', ')}
               </div>
               <Link
-                href="/tests/result"
+                href={`/tests/result?assessment=${a.id}`}
                 className="mt-1 self-start text-[12px] font-semibold text-accent"
               >
                 Enter result after the test →
@@ -72,23 +91,42 @@ export default async function TestsPage() {
         </div>
       )}
 
-      <SectionLabel className="px-5 pb-2 pt-6">Recorded</SectionLabel>
-      <div className="px-5">
-        <Card className="flex flex-col gap-2">
-          <div className="text-[11px] leading-relaxed text-muted">
-            Results and error analysis arrive with the assessment-feedback phase. For now,{' '}
-            <Link href="/subjects" className="text-accent">
-              update a chapter&apos;s ratings
-            </Link>{' '}
-            after a test.
-          </div>
-          <div className="flex flex-wrap gap-1.5">
-            <Chip dashed>Marks-lost by chapter</Chip>
-            <Chip dashed>Error types</Chip>
-            <Chip dashed>Retest queue</Chip>
-          </div>
-        </Card>
-      </div>
+      <SectionLabel className="px-5 pb-2 pt-6">
+        Errors to clear{unmastered.length > 0 ? ` · ${unmastered.length}` : ''}
+      </SectionLabel>
+      {unmastered.length === 0 ? (
+        <p className="px-5 text-[13px] text-muted">
+          No open errors. Enter a result above after a test to log where marks went.
+        </p>
+      ) : (
+        <div className="flex flex-col gap-2.5 px-5">
+          {unmastered.map((e) => (
+            <Card key={e.id} className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[13px] font-semibold text-ink">
+                  {e.chapterName} <span className="font-normal text-faint">· {e.subjectName}</span>
+                </span>
+                <span className="font-mono text-[12px] text-bad">−{e.marksLost}</span>
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5">
+                <Chip>{titleCase(e.errorType)}</Chip>
+                <Chip tone={e.state === 'RETEST_DUE' ? 'warn' : 'default'}>
+                  {titleCase(e.state)}
+                </Chip>
+              </div>
+              {NEXT_TRANSITION[e.state] && (
+                <form action={advanceErrorAction} className="self-start">
+                  <input type="hidden" name="errorId" value={e.id} />
+                  <input type="hidden" name="transition" value={NEXT_TRANSITION[e.state]} />
+                  <button type="submit" className="text-[12px] font-semibold text-accent">
+                    {NEXT_LABEL[e.state]} →
+                  </button>
+                </form>
+              )}
+            </Card>
+          ))}
+        </div>
+      )}
       <div className="h-6" />
     </main>
   );

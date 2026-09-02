@@ -6,6 +6,7 @@ import { ChapterProgressError } from '@/domain/progress/chapter-progress';
 import { StudySessionError } from '@/domain/progress/study-session';
 import { AssessmentError } from '@/domain/assessment/assessment';
 import { StudyWindowError } from '@/domain/planning/study-window';
+import { AssessmentResultError, ErrorTransitionError } from '@/domain/errors/errors';
 
 export type ParseResult<T> = { ok: true; data: T } | { ok: false; response: NextResponse };
 
@@ -62,6 +63,12 @@ export function domainErrorResponse(err: unknown): NextResponse {
   }
   if (err instanceof StudyWindowError) {
     return NextResponse.json({ error: err.message, violations: err.violations }, { status: 400 });
+  }
+  if (err instanceof AssessmentResultError) {
+    return NextResponse.json({ error: err.message, violations: err.violations }, { status: 400 });
+  }
+  if (err instanceof ErrorTransitionError) {
+    return NextResponse.json({ error: err.message }, { status: 409 });
   }
   throw err;
 }

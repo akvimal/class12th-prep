@@ -196,5 +196,20 @@ micro-plan`. Deterministic. `src/app-services/study-now.ts` `getStudyNow`;
   (`addAssessment` validates + resolves keys, `listUpcomingAssessments`,
   `nextSchoolTestDaysByChapter` for the planner). `POST/GET
 /api/academic-years/[id]/assessments`. Seed loads `spec.assessments`.
+- Assessment results + errors (Phase 3, SRS §8): `assessment_results`
+  (one per assessment, unique FK, `score` 0..`maxMarks` CHECK) + `question_errors`
+  (`marksLost > 0` CHECK, `errorType` / `state` pgEnums, `drizzle/0011`).
+  `src/domain/errors/errors.ts`: error state machine
+  NEW→REVIEWED→CORRECTED→RETEST_DUE→MASTERED (`advanceErrorState`, throws
+  `ErrorTransitionError`); FAIL_RETEST drops RETEST_DUE→CORRECTED; MASTERED
+  terminal. `isKnowledgeGap` splits concept gaps from exam-technique slips.
+  `validateAssessmentResult` / `assertAssessmentResult` — tagged marks must not
+  exceed marks dropped. `AssessmentResultRepository` (`recordResult` in a txn,
+  `listErrors` scoped by academic year via JOIN, `advanceError`).
+  `src/app-services/assessment-results.ts`: `recordAssessmentResult` (rejects
+  chapters the test didn't cover, marks the assessment COMPLETED),
+  `listQuestionErrors` (adds chapter/subject names), `advanceQuestionError`.
+  `recordResultAction` / `advanceErrorAction` in `src/app/actions.ts`;
+  `/tests/result?assessment=` enters a result, `/tests` shows "Errors to clear".
 - End a task with a report: files changed, migrations, tests run, acceptance
   criteria status, assumptions, follow-up dependencies.
