@@ -10,6 +10,7 @@ out/
 dist/
 build/
 *.tsbuildinfo
+next-env.d.ts
 
 # Env / secrets
 .env
