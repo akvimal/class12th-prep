@@ -20,3 +20,4 @@ export * from './assessments';
 export * from './study-windows';
 export * from './domain-events';
 export * from './revision-schedules';
+export * from './assessment-results';

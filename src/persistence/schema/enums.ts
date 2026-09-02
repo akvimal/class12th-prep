@@ -155,3 +155,27 @@ export const revisionStatus = pgEnum('revision_status', [
   'MISSED',
   'CANCELLED',
 ]);
+
+// --- Assessment results & errors (Phase 3) ---
+
+export const errorType = pgEnum('error_type', [
+  'CONCEPT',
+  'FORMULA_RECALL',
+  'MEMORY',
+  'CALCULATION',
+  'MISREAD_QUESTION',
+  'WRONG_METHOD',
+  'INCOMPLETE_STEPS',
+  'PRESENTATION',
+  'TIME_MANAGEMENT',
+  'CARELESS',
+  'UNKNOWN',
+]);
+
+export const errorState = pgEnum('error_state', [
+  'NEW',
+  'REVIEWED',
+  'CORRECTED',
+  'RETEST_DUE',
+  'MASTERED',
+]);
