@@ -67,4 +67,43 @@ describe('in-memory planning repository', () => {
     await repo.createStudent({ familyId: f2.id, displayName: 'B', board: 'CBSE', grade: 12 });
     expect(await repo.listStudentsByFamily(f1.id)).toHaveLength(1);
   });
+
+  it('generates and regenerates phases like the drizzle repo', async () => {
+    const repo = createInMemoryPlanningRepository();
+    const { year } = await seedYear(repo);
+    const plan = await repo.createPlan({ academicYearId: year.id, ...shortPlan });
+
+    expect((await repo.getPlanPhases(plan.id)).map((p) => p.phaseType)).toEqual([
+      'SYLLABUS_COVERAGE',
+      'CONSOLIDATION',
+      'REVISION',
+      'PREBOARD',
+      'BOARD_EXAM',
+    ]);
+    expect(await repo.resolveCurrentPhase(plan.id, '2026-12-01')).toBe('SYLLABUS_COVERAGE');
+
+    await repo.updatePlan(plan.id, { syllabusTargetDate: '2026-11-15' });
+    expect(await repo.resolveCurrentPhase(plan.id, '2026-12-01')).toBe('CONSOLIDATION');
+  });
+
+  it('handles subject enrollment and a later board exam date', async () => {
+    const repo = createInMemoryPlanningRepository();
+    const { year } = await seedYear(repo);
+    const { id } = await repo.enrollSubject({
+      academicYearId: year.id,
+      subjectId: 'subject-1',
+      targetMarks: 80,
+    });
+    expect((await repo.listEnrollments(year.id))[0]).toMatchObject({
+      targetMarks: 80,
+      boardExamDate: null,
+    });
+
+    await repo.updateEnrollment(id, { boardExamDate: '2027-03-05' });
+    expect((await repo.listEnrollments(year.id))[0]?.boardExamDate).toBe('2027-03-05');
+
+    await expect(
+      repo.enrollSubject({ academicYearId: year.id, subjectId: 'subject-1' }),
+    ).rejects.toThrow();
+  });
 });

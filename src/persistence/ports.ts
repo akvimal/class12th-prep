@@ -1,4 +1,5 @@
-import type { PlanStatus } from '@/domain/planning/plan';
+import type { PhaseType, PlanStatus } from '@/domain/planning/plan';
+import type { PhaseSpec } from '@/domain/planning/plan-phases';
 import type { CurriculumVersionView, SubjectNode } from '@/domain/curriculum/hierarchy';
 import type { WeightSourceType, WeightUnit } from '@/domain/curriculum/provenance';
 
@@ -54,15 +55,72 @@ export interface PreparationPlanRecord extends NewPreparationPlan {
   status: PlanStatus;
 }
 
+export interface PlanUpdate {
+  startDate?: string;
+  syllabusTargetDate?: string;
+  hardCompletionDate?: string;
+  revisionStartDate?: string;
+  examWindowStart?: string;
+  examWindowEnd?: string;
+  weekdayCapacityMinutes?: number;
+  weekendCapacityMinutes?: number;
+}
+
+export interface NewSubjectEnrollment {
+  academicYearId: string;
+  subjectId: string;
+  theoryMaxMarks?: number | null;
+  practicalMaxMarks?: number | null;
+  targetMarks?: number | null;
+  boardExamDate?: string | null;
+  enabled?: boolean;
+}
+
+export interface SubjectEnrollmentUpdate {
+  theoryMaxMarks?: number | null;
+  practicalMaxMarks?: number | null;
+  targetMarks?: number | null;
+  boardExamDate?: string | null;
+  enabled?: boolean;
+}
+
+export interface SubjectEnrollmentRecord {
+  id: string;
+  academicYearId: string;
+  subjectId: string;
+  theoryMaxMarks: number | null;
+  practicalMaxMarks: number | null;
+  targetMarks: number | null;
+  boardExamDate: string | null;
+  enabled: boolean;
+}
+
 export interface PlanningRepository {
   createFamily(input: NewFamily): Promise<{ id: string }>;
   createStudent(input: NewStudent): Promise<{ id: string }>;
   createAcademicYear(input: NewAcademicYear): Promise<{ id: string }>;
-  /** Creates a plan in DRAFT status. Throws if the dates are out of order. */
+  /** Points an academic year at a published curriculum version. */
+  setAcademicYearCurriculum(academicYearId: string, curriculumVersionId: string): Promise<void>;
+
+  /** Creates a plan in DRAFT status and generates its phases. Throws if the dates are out of order. */
   createPlan(input: NewPreparationPlan): Promise<PreparationPlanRecord>;
+  /** Applies a partial change to dates/capacity, re-validates ordering, and regenerates phases. */
+  updatePlan(planId: string, patch: PlanUpdate): Promise<PreparationPlanRecord>;
   /** Makes `planId` the single ACTIVE plan for its academic year; archives any other active plan. */
   activatePlan(planId: string): Promise<void>;
   getPlan(planId: string): Promise<PreparationPlanRecord | null>;
+  /** The plan's derived phases, ordered, contiguous. Empty if the plan does not exist. */
+  getPlanPhases(planId: string): Promise<PhaseSpec[]>;
+  /** Which phase the plan is in on `onDate` (ISO). Null before it starts / after the exam window. */
+  resolveCurrentPhase(planId: string, onDate: string): Promise<PhaseType | null>;
+
+  enrollSubject(input: NewSubjectEnrollment): Promise<{ id: string }>;
+  updateEnrollment(
+    enrollmentId: string,
+    patch: SubjectEnrollmentUpdate,
+  ): Promise<SubjectEnrollmentRecord>;
+  listEnrollments(academicYearId: string): Promise<SubjectEnrollmentRecord[]>;
+
   listStudentsByFamily(familyId: string): Promise<Array<{ id: string; displayName: string }>>;
 }
 
