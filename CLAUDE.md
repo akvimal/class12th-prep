@@ -113,6 +113,11 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
   profile. `memory` mode pins `asOf` to `DEMO_DATE`; `database` mode uses
   today. `uiContext()` redirects to `/welcome` when the DB is selected but
   has no profile.
+- Optional single-passcode gate (`src/middleware.ts` + `src/lib/passcode.ts`,
+  Web Crypto so it runs on the edge). Enabled only when `PREP_PASSCODE` (plain)
+  or `PREP_PASSCODE_HASH` (sha-256 hex) is set — off for dev/CI. `/unlock` sets
+  a 30-day HMAC-signed httpOnly cookie (`unlockAction`); the matcher lets
+  `/unlock`, `/api/health` and assets through. No accounts.
 - Screen mutations go through Server Actions in `src/app/actions.ts`
   (`'use server'`, zod-validated FormData) → `src/app-services/study-flow.ts`
   → `revalidatePath` + `redirect`. `logStudy` records the immutable session
