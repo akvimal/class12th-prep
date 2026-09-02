@@ -168,8 +168,9 @@ method }`. `revision_schedules` (`drizzle/0010`, one SCHEDULED row per
   idempotent generation), `src/domain/events/`, `EventRepository`
   (`append` = upsert-by-dedupe), `src/app-services/events.ts`
   (`emitEvent`, `listEvents`, `detectDailyEvents` = SCHOOL_TEST_APPROACHING /
-  PREBOARD_APPROACHING / REVISION_DUE / REVISION_OVERDUE / STUDY_BLOCK_MISSED
-  for a day). `GET/POST /api/academic-years/[id]/events`. No UI wiring yet.
+  PREBOARD_APPROACHING / REVISION_DUE / REVISION_OVERDUE / STUDY_BLOCK_MISSED /
+  REPEATED_ERROR_DETECTED for a day). `GET/POST /api/academic-years/[id]/events`.
+  No delivery yet (Phase 7).
 - Weekly review (Phase 3, config `review-v1`): `src/domain/review/weekly-review.ts`
   `buildWeeklyReview` (pure — sessions, time-by-activity, accuracy, per-subject
   readiness delta, rhythm/adherence, revisions, errors, focus list). Stored in
@@ -257,5 +258,13 @@ micro-plan`. Deterministic. `src/app-services/study-now.ts` `getStudyNow`;
   syllabus-weighted overall (targets from `subject_enrollments`). `/trajectory`
   renders it, real curve from `getReadinessTrend`; nothing shown until a subject
   qualifies.
+- Repeated-error patterns (Phase 4, SRS §12, config `error-patterns-v1`):
+  `src/domain/errors/patterns.ts` `detectErrorPatterns` (pure) — same error type
+  ≥ `minChapterOccurrences` in a chapter, or ≥ `minSubjectOccurrences` across ≥ 2
+  chapters of a subject (past the marks-lost floor). `src/app-services/error-patterns.ts`
+  `getErrorPatterns` (adds names); `detectDailyEvents` raises
+  `REPEATED_ERROR_DETECTED` once per pattern (error type folded into the dedupe
+  key). `/tests` shows a "Recurring" section; chapter detail shows readiness
+  history + that chapter's test errors (`getChapterView`).
 - End a task with a report: files changed, migrations, tests run, acceptance
   criteria status, assumptions, follow-up dependencies.

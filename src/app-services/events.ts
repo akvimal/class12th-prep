@@ -4,6 +4,7 @@ import { isSchoolAssessment } from '@/domain/assessment/assessment';
 import type { DomainEventFilters, DomainEventRecord, Repositories } from '@/persistence/ports';
 import { buildDailyCandidates } from './candidates';
 import { getWeeklyRhythm } from './study-windows';
+import { getErrorPatterns } from './error-patterns';
 
 type EventRepos = Pick<
   Repositories,
@@ -13,6 +14,7 @@ type EventRepos = Pick<
   | 'progress'
   | 'readiness'
   | 'assessment'
+  | 'assessmentResult'
   | 'studyWindow'
   | 'session'
   | 'revision'
@@ -99,6 +101,28 @@ export async function detectDailyEvents(
       aggregateId: c.chapterKey,
       on: asOf,
       payload: { subjectKey: c.subjectKey, chapterName: c.chapterName },
+    });
+  }
+
+  // Repeated error patterns (docs/SRS.md §12).
+  const patterns = await getErrorPatterns(repos, academicYearId);
+  for (const p of patterns) {
+    drafts.push({
+      studentId,
+      eventType: 'REPEATED_ERROR_DETECTED',
+      aggregateType: p.scope === 'CHAPTER' ? 'chapter' : 'subject',
+      aggregateId: p.chapterId ?? p.subjectId,
+      // Fold the error type into the dedupe key so one pattern fires once.
+      on: p.errorType,
+      payload: {
+        scope: p.scope,
+        errorType: p.errorType,
+        subjectName: p.subjectName,
+        chapterName: p.chapterName,
+        occurrences: p.occurrences,
+        marksLost: p.marksLost,
+        knowledgeGap: p.knowledgeGap,
+      },
     });
   }
 

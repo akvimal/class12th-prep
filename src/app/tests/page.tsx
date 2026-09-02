@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { uiContext } from '@/app-services/app-context';
 import { listUpcomingAssessments } from '@/app-services/assessment';
 import { listQuestionErrors } from '@/app-services/assessment-results';
+import { getErrorPatterns } from '@/app-services/error-patterns';
 import { advanceErrorAction } from '@/app/actions';
 import { Card, Chip, SectionLabel } from '@/components/ui';
 import { PlusIcon } from '@/components/icons';
@@ -24,9 +25,10 @@ const NEXT_TRANSITION: Record<string, string> = {
 
 export default async function TestsPage() {
   const { repos, academicYearId, asOf } = await uiContext();
-  const [upcoming, openErrors] = await Promise.all([
+  const [upcoming, openErrors, patterns] = await Promise.all([
     listUpcomingAssessments(repos, academicYearId, asOf),
     listQuestionErrors(repos, academicYearId, { limit: 12 }),
+    getErrorPatterns(repos, academicYearId),
   ]);
   const unmastered = openErrors.filter((e) => e.state !== 'MASTERED');
 
@@ -89,6 +91,38 @@ export default async function TestsPage() {
             </Card>
           ))}
         </div>
+      )}
+
+      {patterns.length > 0 && (
+        <>
+          <SectionLabel className="px-5 pb-2 pt-6">Recurring · {patterns.length}</SectionLabel>
+          <div className="flex flex-col gap-2.5 px-5">
+            {patterns.map((p) => (
+              <Card
+                key={`${p.scope}-${p.chapterId ?? p.subjectId}-${p.errorType}`}
+                className="flex flex-col gap-1.5 border-l-[3px] border-l-warn"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-[13px] font-semibold text-ink">
+                    {titleCase(p.errorType)}
+                    <span className="font-normal text-faint">
+                      {' '}
+                      ·{' '}
+                      {p.scope === 'CHAPTER' ? p.chapterName : `${p.subjectName} (across chapters)`}
+                    </span>
+                  </span>
+                  <span className="font-mono text-[12px] text-bad">−{p.marksLost}</span>
+                </div>
+                <div className="text-[11px] leading-relaxed text-muted">
+                  {p.occurrences}× since {formatDate(p.firstSeen)} ·{' '}
+                  {p.knowledgeGap
+                    ? 'a knowledge gap — revisit the concept'
+                    : 'an exam-technique slip'}
+                </div>
+              </Card>
+            ))}
+          </div>
+        </>
       )}
 
       <SectionLabel className="px-5 pb-2 pt-6">
