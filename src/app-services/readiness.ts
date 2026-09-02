@@ -133,3 +133,35 @@ export async function getAcademicYearReadiness(
   if (!year) return null;
   return repos.readiness.latestByScope(academicYearId, 'CHAPTER');
 }
+
+export interface ReadinessTrendPoint {
+  on: string;
+  readiness: number;
+}
+
+/**
+ * Mean chapter readiness on each date a snapshot was calculated for — a coarse
+ * "readiness over time" series for the trajectory chart. Only dates with at
+ * least `minChapters` snapshots are kept so a single-chapter recalc doesn't
+ * make a spike.
+ */
+export async function getReadinessTrend(
+  repos: WithReadiness,
+  academicYearId: string,
+  minChapters = 2,
+): Promise<ReadinessTrendPoint[]> {
+  const snapshots = await repos.readiness.listSnapshots(academicYearId, { scopeType: 'CHAPTER' });
+  const byDate = new Map<string, number[]>();
+  for (const s of snapshots) {
+    const list = byDate.get(s.calculatedFor) ?? [];
+    list.push(s.readiness);
+    byDate.set(s.calculatedFor, list);
+  }
+  return [...byDate.entries()]
+    .filter(([, values]) => values.length >= minChapters)
+    .map(([on, values]) => ({
+      on,
+      readiness: Math.round((values.reduce((a, b) => a + b, 0) / values.length) * 10) / 10,
+    }))
+    .sort((a, b) => (a.on < b.on ? -1 : 1));
+}

@@ -247,5 +247,15 @@ micro-plan`. Deterministic. `src/app-services/study-now.ts` `getStudyNow`;
   only `testScore`. `applyAssessmentRecalibration` (in `assessment-results.ts`,
   called by `recordAssessmentResult`) applies the patches + recomputes readiness
   as of the exam date.
+- Projected score + marks opportunity (Phase 4, ALGORITHMS §11, config
+  `projection-v1`): `src/domain/projection/projection.ts` `projectSubjectScore`
+  (pure) blends weighted chapter readiness with graded-assessment % (pre-board >
+  class test), shrinks while evidence is thin, returns `null` until coverage ≥
+  `minCoverage` **and** ≥ `minAssessments` graded tests. Never exceeds
+  `projectionCeiling`. `src/app-services/projection.ts` `getBoardProjection` →
+  per-subject `{projectedPct, projectedMarks, marksOpportunity, drivers}` + a
+  syllabus-weighted overall (targets from `subject_enrollments`). `/trajectory`
+  renders it, real curve from `getReadinessTrend`; nothing shown until a subject
+  qualifies.
 - End a task with a report: files changed, migrations, tests run, acceptance
   criteria status, assumptions, follow-up dependencies.
