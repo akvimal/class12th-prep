@@ -1,0 +1,7 @@
+# Set SITE_ADDRESS in .env:
+#   a domain (board.example.com) → automatic HTTPS via Let's Encrypt
+#   :80                          → plain HTTP, for trying it on an IP
+{$SITE_ADDRESS:-:80} {
+	encode gzip
+	reverse_proxy app:3000
+}

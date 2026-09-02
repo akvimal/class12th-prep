@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import { IBM_Plex_Mono, IBM_Plex_Sans, Space_Grotesk } from 'next/font/google';
 import { BottomNav } from '@/components/bottom-nav';
+import { RegisterSW } from '@/components/register-sw';
 import { AppFrame } from '@/components/ui';
 import './globals.css';
 
@@ -22,14 +23,22 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Board Prep Tracker',
-  description: 'Date-driven board-exam preparation tracker',
+  title: 'Board Prep',
+  description: 'Date-driven CBSE Class XII board-exam preparation tracker',
+  manifest: '/manifest.webmanifest',
+  appleWebApp: { capable: true, title: 'Board Prep', statusBarStyle: 'default' },
+  icons: {
+    icon: '/icons/icon-192.png',
+    apple: '/apple-touch-icon.png',
+  },
 };
 
 export const viewport: Viewport = {
   themeColor: '#fdfcfa',
   width: 'device-width',
   initialScale: 1,
+  maximumScale: 1,
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -40,6 +49,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           {children}
           <BottomNav />
         </AppFrame>
+        <RegisterSW />
       </body>
     </html>
   );

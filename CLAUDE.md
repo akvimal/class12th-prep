@@ -113,6 +113,15 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
   profile. `memory` mode pins `asOf` to `DEMO_DATE`; `database` mode uses
   today. `uiContext()` redirects to `/welcome` when the DB is selected but
   has no profile.
+- PWA: `public/manifest.webmanifest` + `public/sw.js` (installability + an
+  offline fallback only — never caches app data) registered by
+  `src/components/register-sw.tsx`. Icons regenerate with
+  `node scripts/make-icons.mjs`. `/offline` is the fallback page. The
+  middleware matcher lets `sw.js`, the manifest, icons and `/offline` through.
+- Deploy: `Dockerfile` (single image, `next start`, full deps for the
+  `db:migrate` / `prep:init` one-off commands) + `docker-compose.yml`
+  `deploy` profile (`app` + `caddy`) + `Caddyfile`. `output: 'standalone'`
+  was removed. See README "Deploy to a VPS".
 - Optional single-passcode gate (`src/middleware.ts` + `src/lib/passcode.ts`,
   Web Crypto so it runs on the edge). Enabled only when `PREP_PASSCODE` (plain)
   or `PREP_PASSCODE_HASH` (sha-256 hex) is set — off for dev/CI. `/unlock` sets

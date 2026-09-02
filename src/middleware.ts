@@ -1,10 +1,10 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { isLockEnabled, isValidSessionToken, passcodeCookie } from '@/lib/passcode';
 
-/** Everything except the unlock page, the health probe, and static assets. */
+/** Everything except the unlock/offline pages, the health probe, and PWA/static assets. */
 export const config = {
   matcher: [
-    '/((?!unlock|api/health|_next/static|_next/image|favicon.ico|manifest.webmanifest|icons/).*)',
+    '/((?!unlock|offline|api/health|_next/static|_next/image|favicon.ico|sw.js|manifest.webmanifest|apple-touch-icon.png|icons/).*)',
   ],
 };
 

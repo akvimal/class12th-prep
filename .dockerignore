@@ -1,12 +1,15 @@
 node_modules
 .next
 .git
+.github
 coverage
 playwright-report
 test-results
 design
 docs
 tasks
-*.md
-.env*
+*.log
+.env
+.env.*
 !.env.example
+config/student.json
