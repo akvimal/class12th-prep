@@ -2,6 +2,7 @@ import { db, pingDatabase } from '@/lib/db';
 import type { Repositories } from '../ports';
 import { createDrizzleAssessmentRepository } from './assessment-repository';
 import { createDrizzleStudyWindowRepository } from './study-window-repository';
+import { createDrizzleEventRepository } from './event-repository';
 import { createDrizzleCurriculumRepository } from './curriculum-repository';
 import { createDrizzlePlanningRepository } from './planning-repository';
 import { createDrizzleProgressRepository } from './progress-repository';
@@ -25,5 +26,6 @@ export function createDrizzleRepositories(): Repositories {
     readiness: createDrizzleReadinessRepository(db),
     assessment: createDrizzleAssessmentRepository(db),
     studyWindow: createDrizzleStudyWindowRepository(db),
+    events: createDrizzleEventRepository(db),
   };
 }

@@ -14,6 +14,7 @@ import type { SessionCompletion, StudySessionType } from '@/domain/progress/stud
 import type { ReadinessComponents } from '@/domain/readiness/readiness';
 import type { AssessmentStatus, AssessmentType } from '@/domain/assessment/assessment';
 import type { StudyWindowDayType } from '@/domain/planning/study-window';
+import type { DeliveryStatus, DomainEventType } from '@/domain/events/events';
 
 /**
  * Repository ports.
@@ -487,6 +488,41 @@ export interface StudyWindowRepository {
   listWindows(academicYearId: string): Promise<StudyWindowRecord[]>;
 }
 
+// --- Domain events (Phase 2) ---
+
+export interface NewDomainEvent {
+  studentId: string;
+  eventType: DomainEventType;
+  aggregateType: string;
+  aggregateId: string;
+  payload?: Record<string, unknown>;
+  dedupeKey: string;
+}
+
+export interface DomainEventRecord {
+  id: string;
+  studentId: string;
+  eventType: DomainEventType;
+  aggregateType: string;
+  aggregateId: string;
+  payload: Record<string, unknown>;
+  deliveryStatus: DeliveryStatus;
+  createdAt: string;
+}
+
+export interface DomainEventFilters {
+  eventType?: DomainEventType;
+  deliveryStatus?: DeliveryStatus;
+  limit?: number;
+}
+
+export interface EventRepository {
+  /** Append an event, or return the existing one if `(studentId, dedupeKey)` already exists. */
+  append(input: NewDomainEvent): Promise<{ record: DomainEventRecord; created: boolean }>;
+  list(studentId: string, filters?: DomainEventFilters): Promise<DomainEventRecord[]>;
+  setDeliveryStatus(eventId: string, status: DeliveryStatus): Promise<DomainEventRecord>;
+}
+
 export interface Repositories {
   health: HealthProbe;
   planning: PlanningRepository;
@@ -497,4 +533,5 @@ export interface Repositories {
   readiness: ReadinessRepository;
   assessment: AssessmentRepository;
   studyWindow: StudyWindowRepository;
+  events: EventRepository;
 }
