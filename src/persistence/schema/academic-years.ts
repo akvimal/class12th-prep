@@ -1,13 +1,15 @@
 import { sql } from 'drizzle-orm';
 import { check, date, pgTable, text, unique, uuid } from 'drizzle-orm/pg-core';
 import { timestamps } from './_shared';
+import { curriculumVersions } from './curriculum';
 import { students } from './students';
 
 /**
  * A student may have several academic years (docs/DOMAIN_MODEL.md invariant 6).
  *
- * `curriculumVersionId` is added here to match the domain model but is left
- * without a foreign key until TASK-003 introduces the CurriculumVersion table.
+ * `curriculumVersionId` references a published CurriculumVersion (TASK-003).
+ * ON DELETE RESTRICT — master data in use is never removed out from under a
+ * student.
  */
 export const academicYears = pgTable(
   'academic_years',
@@ -17,7 +19,9 @@ export const academicYears = pgTable(
       .notNull()
       .references(() => students.id, { onDelete: 'cascade' }),
     yearLabel: text('year_label').notNull(),
-    curriculumVersionId: uuid('curriculum_version_id'),
+    curriculumVersionId: uuid('curriculum_version_id').references(() => curriculumVersions.id, {
+      onDelete: 'restrict',
+    }),
     startDate: date('start_date').notNull(),
     endDate: date('end_date').notNull(),
     ...timestamps,

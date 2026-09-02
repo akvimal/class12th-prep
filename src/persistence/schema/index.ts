@@ -7,5 +7,7 @@
 export * from './enums';
 export * from './families';
 export * from './students';
+export * from './curriculum';
+export * from './academic-weights';
 export * from './academic-years';
 export * from './preparation-plans';

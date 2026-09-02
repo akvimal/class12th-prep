@@ -74,6 +74,7 @@ jobs:
       - run: corepack enable
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm run db:migrate
       - run: pnpm run build
       - run: pnpm run test:e2e
       - uses: actions/upload-artifact@v4

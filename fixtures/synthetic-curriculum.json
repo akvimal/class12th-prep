@@ -1,0 +1,165 @@
+{
+  "meta": {
+    "kind": "SYNTHETIC_TEST_DATA",
+    "official": false,
+    "warning": "Illustrative development fixture for TASK-003. Unit marks and derived weights are made up and must never be shown as official CBSE weightage."
+  },
+  "version": {
+    "board": "CBSE",
+    "grade": 12,
+    "academicYearLabel": "2026-27",
+    "version": "synthetic-v1",
+    "sourceReference": "fixtures/synthetic-curriculum.json"
+  },
+  "publish": true,
+  "subjects": [
+    {
+      "key": "PHY",
+      "name": "Physics",
+      "code": "042",
+      "units": [
+        {
+          "key": "PHY-U1",
+          "name": "Electrostatics",
+          "weights": [
+            {
+              "value": 16,
+              "unit": "MARKS",
+              "sourceType": "OFFICIAL",
+              "sourceReference": "SYNTHETIC://cbse/xii/physics/2026-27#unit-1",
+              "effectiveFrom": "2026-04-01"
+            }
+          ],
+          "chapters": [
+            {
+              "key": "PHY01",
+              "name": "Electric Charges and Fields",
+              "weights": [
+                {
+                  "value": 9,
+                  "unit": "RELATIVE",
+                  "sourceType": "DERIVED_PYQ",
+                  "confidence": 0.7,
+                  "effectiveFrom": "2026-04-01",
+                  "parserVersion": "synthetic-0"
+                }
+              ],
+              "topics": [
+                { "key": "PHY01-T1", "name": "Coulomb's Law" },
+                { "key": "PHY01-T2", "name": "Electric Field and Field Lines" },
+                { "key": "PHY01-T3", "name": "Gauss's Law and Applications" }
+              ]
+            },
+            {
+              "key": "PHY02",
+              "name": "Electrostatic Potential and Capacitance",
+              "weights": [
+                {
+                  "value": 7,
+                  "unit": "RELATIVE",
+                  "sourceType": "DERIVED_SQP",
+                  "confidence": 0.6,
+                  "effectiveFrom": "2026-04-01"
+                }
+              ],
+              "topics": [
+                { "key": "PHY02-T1", "name": "Electric Potential" },
+                { "key": "PHY02-T2", "name": "Capacitors and Capacitance" }
+              ]
+            }
+          ]
+        },
+        {
+          "key": "PHY-U2",
+          "name": "Current Electricity",
+          "weights": [
+            {
+              "value": 7,
+              "unit": "MARKS",
+              "sourceType": "OFFICIAL",
+              "sourceReference": "SYNTHETIC://cbse/xii/physics/2026-27#unit-2",
+              "effectiveFrom": "2026-04-01"
+            }
+          ],
+          "chapters": [
+            {
+              "key": "PHY03",
+              "name": "Current Electricity",
+              "topics": [
+                { "key": "PHY03-T1", "name": "Ohm's Law and Resistivity" },
+                { "key": "PHY03-T2", "name": "Kirchhoff's Rules" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "MAT",
+      "name": "Mathematics",
+      "code": "041",
+      "units": [
+        {
+          "key": "MAT-U1",
+          "name": "Calculus",
+          "weights": [
+            {
+              "value": 35,
+              "unit": "MARKS",
+              "sourceType": "OFFICIAL",
+              "sourceReference": "SYNTHETIC://cbse/xii/maths/2026-27#unit-calculus",
+              "effectiveFrom": "2026-04-01"
+            }
+          ],
+          "chapters": [
+            {
+              "key": "MAT01",
+              "name": "Integrals",
+              "weights": [
+                {
+                  "value": 10,
+                  "unit": "RELATIVE",
+                  "sourceType": "DERIVED_PYQ",
+                  "confidence": 0.8,
+                  "effectiveFrom": "2026-04-01"
+                }
+              ],
+              "topics": [
+                { "key": "MAT01-T1", "name": "Indefinite Integrals" },
+                { "key": "MAT01-T2", "name": "Definite Integrals" }
+              ]
+            },
+            {
+              "key": "MAT02",
+              "name": "Application of Integrals",
+              "topics": [{ "key": "MAT02-T1", "name": "Area Under Curves" }]
+            }
+          ]
+        },
+        {
+          "key": "MAT-U2",
+          "name": "Algebra",
+          "weights": [
+            {
+              "value": 10,
+              "unit": "MARKS",
+              "sourceType": "OFFICIAL",
+              "sourceReference": "SYNTHETIC://cbse/xii/maths/2026-27#unit-algebra",
+              "effectiveFrom": "2026-04-01"
+            }
+          ],
+          "chapters": [
+            {
+              "key": "MAT03",
+              "name": "Matrices",
+              "topics": [
+                { "key": "MAT03-T1", "name": "Types of Matrices" },
+                { "key": "MAT03-T2", "name": "Operations on Matrices" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
