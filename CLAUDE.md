@@ -62,5 +62,12 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
   Load a tree with `importCurriculum()`; synthetic tree in
   `fixtures/synthetic-curriculum.json`. `OFFICIAL` weights require a source
   reference (domain guard + DB CHECK).
+- Plan phases are derived from the plan's dates (`src/domain/planning/plan-phases.ts`,
+  config `phases-v1`) and regenerated on every plan change — callers never
+  write `plan_phases` directly. See `docs/DECISIONS/ADR-006`. Date arithmetic
+  lives in `src/domain/planning/dates.ts` — ISO strings, UTC, no month logic.
+- API request bodies are validated with zod schemas; `parseJson` +
+  `domainErrorResponse` in `src/lib/http.ts` turn failures into 400s with
+  machine-readable field errors.
 - End a task with a report: files changed, migrations, tests run, acceptance
   criteria status, assumptions, follow-up dependencies.

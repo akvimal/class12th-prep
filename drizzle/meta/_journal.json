@@ -15,6 +15,13 @@
       "when": 1788325783222,
       "tag": "0001_sticky_skaar",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788328126149,
+      "tag": "0002_brainy_mole_man",
+      "breakpoints": true
     }
   ]
 }
