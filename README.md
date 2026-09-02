@@ -65,14 +65,49 @@ CI runs the same checks plus `pnpm build` on every push and pull request
 
 ### Common commands
 
-| Command                                         | Purpose                                             |
-| ----------------------------------------------- | --------------------------------------------------- |
-| `pnpm dev` / `pnpm build` / `pnpm start`        | Next.js dev server / production build / serve build |
-| `pnpm db:up` / `pnpm db:down` / `pnpm db:reset` | Start / stop / wipe + recreate the local Postgres   |
-| `pnpm db:generate` / `pnpm db:migrate`          | Generate / apply Drizzle migrations                 |
-| `pnpm db:seed`                                  | Load `fixtures/synthetic-seed.json` (idempotent)    |
-| `pnpm test` / `pnpm test:watch`                 | Vitest                                              |
-| `pnpm lint` / `pnpm typecheck` / `pnpm format`  | Individual quality gates                            |
+| Command                                         | Purpose                                                    |
+| ----------------------------------------------- | ---------------------------------------------------------- |
+| `pnpm dev` / `pnpm build` / `pnpm start`        | Next.js dev server / production build / serve build        |
+| `pnpm db:up` / `pnpm db:down` / `pnpm db:reset` | Start / stop / wipe + recreate the local Postgres          |
+| `pnpm db:generate` / `pnpm db:migrate`          | Generate / apply Drizzle migrations                        |
+| `pnpm db:seed`                                  | Load `fixtures/synthetic-seed.json` (idempotent)           |
+| `pnpm prep:init`                                | Create the real student profile from `config/student.json` |
+| `pnpm test` / `pnpm test:watch`                 | Vitest                                                     |
+| `pnpm lint` / `pnpm typecheck` / `pnpm format`  | Individual quality gates                                   |
+
+## Running it for real (one student)
+
+`pnpm dev` shows the shell on synthetic data. To track a real student you need a
+database and a profile:
+
+```bash
+cp config/student.example.json config/student.json   # edit name, dates, subjects
+pnpm db:up && pnpm db:migrate
+pnpm prep:init                                        # imports the CBSE XII curriculum + your plan
+APP_DATA_SOURCE=database pnpm dev
+```
+
+The imported curriculum is **derived / unofficial** — check the chapter lists in
+`fixtures/cbse-class12-2026-27-curriculum.json` against the school syllabus.
+
+### Deploy to a VPS
+
+Needs Docker + Docker Compose on the host.
+
+```bash
+cp .env.example .env      # set POSTGRES_PASSWORD, PREP_PASSCODE, SITE_ADDRESS
+cp config/student.example.json config/student.json   # edit it
+
+docker compose --profile deploy build
+docker compose up -d db
+docker compose --profile deploy run --rm app pnpm db:migrate
+docker compose --profile deploy run --rm app pnpm prep:init
+docker compose --profile deploy up -d                # app + Caddy (auto-HTTPS if SITE_ADDRESS is a domain)
+```
+
+`SITE_ADDRESS=board.example.com` gets a real certificate; `:80` serves plain
+HTTP for trying it on an IP. Install it on a phone from the browser menu →
+**Add to Home Screen**. Set `PREP_PASSCODE` to lock it.
 
 ## Documents
 

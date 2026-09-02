@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: prep
-      POSTGRES_PASSWORD: prep
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-prep}
       POSTGRES_DB: prep
     ports:
       - '5432:5432'
@@ -17,5 +17,46 @@ services:
       timeout: 5s
       retries: 12
 
+  # The app. Enabled with the `deploy` profile so `docker compose up` in dev
+  # still starts only the database.
+  #   docker compose --profile deploy build
+  #   docker compose --profile deploy run --rm app pnpm db:migrate
+  #   docker compose --profile deploy run --rm app pnpm prep:init
+  #   docker compose --profile deploy up -d
+  app:
+    profiles: ['deploy']
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://prep:${POSTGRES_PASSWORD:-prep}@db:5432/prep
+      APP_DATA_SOURCE: database
+      PREP_PASSCODE: ${PREP_PASSCODE:-}
+      PREP_SESSION_SECRET: ${PREP_SESSION_SECRET:-}
+    volumes:
+      - ./config:/app/config
+    expose:
+      - '3000'
+
+  caddy:
+    profiles: ['deploy']
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - '80:80'
+      - '443:443'
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:-:80}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
 volumes:
   prep_pgdata:
+  caddy_data:
+  caddy_config:
