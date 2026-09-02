@@ -83,3 +83,11 @@ export const studySessionType = pgEnum('study_session_type', [
 ]);
 
 export const sessionCompletion = pgEnum('session_completion', ['YES', 'PARTIAL', 'NO']);
+
+// --- Readiness snapshots (TASK-009) ---
+
+export const readinessScopeType = pgEnum('readiness_scope_type', [
+  'CHAPTER',
+  'SUBJECT',
+  'ACADEMIC_YEAR',
+]);

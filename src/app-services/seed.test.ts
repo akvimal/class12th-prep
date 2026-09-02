@@ -4,6 +4,7 @@ import { getPlanOverview } from '@/app-services/plan';
 import { createDrizzleCurriculumRepository } from '@/persistence/drizzle/curriculum-repository';
 import { createDrizzlePlanningRepository } from '@/persistence/drizzle/planning-repository';
 import { createDrizzleProgressRepository } from '@/persistence/drizzle/progress-repository';
+import { createDrizzleReadinessRepository } from '@/persistence/drizzle/readiness-repository';
 import { createDrizzleSchoolCalendarRepository } from '@/persistence/drizzle/school-calendar-repository';
 import { createDrizzleSessionRepository } from '@/persistence/drizzle/session-repository';
 import type { DrizzleDb } from '@/persistence/drizzle/db';
@@ -26,6 +27,7 @@ const drizzleRepos = () => ({
   schoolCalendar: createDrizzleSchoolCalendarRepository(db),
   progress: createDrizzleProgressRepository(db),
   session: createDrizzleSessionRepository(db),
+  readiness: createDrizzleReadinessRepository(db),
 });
 
 describe('seedSynthetic (Drizzle)', () => {
@@ -41,12 +43,18 @@ describe('seedSynthetic (Drizzle)', () => {
       calendarEvents: 4,
       chapterProgress: 12,
       studySessions: 4,
+      readinessSnapshots: 12,
     });
 
-    // chapter progress from the fixture is loaded
+    // chapter progress from the fixture is loaded, and readiness has been computed
     const progress = await repos.progress.listChapterProgress(result.academicYearId!);
     expect(progress).toHaveLength(12);
     expect(progress.some((p) => p.schoolStatus === 'CURRENTLY_TEACHING')).toBe(true);
+    expect(progress.every((p) => p.effectiveReadiness !== null)).toBe(true);
+
+    const readiness = await repos.readiness.latestByScope(result.academicYearId!, 'CHAPTER');
+    expect(readiness).toHaveLength(12);
+    expect(readiness.every((s) => s.algorithmVersion === 'readiness-v1')).toBe(true);
 
     // study session history is loaded, newest first
     const sessions = await repos.session.listSessions(result.academicYearId!);

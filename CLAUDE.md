@@ -94,5 +94,11 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
 - Integration tests share one PGlite instance per file: `createTestDatabase()`
   in `beforeAll`, `truncateAll(db)` (+ `seedTestDatabase(db)` for seeded files)
   in `beforeEach`. Don't put `createTestDatabase` in `beforeEach`.
+- Readiness (`src/domain/readiness/`, config `readiness-v1`, ADR-008):
+  `raw = Σ component·weight`, `effective = raw·recency` (decay by days since
+  last revision; never-revised → factor 1). Confidence is NOT an input.
+  `calculateChapterReadiness` / `recalculateAcademicYearReadiness` append an
+  immutable `readiness_snapshots` row and cache `chapter_progress.effectiveReadiness`.
+  Recalc never rewrites history.
 - End a task with a report: files changed, migrations, tests run, acceptance
   criteria status, assumptions, follow-up dependencies.
