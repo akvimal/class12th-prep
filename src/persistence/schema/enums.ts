@@ -16,3 +16,29 @@ export const phaseType = pgEnum('phase_type', [
   'PREBOARD',
   'BOARD_EXAM',
 ]);
+
+// --- Curriculum & provenance (TASK-003) ---
+
+/** The academic scope an AcademicWeight applies to. */
+export const curriculumScopeType = pgEnum('curriculum_scope_type', [
+  'SUBJECT',
+  'UNIT',
+  'CHAPTER',
+  'TOPIC',
+]);
+
+/**
+ * Where a weight came from (docs/ACADEMIC_DATA.md). OFFICIAL and DERIVED_* are
+ * never conflated: OFFICIAL requires a source reference, DERIVED_* carry a
+ * confidence.
+ */
+export const weightSourceType = pgEnum('weight_source_type', [
+  'OFFICIAL',
+  'DERIVED_SQP',
+  'DERIVED_PYQ',
+  'SCHOOL_TEACHER',
+  'USER',
+]);
+
+/** How a weight's numeric value should be read. */
+export const weightUnit = pgEnum('weight_unit', ['PERCENT', 'MARKS', 'COUNT', 'RELATIVE']);

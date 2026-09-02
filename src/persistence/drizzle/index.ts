@@ -1,5 +1,6 @@
 import { db, pingDatabase } from '@/lib/db';
 import type { Repositories } from '../ports';
+import { createDrizzleCurriculumRepository } from './curriculum-repository';
 import { createDrizzlePlanningRepository } from './planning-repository';
 
 /**
@@ -11,5 +12,6 @@ export function createDrizzleRepositories(): Repositories {
       isReachable: () => pingDatabase(),
     },
     planning: createDrizzlePlanningRepository(db),
+    curriculum: createDrizzleCurriculumRepository(db),
   };
 }

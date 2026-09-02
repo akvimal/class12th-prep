@@ -57,5 +57,10 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
 - Persistence integration tests use PGlite (in-process Postgres) via
   `src/persistence/testing/test-db.ts` — no Docker needed for `pnpm test`.
   See `docs/DECISIONS/ADR-005`.
+- Curriculum is versioned master data (`src/persistence/schema/curriculum.ts`).
+  Never edit a published version in place — create a new `CurriculumVersion`.
+  Load a tree with `importCurriculum()`; synthetic tree in
+  `fixtures/synthetic-curriculum.json`. `OFFICIAL` weights require a source
+  reference (domain guard + DB CHECK).
 - End a task with a report: files changed, migrations, tests run, acceptance
   criteria status, assumptions, follow-up dependencies.
