@@ -17,6 +17,9 @@ next-env.d.ts
 .env.*
 !.env.example
 
+# Local student profile (create from config/student.example.json)
+config/student.json
+
 # Test / coverage
 coverage/
 playwright-report/

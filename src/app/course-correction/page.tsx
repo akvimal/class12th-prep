@@ -1,4 +1,4 @@
-import { DEMO_DATE, demo } from '@/app-services/demo';
+import { uiContext } from '@/app-services/app-context';
 import { getStudentOverview } from '@/app-services/overview';
 import { PageHeader, Card, Chip, SectionLabel } from '@/components/ui';
 import { formatDate } from '@/lib/format';
@@ -33,8 +33,8 @@ const PROPOSALS = [
 ];
 
 export default async function CourseCorrectionPage() {
-  const { repos, academicYearId, planId } = await demo();
-  const overview = await getStudentOverview(repos, academicYearId, planId, DEMO_DATE);
+  const { repos, academicYearId, planId, asOf } = await uiContext();
+  const overview = await getStudentOverview(repos, academicYearId, planId, asOf);
   if (!overview) return <p className="p-5 text-sm text-muted">No data.</p>;
 
   const now = overview.overallReadiness;

@@ -1,127 +1,151 @@
 import Link from 'next/link';
-import { PrimaryButton, SectionLabel } from '@/components/ui';
+import { uiContext } from '@/app-services/app-context';
+import { getCurriculumProgress } from '@/app-services/progress';
+import { logStudyAction } from '@/app/actions';
+import { PageHeader, SectionLabel } from '@/components/ui';
+import { STUDY_SESSION_TYPES } from '@/domain/progress/study-session';
+import { titleCase } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
-export default function SessionPage() {
+const FIELD = 'h-11 w-full rounded-xl border border-line bg-card px-3 text-[14px] text-ink';
+const RADIO =
+  'flex-1 cursor-pointer rounded-lg border border-line py-2.5 text-center text-[12px] font-semibold text-muted has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-paper';
+
+export default async function SessionPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ chapter?: string; subject?: string; type?: string; minutes?: string }>;
+}) {
+  const sp = await searchParams;
+  const { repos, academicYearId } = await uiContext();
+  const tree = await getCurriculumProgress(repos, academicYearId);
+
+  const chapters = (tree?.subjects ?? []).flatMap((s) =>
+    s.units.flatMap((u) =>
+      u.chapters.map((c) => ({ key: c.key, name: c.name, subjectKey: s.key })),
+    ),
+  );
+  const selected = chapters.find((c) => c.key === sp.chapter);
+  const subjectKey = selected?.subjectKey ?? sp.subject ?? '';
+
   return (
     <main>
-      <div className="bg-ink px-5 pb-4 pt-5 text-paper">
-        <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.09em] text-white/60">
-          Physics · Practise
-        </div>
-        <div className="mt-1.5 font-display text-[20px] font-bold leading-tight">
-          Electrostatics
-        </div>
-        <div className="mt-3 flex items-center gap-2">
-          <span className="font-mono text-[26px]">42:07</span>
-          <span className="text-[11px] text-white/60">elapsed · 45 planned</span>
-          <span className="ml-auto rounded-lg border border-white/25 px-3 py-1.5 text-[12px] font-semibold">
-            Pause
-          </span>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow="Log study"
+        title="What did you do?"
+        back={selected ? `/subjects/${selected.subjectKey}/${selected.key}` : '/today'}
+      />
 
-      <h2 className="px-5 pb-1 pt-5 font-display text-[17px] font-bold text-ink">How did it go?</h2>
-      <div className="flex gap-2 px-5 pt-2">
-        {['Complete', 'Partial', 'Skip'].map((c) => (
-          <span
-            key={c}
-            className={`flex-1 rounded-lg py-3 text-center text-[13px] font-semibold ${
-              c === 'Complete'
-                ? 'border-[1.5px] border-ink bg-ink text-paper'
-                : 'border border-line text-muted'
-            }`}
-          >
-            {c}
-          </span>
-        ))}
-      </div>
+      <form action={logStudyAction} className="flex flex-col gap-5 px-5">
+        <input type="hidden" name="subjectKey" value={subjectKey} />
 
-      <div className="flex items-center justify-between px-5 pt-5">
-        <span className="text-[13px] font-semibold text-ink">Time spent</span>
-        <span className="flex items-center gap-3.5">
-          <span className="grid h-8 w-8 place-items-center rounded-lg border border-line text-[16px] text-muted">
-            −
-          </span>
-          <span className="min-w-[52px] text-center font-mono text-[16px]">42 m</span>
-          <span className="grid h-8 w-8 place-items-center rounded-lg border border-line text-[16px] text-muted">
-            +
-          </span>
-        </span>
-      </div>
+        <label className="flex flex-col gap-1.5">
+          <SectionLabel>Chapter</SectionLabel>
+          <select name="chapterKey" className={FIELD} defaultValue={selected?.key ?? ''} required>
+            <option value="" disabled>
+              Choose a chapter…
+            </option>
+            {chapters.map((c) => (
+              <option key={c.key} value={c.key}>
+                {c.subjectKey} · {c.name}
+              </option>
+            ))}
+          </select>
+          {selected && (
+            <p className="text-[11px] text-faint">
+              {selected.subjectKey} · {selected.name}
+            </p>
+          )}
+        </label>
 
-      <SectionLabel className="px-5 pb-2 pt-4">
-        Questions <span className="text-line">(optional)</span>
-      </SectionLabel>
-      <div className="flex gap-3 px-5">
-        {[
-          ['Attempted', 8],
-          ['Correct', 5],
-        ].map(([label, n]) => (
-          <div
-            key={label}
-            className="flex flex-1 items-center justify-between rounded-lg border border-line px-3 py-2.5"
-          >
-            <span className="text-[12px] font-medium text-muted">{label}</span>
-            <span className="font-mono text-[15px]">{n}</span>
+        <label className="flex flex-col gap-1.5">
+          <SectionLabel>Activity</SectionLabel>
+          <select name="type" className={FIELD} defaultValue={sp.type ?? 'PRACTISE'}>
+            {STUDY_SESSION_TYPES.map((t) => (
+              <option key={t} value={t}>
+                {titleCase(t)}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <div className="flex flex-col gap-2">
+          <SectionLabel>How did it go?</SectionLabel>
+          <div className="flex gap-2">
+            {[
+              ['YES', 'Full'],
+              ['PARTIAL', 'Partial'],
+              ['NO', 'Skipped'],
+            ].map(([value, label], i) => (
+              <label key={value} className={RADIO}>
+                <input
+                  type="radio"
+                  name="completion"
+                  value={value}
+                  defaultChecked={i === 0}
+                  className="sr-only"
+                />
+                {label}
+              </label>
+            ))}
           </div>
-        ))}
-      </div>
-
-      <div className="px-5 pt-5">
-        <div className="text-[13px] font-semibold text-ink">Confidence now</div>
-        <div className="mt-2.5 flex gap-2">
-          {['Weak', 'Moderate', 'Strong'].map((c) => (
-            <span
-              key={c}
-              className={`flex-1 rounded-lg py-2.5 text-center text-[12px] font-semibold ${
-                c === 'Moderate'
-                  ? 'border-[1.5px] border-ink text-ink'
-                  : 'border border-line text-muted'
-              }`}
-            >
-              {c}
-            </span>
-          ))}
         </div>
-        <p className="mt-1.5 text-[10px] leading-relaxed text-faint">
-          Confidence guides planning, but your test result carries more weight in readiness.
-        </p>
-      </div>
 
-      <div className="px-5 pt-5">
-        <div className="text-[13px] font-semibold text-ink">
-          Where did marks go? <span className="font-normal text-faint">3 marked</span>
+        <div className="flex gap-3">
+          <label className="flex flex-1 flex-col gap-1.5">
+            <SectionLabel>Minutes</SectionLabel>
+            <input
+              type="number"
+              name="actualMinutes"
+              min={0}
+              max={600}
+              defaultValue={sp.minutes ?? 30}
+              className={FIELD}
+              required
+            />
+          </label>
+          <label className="flex w-24 flex-col gap-1.5">
+            <SectionLabel>Attempted</SectionLabel>
+            <input type="number" name="attempted" min={0} className={FIELD} />
+          </label>
+          <label className="flex w-24 flex-col gap-1.5">
+            <SectionLabel>Correct</SectionLabel>
+            <input type="number" name="correct" min={0} className={FIELD} />
+          </label>
         </div>
-        <div className="mt-2.5 flex flex-wrap gap-1.5">
-          <span className="rounded-lg bg-sink px-2.5 py-2 text-[11px] font-semibold text-ink">
-            Calculation · 2
-          </span>
-          <span className="rounded-lg bg-sink px-2.5 py-2 text-[11px] font-semibold text-ink">
-            Concept · 1
-          </span>
-          {['Formula recall', 'Misread', 'Time'].map((t) => (
-            <span
-              key={t}
-              className="rounded-lg border border-dashed border-line px-2.5 py-2 text-[11px] font-semibold text-faint"
-            >
-              + {t}
-            </span>
-          ))}
-        </div>
-      </div>
 
-      <div className="px-5 pt-6">
-        <PrimaryButton href="/today">Save &amp; continue</PrimaryButton>
-        <p className="mt-3 text-[11px] leading-relaxed text-faint">
-          Saved as evidence. A partial session updates your scores but never marks a chapter
-          finished on its own.{' '}
+        <div className="flex flex-col gap-2">
+          <SectionLabel>
+            Confidence now <span className="text-line">(optional)</span>
+          </SectionLabel>
+          <div className="flex gap-2">
+            {['WEAK', 'MODERATE', 'STRONG'].map((c) => (
+              <label key={c} className={RADIO}>
+                <input type="radio" name="confidenceAfter" value={c} className="sr-only" />
+                {titleCase(c)}
+              </label>
+            ))}
+          </div>
+          <p className="text-[10px] leading-relaxed text-faint">
+            Confidence guides planning. Test &amp; recall evidence carries more weight in readiness
+            — update your ratings on the chapter page after a real test.
+          </p>
+        </div>
+
+        <button
+          type="submit"
+          className="flex h-12 w-full items-center justify-center rounded-xl bg-accent text-[15px] font-semibold text-accent-ink"
+        >
+          Save session
+        </button>
+        <p className="text-[11px] leading-relaxed text-faint">
+          Saved as evidence. A partial or skipped session never marks a chapter finished on its own.{' '}
           <Link href="/today" className="text-accent">
             Back to Today
           </Link>
         </p>
-      </div>
+      </form>
       <div className="h-6" />
     </main>
   );

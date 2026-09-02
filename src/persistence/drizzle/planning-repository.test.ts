@@ -189,3 +189,27 @@ describe('multi-tenancy', () => {
     expect(await repo.listStudentsByFamily(f2.id)).toHaveLength(1);
   });
 });
+
+describe('active-profile resolution', () => {
+  it('lists students, orders academic years newest-first, and finds the active plan', async () => {
+    const { student, year } = await seedYear();
+    await repo.createAcademicYear({
+      studentId: student.id,
+      yearLabel: '2025-26',
+      startDate: '2025-04-01',
+      endDate: '2026-03-31',
+    });
+
+    const students = await repo.listStudents();
+    expect(students).toHaveLength(1);
+    expect(students[0]).toMatchObject({ displayName: 'Demo Student', board: 'CBSE', grade: 12 });
+
+    const years = await repo.listAcademicYears(student.id);
+    expect(years.map((y) => y.yearLabel)).toEqual(['2026-27', '2025-26']);
+
+    expect(await repo.getActivePlan(year.id)).toBeNull();
+    const plan = await repo.createPlan({ academicYearId: year.id, ...shortPlan });
+    await repo.activatePlan(plan.id);
+    expect((await repo.getActivePlan(year.id))?.id).toBe(plan.id);
+  });
+});

@@ -1,8 +1,9 @@
 import Link from 'next/link';
-import { DEMO_DATE, demo } from '@/app-services/demo';
+import { uiContext } from '@/app-services/app-context';
 import { getStudentOverview } from '@/app-services/overview';
 import { getCapacityRange } from '@/app-services/calendar';
-import { ClockIcon, InfoIcon, PlayIcon, ChevronRight } from '@/components/icons';
+import { logStudyAction } from '@/app/actions';
+import { ClockIcon, InfoIcon, PlayIcon, CheckIcon } from '@/components/icons';
 import { Card, SectionLabel } from '@/components/ui';
 import { formatWeekday, titleCase } from '@/lib/format';
 
@@ -12,11 +13,11 @@ const VERBS = ['PRACTISE', 'LEARN', 'ACTIVE_RECALL'] as const;
 const MINUTES = [40, 35, 20];
 
 export default async function TodayPage() {
-  const { repos, academicYearId, planId } = await demo();
-  const overview = await getStudentOverview(repos, academicYearId, planId, DEMO_DATE);
+  const { repos, academicYearId, planId, asOf } = await uiContext();
+  const overview = await getStudentOverview(repos, academicYearId, planId, asOf);
   if (!overview) return <p className="p-5 text-sm text-muted">No data.</p>;
 
-  const range = await getCapacityRange(repos, planId, DEMO_DATE, DEMO_DATE);
+  const range = await getCapacityRange(repos, planId, asOf, asOf);
   const capacity = range?.days[0]?.minutes ?? 0;
   const tasks = overview.needsAttention.slice(0, 3);
 
@@ -24,7 +25,7 @@ export default async function TodayPage() {
     <main>
       <header className="px-5 pb-2 pt-5">
         <SectionLabel>
-          {formatWeekday(DEMO_DATE)} · {titleCase(overview.currentPhase ?? '')}
+          {formatWeekday(asOf)} · {titleCase(overview.currentPhase ?? '')}
         </SectionLabel>
         <h1 className="mt-1 font-display text-[30px] font-bold leading-tight text-ink">Today</h1>
       </header>
@@ -78,37 +79,35 @@ export default async function TodayPage() {
             <p className="text-[12px] leading-relaxed text-muted">
               Readiness {task.readiness}/100{task.reasons[0] ? ` · ${task.reasons[0]}` : ''}
             </p>
-            {i === 0 ? (
-              <>
-                <Link
-                  href={`/subjects/${task.subjectKey}/${task.chapterKey}`}
-                  className="flex items-center gap-1 text-[12px] font-semibold text-accent"
+            <Link
+              href={`/subjects/${task.subjectKey}/${task.chapterKey}`}
+              className="flex items-center gap-1 text-[12px] font-semibold text-accent"
+            >
+              <InfoIcon size={13} /> Why this?
+            </Link>
+            <div className="mt-1 flex gap-2">
+              <Link
+                href={`/session?chapter=${task.chapterKey}&subject=${task.subjectKey}&type=${VERBS[i]}&minutes=${MINUTES[i]}`}
+                className="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-accent text-[14px] font-semibold text-accent-ink"
+              >
+                <PlayIcon size={15} /> Start
+              </Link>
+              <form action={logStudyAction}>
+                <input type="hidden" name="subjectKey" value={task.subjectKey} />
+                <input type="hidden" name="chapterKey" value={task.chapterKey} />
+                <input type="hidden" name="type" value={VERBS[i]} />
+                <input type="hidden" name="completion" value="YES" />
+                <input type="hidden" name="actualMinutes" value={MINUTES[i]} />
+                <input type="hidden" name="redirectTo" value="/today" />
+                <button
+                  type="submit"
+                  aria-label={`Mark ${task.chapterName} done`}
+                  className="flex h-11 items-center gap-1.5 rounded-xl border border-line px-3.5 text-[13px] font-semibold text-ink"
                 >
-                  <InfoIcon size={13} /> Why this?
-                </Link>
-                <Link
-                  href="/session"
-                  className="mt-1 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-accent text-[14px] font-semibold text-accent-ink"
-                >
-                  <PlayIcon size={15} /> Start
-                </Link>
-              </>
-            ) : (
-              <div className="flex items-center justify-between pt-0.5">
-                <Link
-                  href={`/subjects/${task.subjectKey}/${task.chapterKey}`}
-                  className="text-[12px] font-semibold text-accent"
-                >
-                  Why this?
-                </Link>
-                <Link
-                  href="/session"
-                  className="flex items-center gap-1 text-[12px] font-semibold text-ink"
-                >
-                  Start <ChevronRight size={13} />
-                </Link>
-              </div>
-            )}
+                  <CheckIcon size={14} /> Done
+                </button>
+              </form>
+            </div>
           </Card>
         ))}
       </div>

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { DEMO_DATE, demo } from '@/app-services/demo';
+import { uiContext } from '@/app-services/app-context';
 import { getStudentOverview } from '@/app-services/overview';
 import { PageHeader, SectionLabel } from '@/components/ui';
 import { ChevronRight } from '@/components/icons';
@@ -22,8 +22,8 @@ export default async function SubjectDetailPage({
   params: Promise<{ subjectKey: string }>;
 }) {
   const { subjectKey } = await params;
-  const { repos, academicYearId, planId } = await demo();
-  const overview = await getStudentOverview(repos, academicYearId, planId, DEMO_DATE);
+  const { repos, academicYearId, planId, asOf } = await uiContext();
+  const overview = await getStudentOverview(repos, academicYearId, planId, asOf);
   const subject = overview?.subjects.find((s) => s.key === subjectKey);
   if (!subject) notFound();
 

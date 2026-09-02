@@ -1,4 +1,4 @@
-import { DEMO_DATE, demo } from '@/app-services/demo';
+import { uiContext } from '@/app-services/app-context';
 import { getPlanOverview } from '@/app-services/plan';
 import { PageHeader, Card, Chip, SectionLabel, StatTile } from '@/components/ui';
 import { ClockIcon, CheckIcon, AlertIcon } from '@/components/icons';
@@ -26,8 +26,8 @@ const STATUS: Record<string, { chip: 'ok' | 'warn' | 'bad'; label: string }> = {
 };
 
 export default async function RemindersPage() {
-  const { repos, planId } = await demo();
-  const plan = await getPlanOverview(repos, planId, DEMO_DATE);
+  const { repos, planId, asOf } = await uiContext();
+  const plan = await getPlanOverview(repos, planId, asOf);
   const weekday = plan?.plan.weekdayCapacityMinutes ?? 120;
 
   const met = ADHERENCE.filter((a) => a.status === 'met').length;

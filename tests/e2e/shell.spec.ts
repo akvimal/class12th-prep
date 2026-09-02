@@ -23,7 +23,7 @@ test('bottom nav moves between the primary tabs', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Today' })).toBeVisible();
 });
 
-test('daily loop: today → chapter detail → study now', async ({ page }) => {
+test('daily loop: today → chapter detail → session form', async ({ page }) => {
   await page.goto('/today');
   await expect(page.getByText(/Primary ·/)).toBeVisible();
 
@@ -31,8 +31,9 @@ test('daily loop: today → chapter detail → study now', async ({ page }) => {
   await expect(page).toHaveURL(/\/subjects\/[A-Z]+\/[A-Z0-9]+$/);
   await expect(page.getByText('Readiness components')).toBeVisible();
 
-  await page.getByRole('link', { name: 'Study this' }).click();
-  await expect(page).toHaveURL(/\/study-now$/);
+  await page.getByRole('link', { name: 'Log study' }).click();
+  await expect(page).toHaveURL(/\/session\?/);
+  await expect(page.getByRole('button', { name: 'Save session' })).toBeVisible();
 });
 
 test('subjects tab drills into a subject chapter list', async ({ page }) => {

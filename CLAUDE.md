@@ -61,7 +61,12 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
   Never edit a published version in place — create a new `CurriculumVersion`.
   Load a tree with `importCurriculum()`; synthetic tree in
   `fixtures/synthetic-curriculum.json`. `OFFICIAL` weights require a source
-  reference (domain guard + DB CHECK).
+  reference (domain guard + DB CHECK). The real (but **derived / unofficial**)
+  Class XII tree for a live student profile is
+  `fixtures/cbse-class12-2026-27-curriculum.json`, parsed + guarded by
+  `src/persistence/seed/cbse-curriculum.ts` (`cbseClass12Curriculum`) — chapter
+  lists need a per-school review pass and every weight is an estimate
+  (`needsReview: true`, no `OFFICIAL`).
 - Plan phases are derived from the plan's dates (`src/domain/planning/plan-phases.ts`,
   config `phases-v1`) and regenerated on every plan change — callers never
   write `plan_phases` directly. See `docs/DECISIONS/ADR-006`. Date arithmetic
@@ -100,5 +105,26 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
   `calculateChapterReadiness` / `recalculateAcademicYearReadiness` append an
   immutable `readiness_snapshots` row and cache `chapter_progress.effectiveReadiness`.
   Recalc never rewrites history.
+- UI screens render from `uiContext()` (`src/app-services/app-context.ts`),
+  never from a repo directly — it resolves the repos plus `academicYearId`,
+  `planId`, `asOf`, `studentName`, `isDemo`. `APP_DATA_SOURCE`
+  (`memory` | `database`; default `memory` unless `NODE_ENV=production` + a
+  `DATABASE_URL`) picks between the throwaway synthetic seed and the real
+  profile. `memory` mode pins `asOf` to `DEMO_DATE`; `database` mode uses
+  today. `uiContext()` redirects to `/welcome` when the DB is selected but
+  has no profile.
+- Screen mutations go through Server Actions in `src/app/actions.ts`
+  (`'use server'`, zod-validated FormData) → `src/app-services/study-flow.ts`
+  → `revalidatePath` + `redirect`. `logStudy` records the immutable session
+  then stamps `lastStudiedAt` (+ `lastRevisedAt` for `isRevisionSession`
+  types) and recomputes that chapter's readiness — it never infers component
+  scores or advances `state`. `updateChapterSelfAssessment` applies an
+  explicit self-rating patch + recomputes. Recording a session still never
+  mutates progress inside the `session` service itself.
+- The single real student profile is created by `pnpm prep:init` (script →
+  `initRealProfile`, `src/app-services/init.ts`) from `config/student.json`
+  (gitignored; copy `config/student.example.json`). Idempotent. `getActiveProfile`
+  (`src/app-services/profile.ts`) resolves first student → newest academic year
+  → its ACTIVE plan.
 - End a task with a report: files changed, migrations, tests run, acceptance
   criteria status, assumptions, follow-up dependencies.

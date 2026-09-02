@@ -1,0 +1,32 @@
+{
+  "_comment": "Copy to config/student.json and edit. Used by `pnpm prep:init` to create the one real student profile. Dates are ISO YYYY-MM-DD; no month logic anywhere depends on them beyond ordering. Subject keys must match fixtures/cbse-class12-2026-27-curriculum.json (PHY, CHE, MAT, CS, ENG).",
+  "family": { "name": "Home" },
+  "student": {
+    "displayName": "Student",
+    "board": "CBSE",
+    "grade": 12,
+    "timezone": "Asia/Kolkata"
+  },
+  "academicYear": {
+    "yearLabel": "2026-27",
+    "startDate": "2026-04-01",
+    "endDate": "2027-03-31"
+  },
+  "plan": {
+    "startDate": "2026-09-02",
+    "syllabusTargetDate": "2026-12-20",
+    "hardCompletionDate": "2026-12-31",
+    "revisionStartDate": "2027-01-01",
+    "examWindowStart": "2027-02-15",
+    "examWindowEnd": "2027-03-31",
+    "weekdayCapacityMinutes": 120,
+    "weekendCapacityMinutes": 240
+  },
+  "subjects": [
+    { "key": "PHY", "theoryMaxMarks": 70, "practicalMaxMarks": 30, "targetMarks": 80 },
+    { "key": "CHE", "theoryMaxMarks": 70, "practicalMaxMarks": 30, "targetMarks": 78 },
+    { "key": "MAT", "theoryMaxMarks": 80, "targetMarks": 75 },
+    { "key": "CS", "theoryMaxMarks": 70, "practicalMaxMarks": 30, "targetMarks": 85 },
+    { "key": "ENG", "theoryMaxMarks": 80, "targetMarks": 80 }
+  ]
+}

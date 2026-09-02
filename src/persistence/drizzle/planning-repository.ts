@@ -1,4 +1,4 @@
-import { and, asc, eq, ne } from 'drizzle-orm';
+import { and, asc, desc, eq, ne } from 'drizzle-orm';
 import { phasesV1, type PlanPhaseConfig } from '@/config/phases';
 import { assertPlanDateOrder, type PlanDates } from '@/domain/planning/plan-dates';
 import { resolvePhaseAt, resolvePlanPhases, type PhaseSpec } from '@/domain/planning/plan-phases';
@@ -148,6 +148,48 @@ export function createDrizzlePlanningRepository(
             endDate: row.endDate,
           }
         : null;
+    },
+
+    async listStudents() {
+      return db
+        .select({
+          id: students.id,
+          familyId: students.familyId,
+          displayName: students.displayName,
+          board: students.board,
+          grade: students.grade,
+        })
+        .from(students)
+        .orderBy(asc(students.displayName));
+    },
+
+    async listAcademicYears(studentId: string) {
+      const rows = await db
+        .select()
+        .from(academicYears)
+        .where(eq(academicYears.studentId, studentId))
+        .orderBy(desc(academicYears.startDate));
+      return rows.map((row) => ({
+        id: row.id,
+        studentId: row.studentId,
+        yearLabel: row.yearLabel,
+        curriculumVersionId: row.curriculumVersionId,
+        startDate: row.startDate,
+        endDate: row.endDate,
+      }));
+    },
+
+    async getActivePlan(academicYearId: string) {
+      const [row] = await db
+        .select()
+        .from(preparationPlans)
+        .where(
+          and(
+            eq(preparationPlans.academicYearId, academicYearId),
+            eq(preparationPlans.status, 'ACTIVE'),
+          ),
+        );
+      return row ? toRecord(row) : null;
     },
 
     async setAcademicYearCurriculum(academicYearId: string, curriculumVersionId: string) {

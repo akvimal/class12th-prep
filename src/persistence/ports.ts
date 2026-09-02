@@ -114,11 +114,25 @@ export interface AcademicYearRecord {
   endDate: string;
 }
 
+export interface StudentRecord {
+  id: string;
+  familyId: string;
+  displayName: string;
+  board: string;
+  grade: number;
+}
+
 export interface PlanningRepository {
   createFamily(input: NewFamily): Promise<{ id: string }>;
   createStudent(input: NewStudent): Promise<{ id: string }>;
   createAcademicYear(input: NewAcademicYear): Promise<{ id: string }>;
   getAcademicYear(academicYearId: string): Promise<AcademicYearRecord | null>;
+  /** Every student on record. The single-family MVP normally has exactly one. */
+  listStudents(): Promise<StudentRecord[]>;
+  /** A student's academic years, most recent first (by start date). */
+  listAcademicYears(studentId: string): Promise<AcademicYearRecord[]>;
+  /** The single ACTIVE plan for an academic year, or null if none is active. */
+  getActivePlan(academicYearId: string): Promise<PreparationPlanRecord | null>;
   /** Points an academic year at a published curriculum version. */
   setAcademicYearCurriculum(academicYearId: string, curriculumVersionId: string): Promise<void>;
 
