@@ -6,10 +6,11 @@ import { chapterIdForKey, setChapterProgress } from './progress';
 import { calculateChapterReadiness } from './readiness';
 import { recordStudySession, type RecordSessionInput } from './session';
 import { ensureRevisionScheduled, recordRevisionOutcome } from './revision';
+import { resolveTasksForSession } from './study-tasks';
 
 type FlowRepos = Pick<
   Repositories,
-  'session' | 'planning' | 'curriculum' | 'progress' | 'readiness' | 'revision'
+  'session' | 'planning' | 'curriculum' | 'progress' | 'readiness' | 'revision' | 'studyTask'
 >;
 
 /** Session types that carry a spaced-revision outcome. */
@@ -58,6 +59,8 @@ export async function logStudy(
   const patch: ChapterProgressPatch = { lastStudiedAt: on };
   if (isRevisionSession(input.type)) patch.lastRevisedAt = on;
   await setChapterProgress(repos, academicYearId, chapterId, patch);
+
+  await resolveTasksForSession(repos, academicYearId, chapterId, on, session.id);
 
   if (REVISION_SESSION_TYPES.has(input.type)) {
     await recordRevisionOutcome(

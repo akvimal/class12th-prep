@@ -180,10 +180,23 @@ micro-plan`. Deterministic. `src/app-services/study-now.ts` `getStudyNow`;
   time-fit, `maxPerSubject`, revision-starvation, school-urgency force ≤3d,
   low-priority starvation) → ≤3 primary + optional. Pure/deterministic.
   `src/app-services/candidates.ts` builds `PlannerCandidate[]` from progress +
-  readiness snapshots + `nextSchoolTestDaysByChapter` (interim `revisionDue`
-  heuristic until Phase 3). `src/app-services/today.ts` `getTodayPlan(...,energy)`
-  wires capacity + candidates → `buildDailyPlan`. `/today` renders it;
-  `?energy=low|high` scales the target (never real capacity).
+  readiness snapshots + `nextSchoolTestDaysByChapter` + revision schedules +
+  `studyTask.missedCountByChapter` (the priority backlog factor).
+  `src/app-services/today.ts` `getTodayPlan(...,energy)` wires capacity +
+  candidates → `buildDailyPlan` (pure read); `syncTodayPlan` = reconcile past +
+  build + persist. `/today` calls `syncTodayPlan`; `?energy=low|high` scales the
+  target (never real capacity).
+- Study tasks + missed-work reprioritisation (Phase 3, ALGORITHMS §6):
+  `study_tasks` (`drizzle/0012`, one open row per (year, chapter, day) — partial
+  unique index; `slot` PRIMARY/OPTIONAL, `reasonCodes`, `priorityScore` snapshot).
+  `src/domain/planning/study-task.ts` `resolveTaskStatus` (past day → COMPLETED
+  if a session for that chapter landed on/after the planned date, else MISSED;
+  today/future → left SCHEDULED). `StudyTaskRepository.saveDailyPlan` is
+  idempotent (cancels rows it no longer proposes, skips already-completed
+  chapters). `src/app-services/study-tasks.ts`: `persistDailyPlan`,
+  `reconcilePastTasks`, `resolveTasksForSession` (same-day close from `logStudy`).
+  A MISSED task is never re-created for today — its chapter's `missedCount`
+  raises priority instead. `study_sessions.study_task_id` now FKs (set null).
 - Study windows (Phase 2): `study_windows` (`drizzle/0008`),
   `src/domain/planning/study-window.ts` (recurrence WEEKDAY/WEEKEND/DAILY,
   `plannedMinutesOn`), `StudyWindowRepository`, `src/app-services/study-windows.ts`

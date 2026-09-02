@@ -17,6 +17,11 @@ import type { StudyWindowDayType } from '@/domain/planning/study-window';
 import type { DeliveryStatus, DomainEventType } from '@/domain/events/events';
 import type { RevisionMethod, RevisionOutcome, RevisionStatus } from '@/domain/revision/revision';
 import type { ErrorState, ErrorTransition, ErrorType } from '@/domain/errors/errors';
+import type {
+  StudyTaskActivity,
+  StudyTaskSlot,
+  StudyTaskStatus,
+} from '@/domain/planning/study-task';
 
 /**
  * Repository ports.
@@ -632,6 +637,69 @@ export interface AssessmentResultRepository {
   ): Promise<QuestionErrorRecord>;
 }
 
+// --- Study tasks (Phase 3) ---
+
+export interface NewStudyTask {
+  chapterId: string;
+  subjectId: string;
+  plannedDate: string;
+  activity: StudyTaskActivity;
+  plannedMinutes: number;
+  slot: StudyTaskSlot;
+  reasonCodes: string[];
+  priorityScore?: number | null;
+  algorithmVersion?: string | null;
+}
+
+export interface StudyTaskRecord {
+  id: string;
+  academicYearId: string;
+  chapterId: string;
+  subjectId: string;
+  plannedDate: string;
+  activity: StudyTaskActivity;
+  plannedMinutes: number;
+  slot: StudyTaskSlot;
+  reasonCodes: string[];
+  priorityScore: number | null;
+  status: StudyTaskStatus;
+  sourceSessionId: string | null;
+  algorithmVersion: string | null;
+  createdAt: string;
+  resolvedAt: string | null;
+}
+
+export interface StudyTaskFilters {
+  status?: StudyTaskStatus;
+  chapterId?: string;
+  plannedDate?: string;
+  /** Inclusive lower / upper bound on `plannedDate`. */
+  from?: string;
+  to?: string;
+}
+
+export interface StudyTaskRepository {
+  /**
+   * Persist the day's plan. Idempotent: SCHEDULED rows for `plannedDate` whose
+   * chapter is not in `tasks` are CANCELLED; the rest are upserted in place.
+   * Rows already resolved (COMPLETED/MISSED) are never touched.
+   */
+  saveDailyPlan(
+    academicYearId: string,
+    plannedDate: string,
+    tasks: NewStudyTask[],
+  ): Promise<StudyTaskRecord[]>;
+  listTasks(academicYearId: string, filters?: StudyTaskFilters): Promise<StudyTaskRecord[]>;
+  /** Move a task out of SCHEDULED. */
+  resolve(
+    taskId: string,
+    status: Exclude<StudyTaskStatus, 'SCHEDULED'>,
+    opts?: { sourceSessionId?: string | null; resolvedAt?: string },
+  ): Promise<StudyTaskRecord>;
+  /** MISSED-task count per chapter across the academic year. */
+  missedCountByChapter(academicYearId: string): Promise<Record<string, number>>;
+}
+
 export interface Repositories {
   health: HealthProbe;
   planning: PlanningRepository;
@@ -645,4 +713,5 @@ export interface Repositories {
   events: EventRepository;
   revision: RevisionRepository;
   assessmentResult: AssessmentResultRepository;
+  studyTask: StudyTaskRepository;
 }

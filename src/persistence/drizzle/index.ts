@@ -11,6 +11,7 @@ import { createDrizzleProgressRepository } from './progress-repository';
 import { createDrizzleReadinessRepository } from './readiness-repository';
 import { createDrizzleSchoolCalendarRepository } from './school-calendar-repository';
 import { createDrizzleSessionRepository } from './session-repository';
+import { createDrizzleStudyTaskRepository } from './study-task-repository';
 
 /**
  * PostgreSQL repository set (via Drizzle), bound to the shared connection pool.
@@ -31,5 +32,6 @@ export function createDrizzleRepositories(): Repositories {
     events: createDrizzleEventRepository(db),
     revision: createDrizzleRevisionRepository(db),
     assessmentResult: createDrizzleAssessmentResultRepository(db),
+    studyTask: createDrizzleStudyTaskRepository(db),
   };
 }

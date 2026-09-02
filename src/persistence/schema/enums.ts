@@ -179,3 +179,16 @@ export const errorState = pgEnum('error_state', [
   'RETEST_DUE',
   'MASTERED',
 ]);
+
+// --- Study tasks (Phase 3) ---
+
+/** Lifecycle of a planned task. MISSED work returns to the candidate queue. */
+export const studyTaskStatus = pgEnum('study_task_status', [
+  'SCHEDULED',
+  'COMPLETED',
+  'MISSED',
+  'CANCELLED',
+]);
+
+/** Whether the task was a primary card or optional extra in the day's plan. */
+export const studyTaskSlot = pgEnum('study_task_slot', ['PRIMARY', 'OPTIONAL']);

@@ -7,7 +7,7 @@ import { nextSchoolTestDaysByChapter } from './assessment';
 
 type CandidateRepos = Pick<
   Repositories,
-  'progress' | 'planning' | 'curriculum' | 'readiness' | 'assessment' | 'revision'
+  'progress' | 'planning' | 'curriculum' | 'readiness' | 'assessment' | 'revision' | 'studyTask'
 >;
 
 /** Chapters at/after this state are considered "done enough" to skip in the queue. */
@@ -35,10 +35,11 @@ export async function buildDailyCandidates(
   const progress = await getCurriculumProgress(repos, academicYearId);
   if (!progress) return [];
 
-  const [snapshots, testDays, revisions] = await Promise.all([
+  const [snapshots, testDays, revisions, missedByChapter] = await Promise.all([
     getAcademicYearReadiness(repos, academicYearId),
     nextSchoolTestDaysByChapter(repos, academicYearId, asOf),
     repos.revision.listSchedules(academicYearId, { status: 'SCHEDULED' }),
+    repos.studyTask.missedCountByChapter(academicYearId),
   ]);
   const readinessById = new Map((snapshots ?? []).map((s) => [s.scopeId, s.readiness]));
   const revisionDueById = new Map(revisions.map((r) => [r.chapterId, r.dueDate]));
@@ -71,7 +72,7 @@ export async function buildDailyCandidates(
             revisionDue: revisionDueById.has(chapter.id)
               ? revisionDueState(revisionDueById.get(chapter.id)!, asOf)
               : 'NONE',
-            missedCount: 0, // filled in by Phase 3 slice 4 (StudyTask history)
+            missedCount: missedByChapter[chapter.id] ?? 0,
           },
         });
       }
