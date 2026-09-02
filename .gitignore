@@ -40,3 +40,6 @@ pnpm-debug.log*
 # Generated design artifacts (regenerate from design/*.dc.html + build-gallery.mjs / seed-canvas.mjs)
 design/board-prep-tracker-ui-shell.html
 design/board-prep-tracker-gallery.html
+
+# Local docker compose overrides (machine-specific ports etc.)
+docker-compose.override.yml

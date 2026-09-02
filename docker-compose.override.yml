@@ -1,7 +1,0 @@
-# Local-only (gitignored). Port 5432 is used by another project on this
-# machine, so the dev database is published on 5435 instead. Keep .env's
-# DATABASE_URL pointing at 5435 to match.
-services:
-  db:
-    ports: !override
-      - '5435:5432'
