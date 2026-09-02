@@ -144,6 +144,10 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
   ALGORITHMS §3): `raw = weakness · revisionDue · schoolUrgency · importance ·
 backlog`; `prioritize()` ranks + normalises. Pure; consumed by the daily
   planner / Study Now.
+- Study Now (`src/domain/planning/study-now.ts`, ALGORITHMS §4, config
+  `planner-v1`): `minutes + candidates → one task + reason codes + timed
+micro-plan`. Deterministic. `src/app-services/study-now.ts` `getStudyNow`;
+  `/study-now?mins=` renders it.
 - Daily planner (`src/domain/planning/daily-planner.ts`, config `planner-v1`,
   ALGORITHMS §3/§5): candidates → `prioritize` → guardrails (prereq eligibility,
   time-fit, `maxPerSubject`, revision-starvation, school-urgency force ≤3d,
