@@ -2,6 +2,7 @@ import type { Repositories } from '../ports';
 import { createInMemoryCurriculumRepository } from './curriculum-repository';
 import { createInMemoryPlanningRepository } from './planning-repository';
 import { createInMemoryProgressRepository } from './progress-repository';
+import { createInMemoryReadinessRepository } from './readiness-repository';
 import { createInMemorySchoolCalendarRepository } from './school-calendar-repository';
 import { createInMemorySessionRepository } from './session-repository';
 
@@ -19,5 +20,6 @@ export function createInMemoryRepositories(): Repositories {
     schoolCalendar: createInMemorySchoolCalendarRepository(),
     progress: createInMemoryProgressRepository(),
     session: createInMemorySessionRepository(),
+    readiness: createInMemoryReadinessRepository(),
   };
 }

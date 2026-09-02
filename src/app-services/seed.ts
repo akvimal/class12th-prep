@@ -2,10 +2,11 @@ import type { ChapterState } from '@/domain/progress/chapter-progress';
 import { syntheticSeedSpec, type SeedSpec } from '@/persistence/seed/spec';
 import type { Repositories } from '@/persistence/ports';
 import { importCurriculum } from './curriculum-import';
+import { recalculateAcademicYearReadiness } from './readiness';
 
 type SeedRepos = Pick<
   Repositories,
-  'planning' | 'curriculum' | 'schoolCalendar' | 'progress' | 'session'
+  'planning' | 'curriculum' | 'schoolCalendar' | 'progress' | 'session' | 'readiness'
 >;
 
 export interface SeedResult {
@@ -23,6 +24,7 @@ export interface SeedResult {
     calendarEvents: number;
     chapterProgress: number;
     studySessions: number;
+    readinessSnapshots: number;
   };
 }
 
@@ -158,6 +160,11 @@ export async function seedSynthetic(
     studySessionCount += 1;
   }
 
+  // Compute readiness as of the plan start so the seed is deterministic.
+  const readinessSummary = await recalculateAcademicYearReadiness(repos, academicYear.id, {
+    asOf: spec.plan.startDate,
+  });
+
   return {
     created: true,
     curriculumVersionId: versionId,
@@ -172,6 +179,7 @@ export async function seedSynthetic(
       calendarEvents: spec.calendarEvents.length,
       chapterProgress: chapterProgressCount,
       studySessions: studySessionCount,
+      readinessSnapshots: readinessSummary?.chaptersProcessed ?? 0,
     },
   };
 }

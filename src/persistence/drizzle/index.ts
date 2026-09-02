@@ -3,6 +3,7 @@ import type { Repositories } from '../ports';
 import { createDrizzleCurriculumRepository } from './curriculum-repository';
 import { createDrizzlePlanningRepository } from './planning-repository';
 import { createDrizzleProgressRepository } from './progress-repository';
+import { createDrizzleReadinessRepository } from './readiness-repository';
 import { createDrizzleSchoolCalendarRepository } from './school-calendar-repository';
 import { createDrizzleSessionRepository } from './session-repository';
 
@@ -19,5 +20,6 @@ export function createDrizzleRepositories(): Repositories {
     schoolCalendar: createDrizzleSchoolCalendarRepository(db),
     progress: createDrizzleProgressRepository(db),
     session: createDrizzleSessionRepository(db),
+    readiness: createDrizzleReadinessRepository(db),
   };
 }

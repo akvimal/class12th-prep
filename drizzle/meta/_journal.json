@@ -43,6 +43,13 @@
       "when": 1788332487801,
       "tag": "0005_nappy_triathlon",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1788333757496,
+      "tag": "0006_chunky_madame_masque",
+      "breakpoints": true
     }
   ]
 }

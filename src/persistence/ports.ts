@@ -11,6 +11,7 @@ import type {
   SchoolChapterStatus,
 } from '@/domain/progress/chapter-progress';
 import type { SessionCompletion, StudySessionType } from '@/domain/progress/study-session';
+import type { ReadinessComponents } from '@/domain/readiness/readiness';
 
 /**
  * Repository ports.
@@ -350,6 +351,47 @@ export interface SessionRepository {
   listSessions(academicYearId: string, filters?: SessionFilters): Promise<StudySessionRecord[]>;
 }
 
+// --- Readiness snapshots (TASK-009) ---
+
+export type ReadinessScopeType = 'CHAPTER' | 'SUBJECT' | 'ACADEMIC_YEAR';
+
+export interface NewReadinessSnapshot {
+  academicYearId: string;
+  scopeType: ReadinessScopeType;
+  scopeId: string;
+  readiness: number;
+  raw: number;
+  recencyFactor: number;
+  components: ReadinessComponents;
+  algorithmVersion: string;
+  calculatedFor: string;
+}
+
+export interface ReadinessSnapshotRecord extends NewReadinessSnapshot {
+  id: string;
+  calculatedAt: string;
+}
+
+export interface ReadinessRepository {
+  /** Append an immutable snapshot. */
+  createSnapshot(input: NewReadinessSnapshot): Promise<ReadinessSnapshotRecord>;
+  getLatestSnapshot(
+    academicYearId: string,
+    scopeType: ReadinessScopeType,
+    scopeId: string,
+  ): Promise<ReadinessSnapshotRecord | null>;
+  /** Newest first. `limit` caps the result; without a scope, returns every scope's history. */
+  listSnapshots(
+    academicYearId: string,
+    filters?: { scopeType?: ReadinessScopeType; scopeId?: string; limit?: number },
+  ): Promise<ReadinessSnapshotRecord[]>;
+  /** The most recent snapshot for every scope of a type in one academic year. */
+  latestByScope(
+    academicYearId: string,
+    scopeType: ReadinessScopeType,
+  ): Promise<ReadinessSnapshotRecord[]>;
+}
+
 export interface Repositories {
   health: HealthProbe;
   planning: PlanningRepository;
@@ -357,4 +399,5 @@ export interface Repositories {
   schoolCalendar: SchoolCalendarRepository;
   progress: ProgressRepository;
   session: SessionRepository;
+  readiness: ReadinessRepository;
 }

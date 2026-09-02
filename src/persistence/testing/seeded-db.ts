@@ -2,6 +2,7 @@ import { seedSynthetic, type SeedResult } from '@/app-services/seed';
 import { createDrizzleCurriculumRepository } from '@/persistence/drizzle/curriculum-repository';
 import { createDrizzlePlanningRepository } from '@/persistence/drizzle/planning-repository';
 import { createDrizzleProgressRepository } from '@/persistence/drizzle/progress-repository';
+import { createDrizzleReadinessRepository } from '@/persistence/drizzle/readiness-repository';
 import { createDrizzleSchoolCalendarRepository } from '@/persistence/drizzle/school-calendar-repository';
 import { createDrizzleSessionRepository } from '@/persistence/drizzle/session-repository';
 import type { DrizzleDb } from '@/persistence/drizzle/db';
@@ -15,6 +16,7 @@ export function seedTestDatabase(db: DrizzleDb): Promise<SeedResult> {
     schoolCalendar: createDrizzleSchoolCalendarRepository(db),
     progress: createDrizzleProgressRepository(db),
     session: createDrizzleSessionRepository(db),
+    readiness: createDrizzleReadinessRepository(db),
   });
 }
 
