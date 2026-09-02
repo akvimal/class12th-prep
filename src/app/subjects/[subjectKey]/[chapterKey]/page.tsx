@@ -164,6 +164,46 @@ export default async function ChapterDetailPage({
         </>
       )}
 
+      {view.readinessHistory.length > 1 && (
+        <>
+          <SectionLabel className="px-5 pb-1 pt-6">Readiness history</SectionLabel>
+          <div className="flex items-end gap-1.5 px-5">
+            {view.readinessHistory.map((s) => (
+              <div key={s.id} className="flex flex-1 flex-col items-center gap-1">
+                <div
+                  className="w-full rounded-sm bg-ink/80"
+                  style={{ height: `${Math.max(3, Math.round(s.readiness * 0.6))}px` }}
+                  title={`${formatDate(s.calculatedFor)}: ${Math.round(s.readiness)}`}
+                />
+                <span className="font-mono text-[8px] text-faint">{s.calculatedFor.slice(5)}</span>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {view.questionErrors.length > 0 && (
+        <>
+          <SectionLabel className="px-5 pb-1 pt-6">
+            Errors from tests · {view.questionErrors.length}
+          </SectionLabel>
+          <div className="px-5">
+            {view.questionErrors.map((e) => (
+              <div
+                key={e.id}
+                className="flex items-center justify-between border-b border-line-soft py-2.5 last:border-0"
+              >
+                <span className="text-[12px] font-medium text-ink">
+                  {titleCase(e.errorType)}{' '}
+                  <span className="font-normal text-faint">· {titleCase(e.state)}</span>
+                </span>
+                <span className="font-mono text-[11px] text-bad">−{e.marksLost}</span>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
       <div className="flex gap-2.5 px-5 pt-6">
         <PrimaryButton
           href={`/session?chapter=${view.chapterKey}&subject=${view.subjectKey}&type=PRACTISE`}
