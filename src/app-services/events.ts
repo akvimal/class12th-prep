@@ -15,6 +15,7 @@ type EventRepos = Pick<
   | 'assessment'
   | 'studyWindow'
   | 'session'
+  | 'revision'
 >;
 
 /** Append a single event (idempotent per student + dedupe key). */

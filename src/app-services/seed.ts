@@ -1,5 +1,7 @@
 import type { ChapterState } from '@/domain/progress/chapter-progress';
 import { ASSESSMENT_TYPES, type AssessmentType } from '@/domain/assessment/assessment';
+import { firstRevision } from '@/domain/revision/revision';
+import { revisionV1 } from '@/config/revision';
 import { syntheticSeedSpec, type SeedSpec } from '@/persistence/seed/spec';
 import type { Repositories } from '@/persistence/ports';
 import { importCurriculum } from './curriculum-import';
@@ -15,6 +17,7 @@ type SeedRepos = Pick<
   | 'readiness'
   | 'assessment'
   | 'studyWindow'
+  | 'revision'
 >;
 
 /** Sensible starter study windows for a new profile. */
@@ -143,9 +146,10 @@ export async function seedSynthetic(
   for (const cp of spec.chapterProgress) {
     const chapterId = chapterIdByKey.get(cp.chapterKey);
     if (!chapterId) throw new Error(`seed: chapter key "${cp.chapterKey}" not found in curriculum`);
+    const state = seedState(cp.readiness);
     await repos.progress.setChapterProgress(academicYear.id, chapterId, {
       schoolStatus: cp.schoolStatus,
-      state: seedState(cp.readiness),
+      state,
       conceptScore: cp.readiness,
       practiceScore: cp.readiness,
       testScore: cp.readiness,
@@ -153,6 +157,19 @@ export async function seedSynthetic(
       revisionScore: cp.readiness,
     });
     chapterProgressCount += 1;
+
+    // Chapters past LEARNED get a first spaced revision, dated off the plan start.
+    if (['LEARNED', 'PRACTISED', 'TESTED', 'REVISED'].includes(state)) {
+      const first = firstRevision(spec.plan.startDate, revisionV1);
+      await repos.revision.schedule({
+        academicYearId: academicYear.id,
+        chapterId,
+        revisionNumber: first.revisionNumber,
+        dueDate: first.dueDate,
+        method: first.method,
+        algorithmVersion: revisionV1.version,
+      });
+    }
   }
 
   let studySessionCount = 0;

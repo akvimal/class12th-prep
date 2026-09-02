@@ -1,6 +1,5 @@
-import { daysBetween } from '@/domain/planning/dates';
 import type { PlannerActivity, PlannerCandidate } from '@/domain/planning/daily-planner';
-import type { RevisionDueState } from '@/domain/planning/priority';
+import { revisionDueState } from '@/domain/revision/revision';
 import type { Repositories } from '@/persistence/ports';
 import { getCurriculumProgress } from './progress';
 import { getAcademicYearReadiness } from './readiness';
@@ -8,24 +7,11 @@ import { nextSchoolTestDaysByChapter } from './assessment';
 
 type CandidateRepos = Pick<
   Repositories,
-  'progress' | 'planning' | 'curriculum' | 'readiness' | 'assessment'
+  'progress' | 'planning' | 'curriculum' | 'readiness' | 'assessment' | 'revision'
 >;
 
 /** Chapters at/after this state are considered "done enough" to skip in the queue. */
 const DONE_STATES = new Set(['EXAM_READY']);
-
-/**
- * Interim spaced-revision signal until Phase 3's RevisionSchedule lands: a
- * chapter that has reached at least LEARNED but was never revised is due; one
- * last revised more than 14 days ago is overdue.
- */
-function revisionDue(state: string, lastRevisedAt: string | null, asOf: string): RevisionDueState {
-  const advanced = ['LEARNED', 'PRACTISED', 'TESTED', 'REVISED'].includes(state);
-  if (!lastRevisedAt) return advanced ? 'DUE_TODAY' : 'NONE';
-  const age = daysBetween(lastRevisedAt.slice(0, 10), asOf);
-  if (age > 14) return 'OVERDUE';
-  return 'NONE';
-}
 
 function pickActivity(state: string, schoolStatus: string, readiness: number): PlannerActivity {
   if (state === 'NOT_STARTED' || state === 'LEARNING' || schoolStatus === 'NOT_TAUGHT') {
@@ -49,11 +35,13 @@ export async function buildDailyCandidates(
   const progress = await getCurriculumProgress(repos, academicYearId);
   if (!progress) return [];
 
-  const [snapshots, testDays] = await Promise.all([
+  const [snapshots, testDays, revisions] = await Promise.all([
     getAcademicYearReadiness(repos, academicYearId),
     nextSchoolTestDaysByChapter(repos, academicYearId, asOf),
+    repos.revision.listSchedules(academicYearId, { status: 'SCHEDULED' }),
   ]);
   const readinessById = new Map((snapshots ?? []).map((s) => [s.scopeId, s.readiness]));
+  const revisionDueById = new Map(revisions.map((r) => [r.chapterId, r.dueDate]));
 
   const candidates: PlannerCandidate[] = [];
   for (const subject of progress.subjects) {
@@ -80,8 +68,10 @@ export async function buildDailyCandidates(
             effectiveReadiness: readiness,
             boardWeight: chapter.weights[0]?.value ?? null,
             daysUntilSchoolTest: testIn,
-            revisionDue: revisionDue(p.state, p.lastRevisedAt, asOf),
-            missedCount: 0, // no StudyTask history yet (Phase 2 slice 6)
+            revisionDue: revisionDueById.has(chapter.id)
+              ? revisionDueState(revisionDueById.get(chapter.id)!, asOf)
+              : 'NONE',
+            missedCount: 0, // filled in by Phase 3 slice 4 (StudyTask history)
           },
         });
       }

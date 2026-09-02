@@ -19,3 +19,4 @@ export * from './readiness-snapshots';
 export * from './assessments';
 export * from './study-windows';
 export * from './domain-events';
+export * from './revision-schedules';

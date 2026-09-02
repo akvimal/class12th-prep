@@ -71,6 +71,13 @@
       "when": 1788346751728,
       "tag": "0009_careless_sir_ram",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1788354627588,
+      "tag": "0010_swift_christian_walker",
+      "breakpoints": true
     }
   ]
 }

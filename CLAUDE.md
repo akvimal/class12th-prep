@@ -152,6 +152,17 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
   ALGORITHMS §3): `raw = weakness · revisionDue · schoolUrgency · importance ·
 backlog`; `prioritize()` ranks + normalises. Pure; consumed by the daily
   planner / Study Now.
+- Spaced revision (`src/domain/revision/`, config `revision-v1`, ALGORITHMS §7):
+  `firstRevision` / `nextRevision(number, outcome, doneOn)` → next `{ dueDate,
+method }`. `revision_schedules` (`drizzle/0010`, one SCHEDULED row per
+  academic-year+chapter — partial unique index; DONE rows are history).
+  `RevisionRepository`. `src/app-services/revision.ts`: `ensureRevisionScheduled`
+  (on reaching LEARNED via the ratings form), `recordRevisionOutcome` (from a
+  REVISION/ACTIVE_RECALL/PYQ session in `logStudy` — confidence → outcome,
+  `completion:'NO'` → FAILED), `revisionStateForChapter` (feeds the planner —
+  replaced the old `lastRevisedAt` heuristic in `candidates.ts`),
+  `getRevisionQueue` (drives `/revision`). The seed schedules R1 for learned
+  chapters.
 - Domain events (Phase 2, SRS §13 — persisted now, delivered in Phase 7):
   `domain_events` (`drizzle/0009`, unique `(student_id, dedupe_key)` for
   idempotent generation), `src/domain/events/`, `EventRepository`

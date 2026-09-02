@@ -4,7 +4,7 @@ import { buildDailyCandidates } from './candidates';
 
 type StudyNowRepos = Pick<
   Repositories,
-  'progress' | 'planning' | 'curriculum' | 'readiness' | 'assessment'
+  'progress' | 'planning' | 'curriculum' | 'readiness' | 'assessment' | 'revision'
 >;
 
 export const STUDY_NOW_MINUTE_OPTIONS = [20, 30, 45, 60, 90];

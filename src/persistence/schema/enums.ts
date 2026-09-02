@@ -136,3 +136,22 @@ export const domainEventDelivery = pgEnum('domain_event_delivery', [
   'DELIVERED',
   'SUPPRESSED',
 ]);
+
+// --- Spaced revision (Phase 3) ---
+
+export const revisionOutcome = pgEnum('revision_outcome', ['STRONG', 'MODERATE', 'WEAK', 'FAILED']);
+
+export const revisionMethod = pgEnum('revision_method', [
+  'ACTIVE_RECALL',
+  'BLANK_PAGE',
+  'PRACTISE',
+  'PYQ',
+  'FLASHCARDS',
+]);
+
+export const revisionStatus = pgEnum('revision_status', [
+  'SCHEDULED',
+  'DONE',
+  'MISSED',
+  'CANCELLED',
+]);

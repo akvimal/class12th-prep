@@ -55,13 +55,17 @@ describe('detectDailyEvents', () => {
     ).toBe(countBefore);
   });
 
-  it('raises REVISION_DUE for a learned-but-never-revised chapter', async () => {
+  it('raises revision events from the schedule (the seed schedules R1 due 2026-09-03)', async () => {
     const { repos, academicYearId } = await seeded();
-    // Seed chapter MAT01 is COMPLETED / readiness 82 with no revision recorded.
-    const result = await detectDailyEvents(repos, academicYearId, '2026-09-02');
-    const revision = await listEvents(repos, academicYearId, { eventType: 'REVISION_DUE' });
-    expect(result!.createdTypes).toContain('REVISION_DUE');
-    expect(revision!.length).toBeGreaterThan(0);
+
+    const dueDay = await detectDailyEvents(repos, academicYearId, '2026-09-03');
+    expect(dueDay!.createdTypes).toContain('REVISION_DUE');
+
+    const laterDay = await detectDailyEvents(repos, academicYearId, '2026-09-08');
+    expect(laterDay!.createdTypes).toContain('REVISION_OVERDUE');
+    expect(
+      (await listEvents(repos, academicYearId, { eventType: 'REVISION_OVERDUE' }))!.length,
+    ).toBeGreaterThan(0);
   });
 
   it('raises STUDY_BLOCK_MISSED when yesterday had a window and no session', async () => {

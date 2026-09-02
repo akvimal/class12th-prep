@@ -58,12 +58,14 @@ describe('drizzle event repository', () => {
     await repo.append(draft(sid, { eventType: 'REVISION_DUE', dedupeKey: 'k2', aggregateId: 'c1' }));
     await repo.setDeliveryStatus(a.record.id, 'DELIVERED');
 
-    expect((await repo.list(sid)).map((e) => e.eventType)).toEqual([
+    expect((await repo.list(sid)).map((e) => e.eventType).sort()).toEqual([
       'REVISION_DUE',
       'SCHOOL_TEST_APPROACHING',
     ]);
     expect(await repo.list(sid, { eventType: 'REVISION_DUE' })).toHaveLength(1);
-    expect(await repo.list(sid, { deliveryStatus: 'PENDING' })).toHaveLength(1);
+    const pending = await repo.list(sid, { deliveryStatus: 'PENDING' });
+    expect(pending).toHaveLength(1);
+    expect(pending[0]!.eventType).toBe('REVISION_DUE');
   });
 
   it('cascades away when the family is deleted', async () => {
