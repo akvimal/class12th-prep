@@ -43,3 +43,30 @@ export function minDate(a: string, b: string): string {
 export function clampDate(value: string, lo: string, hi: string): string {
   return minDate(maxDate(value, lo), hi);
 }
+
+/** Day of week for a calendar date: 0 = Sunday .. 6 = Saturday. */
+export function dayOfWeek(iso: string): number {
+  return new Date(toUtc(iso)).getUTCDay();
+}
+
+/** Inclusive list of ISO dates from `from` to `to`. */
+export function eachDay(from: string, to: string): string[] {
+  const out: string[] = [];
+  for (let ms = toUtc(from); ms <= toUtc(to); ms += DAY_MS) out.push(fromUtc(ms));
+  return out;
+}
+
+/**
+ * The calendar date "now" in an IANA timezone (e.g. "Asia/Kolkata"). School and
+ * exam dates are interpreted in the student's timezone (docs/ARCHITECTURE.md).
+ * `instant` defaults to the current time; pass one to keep tests deterministic.
+ */
+export function currentDateInZone(timeZone: string, instant: Date = new Date()): string {
+  // en-CA formats as YYYY-MM-DD.
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(instant);
+}

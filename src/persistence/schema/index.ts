@@ -11,4 +11,5 @@ export * from './curriculum';
 export * from './academic-weights';
 export * from './academic-years';
 export * from './subject-enrollments';
+export * from './school-calendar-events';
 export * from './preparation-plans';

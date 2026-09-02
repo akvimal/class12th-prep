@@ -69,5 +69,12 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
 - API request bodies are validated with zod schemas; `parseJson` +
   `domainErrorResponse` in `src/lib/http.ts` turn failures into 400s with
   machine-readable field errors.
+- Daily study capacity = plan weekday/weekend minutes adjusted by
+  `school_calendar_events` (`src/domain/planning/school-calendar.ts`, config
+  `school-calendar-v1`, ADR-007). Priority-based conflict resolution; the
+  calendar never creates tasks. Read via `getDailyCapacity` / `getCapacityRange`.
+- Drizzle `getPlan`/`getVersion` etc. THROW on a malformed UUID (Postgres) —
+  tests for "not found" must use a well-formed UUID like all-zeros. The
+  in-memory repos return null.
 - End a task with a report: files changed, migrations, tests run, acceptance
   criteria status, assumptions, follow-up dependencies.
