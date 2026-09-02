@@ -4,15 +4,22 @@ import {
   type ErrorTransition,
   type ErrorType,
 } from '@/domain/errors/errors';
+import {
+  recalibrateFromResult,
+  type ChapterRecalibration,
+  type RecalibrationChapterInput,
+} from '@/domain/assessment/recalibration';
+import { recalibrationV1 } from '@/config/recalibration';
 import type {
   AssessmentResultRecord,
   QuestionErrorRecord,
   Repositories,
 } from '@/persistence/ports';
+import { calculateChapterReadiness } from './readiness';
 
 type ResultRepos = Pick<
   Repositories,
-  'assessment' | 'assessmentResult' | 'planning' | 'curriculum'
+  'assessment' | 'assessmentResult' | 'planning' | 'curriculum' | 'progress' | 'readiness'
 >;
 
 export interface RecordResultInput {
@@ -84,7 +91,73 @@ export async function recordAssessmentResult(
   });
 
   await repos.assessment.setStatus(assessmentId, 'COMPLETED');
+  await applyAssessmentRecalibration(repos, academicYearId, assessmentId);
   return result;
+}
+
+/**
+ * Recalibrate the tested chapters from a recorded result (docs/ALGORITHMS.md
+ * §10): nudge each chapter's component scores toward what the result observed —
+ * weighted by assessment type — and recompute its readiness. Evidence affects
+ * only tested scopes. Idempotent-ish: re-running applies the model again to the
+ * already-moved components, so callers run it once, on record.
+ */
+export async function applyAssessmentRecalibration(
+  repos: Pick<
+    Repositories,
+    'assessment' | 'assessmentResult' | 'progress' | 'readiness' | 'planning'
+  >,
+  academicYearId: string,
+  assessmentId: string,
+  asOf?: string,
+): Promise<ChapterRecalibration[]> {
+  const [assessment, result] = await Promise.all([
+    repos.assessment.getAssessment(assessmentId),
+    repos.assessmentResult.getResult(assessmentId),
+  ]);
+  if (!assessment || !result || assessment.academicYearId !== academicYearId) return [];
+  if (!result.maxMarks) return [];
+
+  const lostByChapter = new Map<string, Partial<Record<ErrorType, number>>>();
+  for (const e of result.errors) {
+    const perType = lostByChapter.get(e.chapterId) ?? {};
+    perType[e.errorType] = (perType[e.errorType] ?? 0) + e.marksLost;
+    lostByChapter.set(e.chapterId, perType);
+  }
+
+  const chapters: RecalibrationChapterInput[] = [];
+  for (const chapterId of assessment.chapterIds) {
+    const progress = await repos.progress.getChapterProgress(academicYearId, chapterId);
+    if (!progress) continue;
+    chapters.push({
+      chapterId,
+      components: {
+        conceptScore: progress.conceptScore,
+        practiceScore: progress.practiceScore,
+        testScore: progress.testScore,
+        recallScore: progress.recallScore,
+        revisionScore: progress.revisionScore,
+      },
+      marksLostByType: lostByChapter.get(chapterId) ?? {},
+    });
+  }
+
+  const recalibrations = recalibrateFromResult(
+    {
+      assessmentType: assessment.type,
+      score: result.score,
+      maxMarks: result.maxMarks,
+      chapters,
+    },
+    recalibrationV1,
+  );
+
+  const on = asOf ?? assessment.examDate;
+  for (const r of recalibrations) {
+    await repos.progress.setChapterProgress(academicYearId, r.chapterId, r.components);
+    await calculateChapterReadiness(repos, academicYearId, r.chapterId, { asOf: on });
+  }
+  return recalibrations;
 }
 
 export function getAssessmentResult(
