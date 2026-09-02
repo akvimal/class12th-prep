@@ -1,6 +1,5 @@
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import { z } from 'zod';
+import seedFixture from '../../../fixtures/synthetic-seed.json';
 import { SCHOOL_EVENT_TYPES } from '@/domain/planning/school-calendar';
 import { WEIGHT_SOURCE_TYPES, WEIGHT_UNITS } from '@/domain/curriculum/provenance';
 import { CONFIDENCE_LEVELS } from '@/domain/progress/chapter-progress';
@@ -157,11 +156,5 @@ export const seedSpecSchema = z.object({
 
 export type SeedSpec = z.infer<typeof seedSpecSchema>;
 
-const fixturePath = fileURLToPath(
-  new URL('../../../fixtures/synthetic-seed.json', import.meta.url),
-);
-
 /** The parsed, validated synthetic seed. Throws at import time if the file drifts from the schema. */
-export const syntheticSeedSpec: SeedSpec = seedSpecSchema.parse(
-  JSON.parse(readFileSync(fixturePath, 'utf8')),
-);
+export const syntheticSeedSpec: SeedSpec = seedSpecSchema.parse(seedFixture);
