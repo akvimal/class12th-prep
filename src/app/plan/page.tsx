@@ -1,4 +1,4 @@
-import { DEMO_DATE, demo } from '@/app-services/demo';
+import { uiContext } from '@/app-services/app-context';
 import { getPlanOverview } from '@/app-services/plan';
 import { daysBetween } from '@/domain/planning/dates';
 import { PageHeader, Card, SectionLabel, StatTile } from '@/components/ui';
@@ -8,8 +8,8 @@ import { formatDate, titleCase } from '@/lib/format';
 export const dynamic = 'force-dynamic';
 
 export default async function PlanPage() {
-  const { repos, planId } = await demo();
-  const plan = await getPlanOverview(repos, planId, DEMO_DATE);
+  const { repos, planId, asOf } = await uiContext();
+  const plan = await getPlanOverview(repos, planId, asOf);
   if (!plan) return <p className="p-5 text-sm text-muted">No plan.</p>;
 
   const p = plan.plan;
@@ -45,7 +45,7 @@ export default async function PlanPage() {
       <div className="px-5">
         <ol className="relative border-l border-line pl-5">
           {milestones.map(([label, date]) => {
-            const d = daysBetween(DEMO_DATE, date);
+            const d = daysBetween(asOf, date);
             return (
               <li key={label} className="relative pb-5 last:pb-0">
                 <span className="absolute -left-[27px] top-1 h-2.5 w-2.5 rounded-full border-2 border-paper bg-ink" />

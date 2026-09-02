@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { DEMO_DATE, demo } from '@/app-services/demo';
+import { uiContext } from '@/app-services/app-context';
 import { getStudentOverview } from '@/app-services/overview';
 import { Bar, Card, Chip, SectionLabel } from '@/components/ui';
 import { ChevronRight } from '@/components/icons';
@@ -7,8 +7,8 @@ import { ChevronRight } from '@/components/icons';
 export const dynamic = 'force-dynamic';
 
 export default async function SubjectsPage() {
-  const { repos, academicYearId, planId } = await demo();
-  const overview = await getStudentOverview(repos, academicYearId, planId, DEMO_DATE);
+  const { repos, academicYearId, planId, asOf } = await uiContext();
+  const overview = await getStudentOverview(repos, academicYearId, planId, asOf);
   if (!overview) return <p className="p-5 text-sm text-muted">No data.</p>;
 
   return (

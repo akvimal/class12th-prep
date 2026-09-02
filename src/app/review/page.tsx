@@ -1,4 +1,4 @@
-import { DEMO_DATE, demo } from '@/app-services/demo';
+import { uiContext } from '@/app-services/app-context';
 import { getStudentOverview } from '@/app-services/overview';
 import { listStudySessions } from '@/app-services/session';
 import { addDays } from '@/domain/planning/dates';
@@ -8,11 +8,11 @@ import { titleCase } from '@/lib/format';
 export const dynamic = 'force-dynamic';
 
 export default async function ReviewPage() {
-  const { repos, academicYearId, planId } = await demo();
-  const overview = await getStudentOverview(repos, academicYearId, planId, DEMO_DATE);
-  const weekStart = addDays(DEMO_DATE, -7);
+  const { repos, academicYearId, planId, asOf } = await uiContext();
+  const overview = await getStudentOverview(repos, academicYearId, planId, asOf);
+  const weekStart = addDays(asOf, -7);
   const sessions =
-    (await listStudySessions(repos, academicYearId, { from: weekStart, to: DEMO_DATE })) ?? [];
+    (await listStudySessions(repos, academicYearId, { from: weekStart, to: asOf })) ?? [];
 
   const minutes = sessions.reduce((a, s) => a + s.actualMinutes, 0);
   const done = sessions.filter((s) => s.completion === 'YES').length;
@@ -27,7 +27,7 @@ export default async function ReviewPage() {
     <main>
       <header className="px-5 pb-3.5 pt-5">
         <SectionLabel>
-          Week of {weekStart.slice(5)} → {DEMO_DATE.slice(5)}
+          Week of {weekStart.slice(5)} → {asOf.slice(5)}
         </SectionLabel>
         <h1 className="mt-1 font-display text-[30px] font-bold leading-tight text-ink">
           Weekly review

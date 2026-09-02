@@ -26,7 +26,10 @@ export function createInMemoryPlanningRepository(
   phaseConfig: PlanPhaseConfig = phasesV1,
 ): PlanningRepository {
   const families = new Set<string>();
-  const students = new Map<string, { id: string; familyId: string; displayName: string }>();
+  const students = new Map<
+    string,
+    { id: string; familyId: string; displayName: string; board: string; grade: number }
+  >();
   const academicYears = new Map<
     string,
     {
@@ -60,8 +63,34 @@ export function createInMemoryPlanningRepository(
 
     async createStudent(input: NewStudent) {
       const id = randomUUID();
-      students.set(id, { id, familyId: input.familyId, displayName: input.displayName });
+      students.set(id, {
+        id,
+        familyId: input.familyId,
+        displayName: input.displayName,
+        board: input.board,
+        grade: input.grade,
+      });
       return { id };
+    },
+
+    async listStudents() {
+      return [...students.values()].map((s) => ({ ...s }));
+    },
+
+    async listAcademicYears(studentId: string) {
+      return [...academicYears.values()]
+        .filter((y) => y.studentId === studentId)
+        .sort((a, b) => b.startDate.localeCompare(a.startDate))
+        .map((y) => ({ ...y }));
+    },
+
+    async getActivePlan(academicYearId: string) {
+      for (const plan of plans.values()) {
+        if (plan.academicYearId === academicYearId && plan.status === 'ACTIVE') {
+          return { ...plan };
+        }
+      }
+      return null;
     },
 
     async createAcademicYear(input: NewAcademicYear) {

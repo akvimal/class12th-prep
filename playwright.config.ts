@@ -20,5 +20,7 @@ export default defineConfig({
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
+    // The shell e2e specs render from the synthetic seed, not a real profile.
+    env: { APP_DATA_SOURCE: 'memory' },
   },
 });

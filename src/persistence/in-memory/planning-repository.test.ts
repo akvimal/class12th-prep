@@ -68,6 +68,27 @@ describe('in-memory planning repository', () => {
     expect(await repo.listStudentsByFamily(f1.id)).toHaveLength(1);
   });
 
+  it('resolves the active profile: students, years newest-first, active plan', async () => {
+    const repo = createInMemoryPlanningRepository();
+    const { student, year } = await seedYear(repo);
+
+    expect((await repo.listStudents()).map((s) => s.displayName)).toEqual(['Demo Student']);
+
+    const older = await repo.createAcademicYear({
+      studentId: student.id,
+      yearLabel: '2025-26',
+      startDate: '2025-04-01',
+      endDate: '2026-03-31',
+    });
+    const years = await repo.listAcademicYears(student.id);
+    expect(years.map((y) => y.id)).toEqual([year.id, older.id]);
+
+    expect(await repo.getActivePlan(year.id)).toBeNull();
+    const plan = await repo.createPlan({ academicYearId: year.id, ...shortPlan });
+    await repo.activatePlan(plan.id);
+    expect((await repo.getActivePlan(year.id))?.id).toBe(plan.id);
+  });
+
   it('generates and regenerates phases like the drizzle repo', async () => {
     const repo = createInMemoryPlanningRepository();
     const { year } = await seedYear(repo);

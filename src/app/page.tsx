@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { DEMO_DATE, demo } from '@/app-services/demo';
+import { uiContext } from '@/app-services/app-context';
 import { getStudentOverview } from '@/app-services/overview';
 import { PhaseStrip } from '@/components/phase-strip';
 import { Bar, Chip, SectionLabel, StatTile, SyntheticNote } from '@/components/ui';
@@ -21,8 +21,8 @@ const NUM_COLOR: Record<'ink' | 'warn' | 'bad', string> = {
 };
 
 export default async function DashboardPage() {
-  const { repos, academicYearId, planId } = await demo();
-  const overview = await getStudentOverview(repos, academicYearId, planId, DEMO_DATE);
+  const { repos, academicYearId, planId, asOf, studentName } = await uiContext();
+  const overview = await getStudentOverview(repos, academicYearId, planId, asOf);
   if (!overview) return <p className="p-5 text-sm text-muted">No data.</p>;
 
   const onTrack = overview.overallReadiness >= 55;
@@ -32,10 +32,10 @@ export default async function DashboardPage() {
       <header className="flex items-start justify-between px-5 pb-3 pt-5">
         <div>
           <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-faint">
-            Demo Student · CBSE XII
+            {studentName} · CBSE XII
           </div>
           <h1 className="mt-1 font-display text-[22px] font-bold leading-tight text-ink">
-            {formatWeekday(DEMO_DATE)}
+            {formatWeekday(asOf)}
           </h1>
         </div>
         <Link

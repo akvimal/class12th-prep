@@ -1,4 +1,4 @@
-import { DEMO_DATE, demo } from '@/app-services/demo';
+import { uiContext } from '@/app-services/app-context';
 import { getStudentOverview } from '@/app-services/overview';
 import { Bar, Card, Chip, SectionLabel, StatTile } from '@/components/ui';
 import { formatDate } from '@/lib/format';
@@ -12,8 +12,8 @@ function tone(r: number): 'ok' | 'warn' | 'bad' {
 }
 
 export default async function ParentPage() {
-  const { repos, academicYearId, planId } = await demo();
-  const overview = await getStudentOverview(repos, academicYearId, planId, DEMO_DATE);
+  const { repos, academicYearId, planId, asOf } = await uiContext();
+  const overview = await getStudentOverview(repos, academicYearId, planId, asOf);
   if (!overview) return <p className="p-5 text-sm text-muted">No data.</p>;
 
   const onTrack = overview.overallReadiness >= 55;

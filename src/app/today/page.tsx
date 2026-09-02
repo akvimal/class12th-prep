@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { DEMO_DATE, demo } from '@/app-services/demo';
+import { uiContext } from '@/app-services/app-context';
 import { getStudentOverview } from '@/app-services/overview';
 import { getCapacityRange } from '@/app-services/calendar';
 import { ClockIcon, InfoIcon, PlayIcon, ChevronRight } from '@/components/icons';
@@ -12,11 +12,11 @@ const VERBS = ['PRACTISE', 'LEARN', 'ACTIVE_RECALL'] as const;
 const MINUTES = [40, 35, 20];
 
 export default async function TodayPage() {
-  const { repos, academicYearId, planId } = await demo();
-  const overview = await getStudentOverview(repos, academicYearId, planId, DEMO_DATE);
+  const { repos, academicYearId, planId, asOf } = await uiContext();
+  const overview = await getStudentOverview(repos, academicYearId, planId, asOf);
   if (!overview) return <p className="p-5 text-sm text-muted">No data.</p>;
 
-  const range = await getCapacityRange(repos, planId, DEMO_DATE, DEMO_DATE);
+  const range = await getCapacityRange(repos, planId, asOf, asOf);
   const capacity = range?.days[0]?.minutes ?? 0;
   const tasks = overview.needsAttention.slice(0, 3);
 
@@ -24,7 +24,7 @@ export default async function TodayPage() {
     <main>
       <header className="px-5 pb-2 pt-5">
         <SectionLabel>
-          {formatWeekday(DEMO_DATE)} · {titleCase(overview.currentPhase ?? '')}
+          {formatWeekday(asOf)} · {titleCase(overview.currentPhase ?? '')}
         </SectionLabel>
         <h1 className="mt-1 font-display text-[30px] font-bold leading-tight text-ink">Today</h1>
       </header>

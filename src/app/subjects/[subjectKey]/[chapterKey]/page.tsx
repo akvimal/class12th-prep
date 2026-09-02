@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { demo } from '@/app-services/demo';
+import { uiContext } from '@/app-services/app-context';
 import { getChapterView } from '@/app-services/chapter-view';
 import { CHAPTER_STATES } from '@/domain/progress/chapter-progress';
 import { GhostButton, PageHeader, PrimaryButton, SectionLabel, StatTile } from '@/components/ui';
@@ -31,7 +31,7 @@ export default async function ChapterDetailPage({
   params: Promise<{ subjectKey: string; chapterKey: string }>;
 }) {
   const { subjectKey, chapterKey } = await params;
-  const { repos, academicYearId } = await demo();
+  const { repos, academicYearId } = await uiContext();
   const view = await getChapterView(repos, academicYearId, subjectKey, chapterKey);
   if (!view) notFound();
 

@@ -1,4 +1,4 @@
-import { DEMO_DATE, demo } from '@/app-services/demo';
+import { uiContext } from '@/app-services/app-context';
 import { getStudentOverview } from '@/app-services/overview';
 import { PageHeader, Card, SectionLabel } from '@/components/ui';
 import { TrajectoryChart, type TrajectoryPoint } from '@/components/trajectory-chart';
@@ -9,8 +9,8 @@ export const dynamic = 'force-dynamic';
 const TARGET = 78;
 
 export default async function TrajectoryPage() {
-  const { repos, academicYearId, planId } = await demo();
-  const overview = await getStudentOverview(repos, academicYearId, planId, DEMO_DATE);
+  const { repos, academicYearId, planId, asOf } = await uiContext();
+  const overview = await getStudentOverview(repos, academicYearId, planId, asOf);
   if (!overview) return <p className="p-5 text-sm text-muted">No data.</p>;
 
   const now = overview.overallReadiness;

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { DEMO_DATE, demo } from '@/app-services/demo';
+import { uiContext } from '@/app-services/app-context';
 import { getStudentOverview } from '@/app-services/overview';
 import { syntheticSeedSpec } from '@/persistence/seed/spec';
 import { daysBetween } from '@/domain/planning/dates';
@@ -10,8 +10,8 @@ import { formatDate, titleCase } from '@/lib/format';
 export const dynamic = 'force-dynamic';
 
 export default async function TestsPage() {
-  const { repos, academicYearId, planId } = await demo();
-  const overview = await getStudentOverview(repos, academicYearId, planId, DEMO_DATE);
+  const { repos, academicYearId, planId, asOf } = await uiContext();
+  const overview = await getStudentOverview(repos, academicYearId, planId, asOf);
   if (!overview) return <p className="p-5 text-sm text-muted">No data.</p>;
 
   const subjectName = new Map(overview.subjects.map((s) => [s.key, s.name]));
@@ -20,7 +20,7 @@ export default async function TestsPage() {
   );
 
   const upcoming = syntheticSeedSpec.assessments
-    .map((a) => ({ ...a, days: daysBetween(DEMO_DATE, a.date) }))
+    .map((a) => ({ ...a, days: daysBetween(asOf, a.date) }))
     .sort((a, b) => a.days - b.days);
 
   return (
