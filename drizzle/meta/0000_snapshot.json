@@ -1,0 +1,494 @@
+{
+  "id": "fe1f6df2-095b-4f4c-a98e-a95331361c35",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.families": {
+      "name": "families",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.students": {
+      "name": "students",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "family_id": {
+          "name": "family_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "display_name": {
+          "name": "display_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "board": {
+          "name": "board",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "grade": {
+          "name": "grade",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timezone": {
+          "name": "timezone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Asia/Kolkata'"
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "students_family_id_families_id_fk": {
+          "name": "students_family_id_families_id_fk",
+          "tableFrom": "students",
+          "tableTo": "families",
+          "columnsFrom": [
+            "family_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "students_grade_range": {
+          "name": "students_grade_range",
+          "value": "\"students\".\"grade\" between 1 and 12"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.academic_years": {
+      "name": "academic_years",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "student_id": {
+          "name": "student_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "year_label": {
+          "name": "year_label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "curriculum_version_id": {
+          "name": "curriculum_version_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_date": {
+          "name": "end_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "academic_years_student_id_students_id_fk": {
+          "name": "academic_years_student_id_students_id_fk",
+          "tableFrom": "academic_years",
+          "tableTo": "students",
+          "columnsFrom": [
+            "student_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "academic_years_student_label_unique": {
+          "name": "academic_years_student_label_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "student_id",
+            "year_label"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "academic_years_dates_ordered": {
+          "name": "academic_years_dates_ordered",
+          "value": "\"academic_years\".\"start_date\" < \"academic_years\".\"end_date\""
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.plan_phases": {
+      "name": "plan_phases",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "preparation_plan_id": {
+          "name": "preparation_plan_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phase_type": {
+          "name": "phase_type",
+          "type": "phase_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_date": {
+          "name": "end_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "config_json": {
+          "name": "config_json",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::jsonb"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "plan_phases_preparation_plan_id_preparation_plans_id_fk": {
+          "name": "plan_phases_preparation_plan_id_preparation_plans_id_fk",
+          "tableFrom": "plan_phases",
+          "tableTo": "preparation_plans",
+          "columnsFrom": [
+            "preparation_plan_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "plan_phases_plan_type_unique": {
+          "name": "plan_phases_plan_type_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "preparation_plan_id",
+            "phase_type"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "plan_phases_dates_ordered": {
+          "name": "plan_phases_dates_ordered",
+          "value": "\"plan_phases\".\"start_date\" <= \"plan_phases\".\"end_date\""
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.preparation_plans": {
+      "name": "preparation_plans",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "academic_year_id": {
+          "name": "academic_year_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "plan_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'DRAFT'"
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "syllabus_target_date": {
+          "name": "syllabus_target_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hard_completion_date": {
+          "name": "hard_completion_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "revision_start_date": {
+          "name": "revision_start_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "exam_window_start": {
+          "name": "exam_window_start",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "exam_window_end": {
+          "name": "exam_window_end",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "weekday_capacity_minutes": {
+          "name": "weekday_capacity_minutes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "weekend_capacity_minutes": {
+          "name": "weekend_capacity_minutes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "preparation_plans_one_active_per_year": {
+          "name": "preparation_plans_one_active_per_year",
+          "columns": [
+            {
+              "expression": "academic_year_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"preparation_plans\".\"status\" = 'ACTIVE'",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "preparation_plans_academic_year_id_academic_years_id_fk": {
+          "name": "preparation_plans_academic_year_id_academic_years_id_fk",
+          "tableFrom": "preparation_plans",
+          "tableTo": "academic_years",
+          "columnsFrom": [
+            "academic_year_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "preparation_plans_dates_ordered": {
+          "name": "preparation_plans_dates_ordered",
+          "value": "\"preparation_plans\".\"start_date\" <= \"preparation_plans\".\"syllabus_target_date\"\n        and \"preparation_plans\".\"syllabus_target_date\" <= \"preparation_plans\".\"hard_completion_date\"\n        and \"preparation_plans\".\"hard_completion_date\" <= \"preparation_plans\".\"revision_start_date\"\n        and \"preparation_plans\".\"revision_start_date\" <= \"preparation_plans\".\"exam_window_start\"\n        and \"preparation_plans\".\"exam_window_start\" <= \"preparation_plans\".\"exam_window_end\""
+        },
+        "preparation_plans_capacity_non_negative": {
+          "name": "preparation_plans_capacity_non_negative",
+          "value": "\"preparation_plans\".\"weekday_capacity_minutes\" >= 0 and \"preparation_plans\".\"weekend_capacity_minutes\" >= 0"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.phase_type": {
+      "name": "phase_type",
+      "schema": "public",
+      "values": [
+        "FOUNDATION",
+        "SYLLABUS_COVERAGE",
+        "CONSOLIDATION",
+        "REVISION",
+        "PREBOARD",
+        "BOARD_EXAM"
+      ]
+    },
+    "public.plan_status": {
+      "name": "plan_status",
+      "schema": "public",
+      "values": [
+        "DRAFT",
+        "ACTIVE",
+        "ARCHIVED"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

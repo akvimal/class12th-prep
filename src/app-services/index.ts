@@ -6,10 +6,10 @@ import { systemStatus, type SystemStatus } from '@/domain/system-status';
  * repositories. Route handlers and server components call these; they never
  * reach past this layer into persistence directly.
  *
- * Only the health check exists so far.
+ * Each service takes only the repository slice it needs.
  */
 export async function getHealth(
-  repos: Repositories,
+  repos: Pick<Repositories, 'health'>,
 ): Promise<{ status: SystemStatus; checks: { database: boolean } }> {
   const database = await repos.health.isReachable();
   return { status: systemStatus({ database }), checks: { database } };
