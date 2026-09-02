@@ -238,5 +238,14 @@ micro-plan`. Deterministic. `src/app-services/study-now.ts` `getStudyNow`;
   `listQuestionErrors` (adds chapter/subject names), `advanceQuestionError`.
   `recordResultAction` / `advanceErrorAction` in `src/app/actions.ts`;
   `/tests/result?assessment=` enters a result, `/tests` shows "Errors to clear".
+- Assessment recalibration (Phase 4, ALGORITHMS §10, config `recalibration-v1`):
+  `src/domain/assessment/recalibration.ts` `recalibrateFromResult` (pure) turns a
+  result into component-score patches for the **tested chapters only** — EWMA
+  toward the observed value, weight by assessment type (PREBOARD 0.6 … class test
+  0.25). Never replaces readiness with the %. Knowledge-gap errors (non-MEMORY)
+  also drag `conceptScore`; MEMORY drags `recallScore`; exam-technique slips touch
+  only `testScore`. `applyAssessmentRecalibration` (in `assessment-results.ts`,
+  called by `recordAssessmentResult`) applies the patches + recomputes readiness
+  as of the exam date.
 - End a task with a report: files changed, migrations, tests run, acceptance
   criteria status, assumptions, follow-up dependencies.
