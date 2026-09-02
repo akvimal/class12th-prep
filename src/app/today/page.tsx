@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { uiContext } from '@/app-services/app-context';
 import { getStudentOverview } from '@/app-services/overview';
-import { getTodayPlan } from '@/app-services/today';
+import { syncTodayPlan } from '@/app-services/today';
 import { logStudyAction } from '@/app/actions';
 import { ClockIcon, InfoIcon, PlayIcon, CheckIcon } from '@/components/icons';
 import { Card, SectionLabel } from '@/components/ui';
@@ -38,7 +38,7 @@ export default async function TodayPage({
     : 'OK';
 
   const [plan, overview] = await Promise.all([
-    getTodayPlan(repos, academicYearId, planId, asOf, energy),
+    syncTodayPlan(repos, academicYearId, planId, asOf, energy),
     getStudentOverview(repos, academicYearId, planId, asOf),
   ]);
   if (!plan) return <p className="p-5 text-sm text-muted">No plan.</p>;

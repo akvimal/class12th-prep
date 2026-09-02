@@ -3,14 +3,15 @@ import { check, date, index, integer, pgTable, text, timestamp, uuid } from 'dri
 import { academicYears } from './academic-years';
 import { chapters, subjects } from './curriculum';
 import { confidenceLevel, sessionCompletion, studySessionType } from './enums';
+import { studyTasks } from './study-tasks';
 
 /**
  * Immutable evidence of actual study/practice/revision work
  * (docs/DOMAIN_MODEL.md `StudySession`). Only `created_at` — a session is not
  * edited after the fact.
  *
- * `studyTaskId` links to a planned task once the planner exists (TASK-011);
- * no foreign key yet. `chapterId` implies `subjectId` (CHECK); a whole-paper
+ * `studyTaskId` links to the planned task it fulfilled (nulled if that task is
+ * later deleted). `chapterId` implies `subjectId` (CHECK); a whole-paper
  * session may carry a subject but no chapter, or neither.
  */
 export const studySessions = pgTable(
@@ -22,7 +23,7 @@ export const studySessions = pgTable(
       .references(() => academicYears.id, { onDelete: 'cascade' }),
     subjectId: uuid('subject_id').references(() => subjects.id, { onDelete: 'restrict' }),
     chapterId: uuid('chapter_id').references(() => chapters.id, { onDelete: 'restrict' }),
-    studyTaskId: uuid('study_task_id'),
+    studyTaskId: uuid('study_task_id').references(() => studyTasks.id, { onDelete: 'set null' }),
 
     type: studySessionType('type').notNull(),
     completion: sessionCompletion('completion').notNull(),

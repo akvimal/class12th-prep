@@ -6,6 +6,7 @@ import {
 import type { Repositories } from '@/persistence/ports';
 import { buildDailyCandidates } from './candidates';
 import { getCapacityRange } from './calendar';
+import { persistDailyPlan, reconcilePastTasks } from './study-tasks';
 
 type TodayRepos = Pick<
   Repositories,
@@ -16,6 +17,8 @@ type TodayRepos = Pick<
   | 'assessment'
   | 'schoolCalendar'
   | 'revision'
+  | 'studyTask'
+  | 'session'
 >;
 
 export const PLANNER_ENERGIES: PlannerEnergy[] = ['LOW', 'OK', 'HIGH'];
@@ -40,4 +43,23 @@ export async function getTodayPlan(
 
   const capacityMinutes = range.days[0]?.minutes ?? 0;
   return buildDailyPlan({ candidates, capacityMinutes, energy, asOf });
+}
+
+/**
+ * Same as {@link getTodayPlan}, but first reconciles yesterday's unresolved
+ * tasks (COMPLETED / MISSED) so today's candidates carry an accurate backlog,
+ * and then persists the plan it produced. This is the write path behind
+ * `/today`; a background job will call it too (Phase 3 slice 5).
+ */
+export async function syncTodayPlan(
+  repos: TodayRepos,
+  academicYearId: string,
+  planId: string,
+  asOf: string,
+  energy: PlannerEnergy = 'OK',
+): Promise<DailyPlan | null> {
+  await reconcilePastTasks(repos, academicYearId, asOf);
+  const plan = await getTodayPlan(repos, academicYearId, planId, asOf, energy);
+  if (plan) await persistDailyPlan(repos, academicYearId, plan);
+  return plan;
 }
