@@ -4,7 +4,8 @@ Product-ready, date-driven study preparation system for board-exam students.
 
 ## Core goal
 
-Turn curriculum, school progress, tests, revision history and actual performance into a small, realistic daily plan that maximizes exam readiness.
+Turn curriculum, school progress, tests, revision history and actual performance
+into a small, realistic daily plan that maximizes exam readiness.
 
 Core loop:
 
@@ -21,18 +22,51 @@ Core loop:
 - Missed work is reprioritized, not blindly carried forward.
 - Parent dashboard and external notification delivery are important but not on the MVP critical path.
 
-## Recommended stack
+## Stack
 
-The SRS is framework-neutral. A pragmatic implementation is:
+- Next.js 15 (App Router) + TypeScript + Tailwind CSS v4
+- PostgreSQL 16 + Drizzle ORM
+- Vitest (unit / integration) + Playwright (critical E2E only)
+- pnpm, Docker Compose for local Postgres
 
-- Next.js + TypeScript
-- PostgreSQL
-- ORM: Prisma or Drizzle
-- PWA/responsive web UI
-- Background jobs for revision/notification events
-- Docker Compose for local development
+Layer boundaries are documented in [`src/README.md`](src/README.md) and
+`docs/ARCHITECTURE.md`. If the stack changes, record it in `docs/DECISIONS/`.
 
-If a different stack is chosen, record the decision in `docs/DECISIONS/`.
+## Getting started
+
+Prerequisites: **Node 20.11+**, **Docker**, and **pnpm** (via Corepack —
+`corepack enable`).
+
+```bash
+pnpm install
+cp .env.example .env
+pnpm db:up            # start Postgres 16 in Docker
+pnpm dev              # http://localhost:3000
+```
+
+`http://localhost:3000` and `http://localhost:3000/api/health` both report app
+and database status. There are no product features yet — this is the bootstrap
+shell (`TASK-001`).
+
+### Quality checks
+
+```bash
+pnpm check            # format:check + lint + typecheck + test
+pnpm test:e2e         # Playwright (needs `pnpm db:up` and a one-time `pnpm exec playwright install chromium`)
+```
+
+CI runs the same checks plus `pnpm build` on every push and pull request
+(`.github/workflows/ci.yml`).
+
+### Common commands
+
+| Command                                        | Purpose                                             |
+| ---------------------------------------------- | --------------------------------------------------- |
+| `pnpm dev` / `pnpm build` / `pnpm start`       | Next.js dev server / production build / serve build |
+| `pnpm db:up` / `pnpm db:down`                  | Start / stop the local Postgres container           |
+| `pnpm db:generate` / `pnpm db:migrate`         | Drizzle migrations (schema lands in TASK-002)       |
+| `pnpm test` / `pnpm test:watch`                | Vitest                                              |
+| `pnpm lint` / `pnpm typecheck` / `pnpm format` | Individual quality gates                            |
 
 ## Documents
 
@@ -44,13 +78,14 @@ If a different stack is chosen, record the decision in `docs/DECISIONS/`.
 - `docs/UX_FLOWS.md` - UX journeys and interaction constraints
 - `docs/API_SPEC.md` - API contract baseline
 - `docs/TEST_STRATEGY.md` - automated validation strategy
+- `design/` - mobile UI screen designs (`.dc.html`) + build plan
 - `AGENTS.md` - mandatory rules for Codex/AI coding agents
 
 ## Development sequence
 
 Start with Phase 0. Do not ask an agent to implement the entire SRS at once.
 
-1. `tasks/PHASE-00/TASK-001-project-bootstrap.md`
+1. `tasks/PHASE-00/TASK-001-project-bootstrap.md` ✅
 2. `TASK-002-core-database-schema.md`
 3. `TASK-003-curriculum-model.md`
 4. `TASK-004-student-academic-year-plan.md`
@@ -58,4 +93,5 @@ Start with Phase 0. Do not ask an agent to implement the entire SRS at once.
 6. `TASK-006-seed-validation-data.md`
 7. Continue with Phase 1.
 
-Each task must be implemented independently and pass its acceptance criteria before moving forward.
+Each task must be implemented independently and pass its acceptance criteria
+before moving forward. The full milestone map is in `design/build-plan.html`.

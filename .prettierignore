@@ -1,0 +1,14 @@
+.next/
+node_modules/
+coverage/
+playwright-report/
+test-results/
+pnpm-lock.yaml
+drizzle/
+
+# Content authored outside the app — not reformatted by the app's style rules
+design/
+docs/
+tasks/
+fixtures/
+*.docx
