@@ -19,11 +19,12 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "check": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test",
-    "db:up": "docker compose up -d db",
+    "db:up": "docker compose up -d --wait db",
     "db:down": "docker compose down",
-    "db:wait": "docker compose exec -T db sh -c 'until pg_isready -U prep -q; do sleep 1; done'",
+    "db:reset": "docker compose down -v && docker compose up -d --wait db && pnpm run db:migrate",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "db:seed": "tsx --env-file-if-exists=.env scripts/seed.ts",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {

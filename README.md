@@ -41,8 +41,13 @@ Prerequisites: **Node 20.11+**, **Docker**, and **pnpm** (via Corepack —
 pnpm install
 cp .env.example .env
 pnpm db:up            # start Postgres 16 in Docker
+pnpm db:migrate       # apply schema
+pnpm db:seed          # load the synthetic validation data (idempotent)
 pnpm dev              # http://localhost:3000
 ```
+
+`pnpm db:reset` drops the volume, restarts Postgres and re-migrates for a clean
+slate; follow it with `pnpm db:seed`.
 
 `http://localhost:3000` and `http://localhost:3000/api/health` both report app
 and database status. There are no product features yet — this is the bootstrap
@@ -60,13 +65,14 @@ CI runs the same checks plus `pnpm build` on every push and pull request
 
 ### Common commands
 
-| Command                                        | Purpose                                             |
-| ---------------------------------------------- | --------------------------------------------------- |
-| `pnpm dev` / `pnpm build` / `pnpm start`       | Next.js dev server / production build / serve build |
-| `pnpm db:up` / `pnpm db:down`                  | Start / stop the local Postgres container           |
-| `pnpm db:generate` / `pnpm db:migrate`         | Drizzle migrations (schema lands in TASK-002)       |
-| `pnpm test` / `pnpm test:watch`                | Vitest                                              |
-| `pnpm lint` / `pnpm typecheck` / `pnpm format` | Individual quality gates                            |
+| Command                                         | Purpose                                             |
+| ----------------------------------------------- | --------------------------------------------------- |
+| `pnpm dev` / `pnpm build` / `pnpm start`        | Next.js dev server / production build / serve build |
+| `pnpm db:up` / `pnpm db:down` / `pnpm db:reset` | Start / stop / wipe + recreate the local Postgres   |
+| `pnpm db:generate` / `pnpm db:migrate`          | Generate / apply Drizzle migrations                 |
+| `pnpm db:seed`                                  | Load `fixtures/synthetic-seed.json` (idempotent)    |
+| `pnpm test` / `pnpm test:watch`                 | Vitest                                              |
+| `pnpm lint` / `pnpm typecheck` / `pnpm format`  | Individual quality gates                            |
 
 ## Documents
 
