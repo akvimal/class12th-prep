@@ -11,6 +11,7 @@ import { createInMemoryReadinessRepository } from './readiness-repository';
 import { createInMemorySchoolCalendarRepository } from './school-calendar-repository';
 import { createInMemorySessionRepository } from './session-repository';
 import { createInMemoryStudyTaskRepository } from './study-task-repository';
+import { createInMemoryWeeklyReviewRepository } from './weekly-review-repository';
 
 /**
  * In-memory repository set. Backs the UI shell (before Postgres lands) and
@@ -36,5 +37,6 @@ export function createInMemoryRepositories(): Repositories {
       async (id) => (await assessment.getAssessment(id))?.academicYearId ?? null,
     ),
     studyTask: createInMemoryStudyTaskRepository(),
+    weeklyReview: createInMemoryWeeklyReviewRepository(),
   };
 }

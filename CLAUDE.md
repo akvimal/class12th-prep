@@ -170,9 +170,19 @@ method }`. `revision_schedules` (`drizzle/0010`, one SCHEDULED row per
   (`emitEvent`, `listEvents`, `detectDailyEvents` = SCHOOL_TEST_APPROACHING /
   PREBOARD_APPROACHING / REVISION_DUE / REVISION_OVERDUE / STUDY_BLOCK_MISSED
   for a day). `GET/POST /api/academic-years/[id]/events`. No UI wiring yet.
+- Weekly review (Phase 3, config `review-v1`): `src/domain/review/weekly-review.ts`
+  `buildWeeklyReview` (pure — sessions, time-by-activity, accuracy, per-subject
+  readiness delta, rhythm/adherence, revisions, errors, focus list). Stored in
+  `weekly_reviews` (`drizzle/0013`, one row per (year, week start), `summary`
+  jsonb). `src/app-services/weekly-review.ts` `generateWeeklyReview(repos, ay,
+asOf, {announce})` — window is `[asOf−7, asOf−1]`, upserts, emits
+  `WEEKLY_REVIEW_READY` (deduped per week) only when `announce`. `/review` renders
+  the latest (regenerating with `announce:false`); the worker announces on a
+  7-day boundary from plan start.
 - Daily worker (Phase 3, `src/jobs/`): `runDailyJobs(repos, asOf)` for the active
   profile — `reconcilePastTasks` → regenerate + `persistDailyPlan` →
-  `detectDailyEvents`. Idempotent. Entrypoint `scripts/run-daily-jobs.ts`
+  `detectDailyEvents` → `generateWeeklyReview`. Idempotent. Entrypoint
+  `scripts/run-daily-jobs.ts`
   (`pnpm jobs:daily [YYYY-MM-DD]`), run from host cron; never on the request path
   (`/today` calls `syncTodayPlan` for the same effect opportunistically).
 - Study Now (`src/domain/planning/study-now.ts`, ALGORITHMS §4, config

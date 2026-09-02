@@ -22,3 +22,4 @@ export * from './domain-events';
 export * from './revision-schedules';
 export * from './assessment-results';
 export * from './study-tasks';
+export * from './weekly-reviews';
