@@ -61,7 +61,12 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
   Never edit a published version in place — create a new `CurriculumVersion`.
   Load a tree with `importCurriculum()`; synthetic tree in
   `fixtures/synthetic-curriculum.json`. `OFFICIAL` weights require a source
-  reference (domain guard + DB CHECK).
+  reference (domain guard + DB CHECK). The real (but **derived / unofficial**)
+  Class XII tree for a live student profile is
+  `fixtures/cbse-class12-2026-27-curriculum.json`, parsed + guarded by
+  `src/persistence/seed/cbse-curriculum.ts` (`cbseClass12Curriculum`) — chapter
+  lists need a per-school review pass and every weight is an estimate
+  (`needsReview: true`, no `OFFICIAL`).
 - Plan phases are derived from the plan's dates (`src/domain/planning/plan-phases.ts`,
   config `phases-v1`) and regenerated on every plan change — callers never
   write `plan_phases` directly. See `docs/DECISIONS/ADR-006`. Date arithmetic

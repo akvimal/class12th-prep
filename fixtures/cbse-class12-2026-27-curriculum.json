@@ -1,0 +1,267 @@
+{
+  "meta": {
+    "kind": "DERIVED_UNOFFICIAL",
+    "official": false,
+    "board": "CBSE",
+    "grade": 12,
+    "academicYearLabel": "2026-27",
+    "needsReview": true,
+    "warning": "Chapter lists follow the NCERT / CBSE Class XII syllabus as of 2025-26 and MUST be checked against the student's own school syllabus before relying on them. Every weight here is an ESTIMATE of exam importance derived from past papers and sample papers (sourceType DERIVED_PYQ / DERIVED_SQP) with low-to-moderate confidence — none of it is official CBSE unit weightage. Edit this file and re-run the curriculum import to correct anything.",
+    "source": "NCERT textbook contents + CBSE senior-secondary curriculum 2025-26; transcribed by hand"
+  },
+  "version": {
+    "board": "CBSE",
+    "grade": 12,
+    "academicYearLabel": "2026-27",
+    "version": "cbse-xii-2026-27-derived-v1",
+    "sourceReference": "DERIVED://ncert-class12 + cbse-curriculum-2025-26 (unofficial, needs review)"
+  },
+  "publish": true,
+  "subjects": [
+    {
+      "key": "PHY",
+      "name": "Physics",
+      "code": "042",
+      "units": [
+        {
+          "key": "PHY-U1",
+          "name": "Electrostatics",
+          "chapters": [
+            { "key": "PHY01", "name": "Electric Charges and Fields", "weights": [{ "value": 6, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "PHY02", "name": "Electrostatic Potential and Capacitance", "weights": [{ "value": 7, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] }
+          ]
+        },
+        {
+          "key": "PHY-U2",
+          "name": "Current Electricity",
+          "chapters": [
+            { "key": "PHY03", "name": "Current Electricity", "weights": [{ "value": 8, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] }
+          ]
+        },
+        {
+          "key": "PHY-U3",
+          "name": "Magnetic Effects of Current, Magnetism & EMI",
+          "chapters": [
+            { "key": "PHY04", "name": "Moving Charges and Magnetism", "weights": [{ "value": 7, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "PHY05", "name": "Magnetism and Matter", "weights": [{ "value": 4, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "PHY06", "name": "Electromagnetic Induction", "weights": [{ "value": 6, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "PHY07", "name": "Alternating Current", "weights": [{ "value": 6, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] }
+          ]
+        },
+        {
+          "key": "PHY-U4",
+          "name": "Electromagnetic Waves & Optics",
+          "chapters": [
+            { "key": "PHY08", "name": "Electromagnetic Waves", "weights": [{ "value": 3, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "PHY09", "name": "Ray Optics and Optical Instruments", "weights": [{ "value": 9, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "PHY10", "name": "Wave Optics", "weights": [{ "value": 6, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] }
+          ]
+        },
+        {
+          "key": "PHY-U5",
+          "name": "Dual Nature, Atoms & Nuclei",
+          "chapters": [
+            { "key": "PHY11", "name": "Dual Nature of Radiation and Matter", "weights": [{ "value": 5, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "PHY12", "name": "Atoms", "weights": [{ "value": 4, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "PHY13", "name": "Nuclei", "weights": [{ "value": 5, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] }
+          ]
+        },
+        {
+          "key": "PHY-U6",
+          "name": "Electronic Devices",
+          "chapters": [
+            { "key": "PHY14", "name": "Semiconductor Electronics: Materials, Devices and Simple Circuits", "weights": [{ "value": 7, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "CHE",
+      "name": "Chemistry",
+      "code": "043",
+      "units": [
+        {
+          "key": "CHE-U1",
+          "name": "Physical Chemistry",
+          "chapters": [
+            { "key": "CHE01", "name": "Solutions", "weights": [{ "value": 7, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "CHE02", "name": "Electrochemistry", "weights": [{ "value": 8, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "CHE03", "name": "Chemical Kinetics", "weights": [{ "value": 7, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] }
+          ]
+        },
+        {
+          "key": "CHE-U2",
+          "name": "Inorganic Chemistry",
+          "chapters": [
+            { "key": "CHE04", "name": "The d- and f-Block Elements", "weights": [{ "value": 8, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "CHE05", "name": "Coordination Compounds", "weights": [{ "value": 8, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] }
+          ]
+        },
+        {
+          "key": "CHE-U3",
+          "name": "Organic Chemistry",
+          "chapters": [
+            { "key": "CHE06", "name": "Haloalkanes and Haloarenes", "weights": [{ "value": 6, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "CHE07", "name": "Alcohols, Phenols and Ethers", "weights": [{ "value": 7, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "CHE08", "name": "Aldehydes, Ketones and Carboxylic Acids", "weights": [{ "value": 9, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "CHE09", "name": "Amines", "weights": [{ "value": 6, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "CHE10", "name": "Biomolecules", "weights": [{ "value": 6, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "MAT",
+      "name": "Mathematics",
+      "code": "041",
+      "units": [
+        {
+          "key": "MAT-U1",
+          "name": "Relations and Functions",
+          "chapters": [
+            { "key": "MAT01", "name": "Relations and Functions", "weights": [{ "value": 5, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "MAT02", "name": "Inverse Trigonometric Functions", "weights": [{ "value": 4, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] }
+          ]
+        },
+        {
+          "key": "MAT-U2",
+          "name": "Algebra",
+          "chapters": [
+            { "key": "MAT03", "name": "Matrices", "weights": [{ "value": 6, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "MAT04", "name": "Determinants", "weights": [{ "value": 6, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] }
+          ]
+        },
+        {
+          "key": "MAT-U3",
+          "name": "Calculus",
+          "chapters": [
+            { "key": "MAT05", "name": "Continuity and Differentiability", "weights": [{ "value": 8, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "MAT06", "name": "Application of Derivatives", "weights": [{ "value": 7, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "MAT07", "name": "Integrals", "weights": [{ "value": 9, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "MAT08", "name": "Application of Integrals", "weights": [{ "value": 5, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "MAT09", "name": "Differential Equations", "weights": [{ "value": 6, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] }
+          ]
+        },
+        {
+          "key": "MAT-U4",
+          "name": "Vectors and Three-Dimensional Geometry",
+          "chapters": [
+            { "key": "MAT10", "name": "Vector Algebra", "weights": [{ "value": 6, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "MAT11", "name": "Three Dimensional Geometry", "weights": [{ "value": 7, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] }
+          ]
+        },
+        {
+          "key": "MAT-U5",
+          "name": "Linear Programming",
+          "chapters": [
+            { "key": "MAT12", "name": "Linear Programming", "weights": [{ "value": 5, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] }
+          ]
+        },
+        {
+          "key": "MAT-U6",
+          "name": "Probability",
+          "chapters": [
+            { "key": "MAT13", "name": "Probability", "weights": [{ "value": 8, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "CS",
+      "name": "Computer Science",
+      "code": "083",
+      "units": [
+        {
+          "key": "CS-U1",
+          "name": "Computational Thinking and Programming – 2",
+          "chapters": [
+            { "key": "CS01", "name": "Python Revision Tour", "weights": [{ "value": 4, "unit": "RELATIVE", "sourceType": "DERIVED_SQP", "confidence": 0.5, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://sqp-estimate" }] },
+            { "key": "CS02", "name": "Functions", "weights": [{ "value": 6, "unit": "RELATIVE", "sourceType": "DERIVED_SQP", "confidence": 0.5, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://sqp-estimate" }] },
+            { "key": "CS03", "name": "Exception Handling in Python", "weights": [{ "value": 3, "unit": "RELATIVE", "sourceType": "DERIVED_SQP", "confidence": 0.5, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://sqp-estimate" }] },
+            { "key": "CS04", "name": "File Handling in Python", "weights": [{ "value": 7, "unit": "RELATIVE", "sourceType": "DERIVED_SQP", "confidence": 0.5, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://sqp-estimate" }] },
+            { "key": "CS05", "name": "Data Structures: Stack", "weights": [{ "value": 6, "unit": "RELATIVE", "sourceType": "DERIVED_SQP", "confidence": 0.5, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://sqp-estimate" }] }
+          ]
+        },
+        {
+          "key": "CS-U2",
+          "name": "Computer Networks",
+          "chapters": [
+            { "key": "CS06", "name": "Computer Networks", "weights": [{ "value": 8, "unit": "RELATIVE", "sourceType": "DERIVED_SQP", "confidence": 0.5, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://sqp-estimate" }] }
+          ]
+        },
+        {
+          "key": "CS-U3",
+          "name": "Database Management",
+          "chapters": [
+            { "key": "CS07", "name": "Database Concepts", "weights": [{ "value": 4, "unit": "RELATIVE", "sourceType": "DERIVED_SQP", "confidence": 0.5, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://sqp-estimate" }] },
+            { "key": "CS08", "name": "Structured Query Language (SQL)", "weights": [{ "value": 9, "unit": "RELATIVE", "sourceType": "DERIVED_SQP", "confidence": 0.5, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://sqp-estimate" }] },
+            { "key": "CS09", "name": "Interface Python with MySQL", "weights": [{ "value": 6, "unit": "RELATIVE", "sourceType": "DERIVED_SQP", "confidence": 0.5, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://sqp-estimate" }] }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "ENG",
+      "name": "English Core",
+      "code": "301",
+      "units": [
+        {
+          "key": "ENG-U1",
+          "name": "Reading Skills",
+          "chapters": [
+            { "key": "ENG01", "name": "Reading Comprehension — Unseen Passages", "weights": [{ "value": 9, "unit": "RELATIVE", "sourceType": "DERIVED_SQP", "confidence": 0.5, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://sqp-estimate" }] },
+            { "key": "ENG02", "name": "Note-making and Summarising", "weights": [{ "value": 5, "unit": "RELATIVE", "sourceType": "DERIVED_SQP", "confidence": 0.5, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://sqp-estimate" }] }
+          ]
+        },
+        {
+          "key": "ENG-U2",
+          "name": "Creative Writing Skills",
+          "chapters": [
+            { "key": "ENG03", "name": "Notice Writing", "weights": [{ "value": 4, "unit": "RELATIVE", "sourceType": "DERIVED_SQP", "confidence": 0.5, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://sqp-estimate" }] },
+            { "key": "ENG04", "name": "Formal / Informal Invitations and Replies", "weights": [{ "value": 4, "unit": "RELATIVE", "sourceType": "DERIVED_SQP", "confidence": 0.5, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://sqp-estimate" }] },
+            { "key": "ENG05", "name": "Letters (Application / Letter to the Editor)", "weights": [{ "value": 6, "unit": "RELATIVE", "sourceType": "DERIVED_SQP", "confidence": 0.5, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://sqp-estimate" }] },
+            { "key": "ENG06", "name": "Article Writing", "weights": [{ "value": 6, "unit": "RELATIVE", "sourceType": "DERIVED_SQP", "confidence": 0.5, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://sqp-estimate" }] },
+            { "key": "ENG07", "name": "Report Writing", "weights": [{ "value": 6, "unit": "RELATIVE", "sourceType": "DERIVED_SQP", "confidence": 0.5, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://sqp-estimate" }] }
+          ]
+        },
+        {
+          "key": "ENG-U3",
+          "name": "Flamingo — Prose",
+          "chapters": [
+            { "key": "ENG08", "name": "The Last Lesson", "weights": [{ "value": 4, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "ENG09", "name": "Lost Spring", "weights": [{ "value": 4, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "ENG10", "name": "Deep Water", "weights": [{ "value": 3, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "ENG11", "name": "The Rattrap", "weights": [{ "value": 4, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "ENG12", "name": "Indigo", "weights": [{ "value": 4, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "ENG13", "name": "Poets and Pancakes", "weights": [{ "value": 3, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "ENG14", "name": "The Interview", "weights": [{ "value": 3, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "ENG15", "name": "Going Places", "weights": [{ "value": 3, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] }
+          ]
+        },
+        {
+          "key": "ENG-U4",
+          "name": "Flamingo — Poetry",
+          "chapters": [
+            { "key": "ENG16", "name": "My Mother at Sixty-Six", "weights": [{ "value": 3, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "ENG17", "name": "Keeping Quiet", "weights": [{ "value": 3, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "ENG18", "name": "A Thing of Beauty", "weights": [{ "value": 3, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "ENG19", "name": "A Roadside Stand", "weights": [{ "value": 2, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "ENG20", "name": "Aunt Jennifer's Tigers", "weights": [{ "value": 3, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] }
+          ]
+        },
+        {
+          "key": "ENG-U5",
+          "name": "Vistas — Supplementary Reader",
+          "chapters": [
+            { "key": "ENG21", "name": "The Third Level", "weights": [{ "value": 3, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "ENG22", "name": "The Tiger King", "weights": [{ "value": 4, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "ENG23", "name": "Journey to the End of the Earth", "weights": [{ "value": 3, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "ENG24", "name": "The Enemy", "weights": [{ "value": 3, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "ENG25", "name": "On the Face of It", "weights": [{ "value": 3, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] },
+            { "key": "ENG26", "name": "Memories of Childhood", "weights": [{ "value": 3, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.4, "effectiveFrom": "2026-04-01", "sourceReference": "DERIVED://pyq-estimate" }] }
+          ]
+        }
+      ]
+    }
+  ]
+}
