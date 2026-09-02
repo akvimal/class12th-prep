@@ -34,6 +34,7 @@ services:
       DATABASE_URL: postgres://prep:${POSTGRES_PASSWORD:-prep}@db:5432/prep
       APP_DATA_SOURCE: database
       PREP_PASSCODE: ${PREP_PASSCODE:-}
+      PREP_PARENT_PASSCODE: ${PREP_PARENT_PASSCODE:-}
       PREP_SESSION_SECRET: ${PREP_SESSION_SECRET:-}
     volumes:
       - ./config:/app/config

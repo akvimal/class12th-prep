@@ -12,9 +12,12 @@ export const env = {
    * `database` in production when a DATABASE_URL is present, `memory` otherwise.
    */
   appDataSource: (process.env.APP_DATA_SOURCE ?? '') as '' | 'memory' | 'database',
-  /** Single-passcode gate. Set the plaintext passcode or its SHA-256 hex hash. */
+  /** Student passcode gate (full access). Plaintext or SHA-256 hex hash. */
   passcode: (process.env.PREP_PASSCODE ?? '').trim(),
   passcodeHash: (process.env.PREP_PASSCODE_HASH ?? '').trim().toLowerCase(),
+  /** Optional parent passcode — a session limited to the parent summary. */
+  parentPasscode: (process.env.PREP_PARENT_PASSCODE ?? '').trim(),
+  parentPasscodeHash: (process.env.PREP_PARENT_PASSCODE_HASH ?? '').trim().toLowerCase(),
   /** HMAC secret for the unlock cookie; derived from the passcode when unset. */
   sessionSecret: (process.env.PREP_SESSION_SECRET ?? '').trim(),
 } as const;

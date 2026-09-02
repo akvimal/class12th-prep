@@ -1,26 +1,29 @@
 'use server';
 
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { env } from '@/lib/env';
-import { issueSessionToken, passcodeCookie, safeNext, verifyPasscode } from '@/lib/passcode';
+import { issueSessionToken, passcodeCookie, resolveRole, safeNext } from '@/lib/passcode';
 
 export async function unlockAction(formData: FormData): Promise<void> {
   const passcode = String(formData.get('passcode') ?? '');
   const next = safeNext(String(formData.get('next') ?? '/'));
 
-  if (!(await verifyPasscode(passcode))) {
+  const role = await resolveRole(passcode);
+  if (!role) {
     redirect(`/unlock?next=${encodeURIComponent(next)}&error=1`);
   }
 
+  // `Secure` cookies are dropped over plain HTTP (e.g. a VPS reached by IP), so
+  // only set it when the request actually arrived over HTTPS.
+  const proto = (await headers()).get('x-forwarded-proto');
   const store = await cookies();
-  store.set(passcodeCookie.name, await issueSessionToken(), {
+  store.set(passcodeCookie.name, await issueSessionToken(role), {
     httpOnly: true,
     sameSite: 'lax',
-    secure: env.nodeEnv === 'production',
+    secure: proto === 'https',
     path: '/',
     maxAge: passcodeCookie.maxAge,
   });
 
-  redirect(next);
+  redirect(role === 'parent' ? '/parent' : next);
 }

@@ -95,7 +95,7 @@ The imported curriculum is **derived / unofficial** — check the chapter lists 
 Needs Docker + Docker Compose on the host.
 
 ```bash
-cp .env.example .env      # set POSTGRES_PASSWORD, PREP_PASSCODE, SITE_ADDRESS
+cp .env.example .env      # set POSTGRES_PASSWORD, PREP_PASSCODE, PREP_PARENT_PASSCODE, SITE_ADDRESS
 cp config/student.example.json config/student.json   # edit it
 
 docker compose --profile deploy build
@@ -105,9 +105,15 @@ docker compose --profile deploy run --rm app pnpm prep:init
 docker compose --profile deploy up -d                # app + Caddy (auto-HTTPS if SITE_ADDRESS is a domain)
 ```
 
-`SITE_ADDRESS=board.example.com` gets a real certificate; `:80` serves plain
-HTTP for trying it on an IP. Install it on a phone from the browser menu →
-**Add to Home Screen**. Set `PREP_PASSCODE` to lock it.
+**Reaching it:** `SITE_ADDRESS=board.example.com` gets a real HTTPS certificate;
+`SITE_ADDRESS=:80` (or leaving it unset) serves plain HTTP on the VPS IP —
+usable, but the installable-PWA behaviour (offline, iOS home-screen app) needs
+HTTPS.
+
+**Two logins:** `PREP_PASSCODE` is the student's (full access). Set
+`PREP_PARENT_PASSCODE` too and that code opens a read-only parent summary and
+nothing else. Both open the same URL; each person enters their own passcode
+once per device.
 
 ## Documents
 
