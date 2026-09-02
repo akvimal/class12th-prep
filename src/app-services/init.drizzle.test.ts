@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { createDrizzleAssessmentRepository } from '@/persistence/drizzle/assessment-repository';
 import { createDrizzleCurriculumRepository } from '@/persistence/drizzle/curriculum-repository';
 import { createDrizzlePlanningRepository } from '@/persistence/drizzle/planning-repository';
 import { createDrizzleProgressRepository } from '@/persistence/drizzle/progress-repository';
@@ -25,6 +26,7 @@ const repos = () => ({
   progress: createDrizzleProgressRepository(db),
   session: createDrizzleSessionRepository(db),
   readiness: createDrizzleReadinessRepository(db),
+  assessment: createDrizzleAssessmentRepository(db),
 });
 
 const config: ProfileConfig = profileConfigSchema.parse(configExample);

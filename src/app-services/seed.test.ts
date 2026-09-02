@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { getCapacityRange, getDailyCapacity } from '@/app-services/calendar';
 import { getPlanOverview } from '@/app-services/plan';
+import { createDrizzleAssessmentRepository } from '@/persistence/drizzle/assessment-repository';
 import { createDrizzleCurriculumRepository } from '@/persistence/drizzle/curriculum-repository';
 import { createDrizzlePlanningRepository } from '@/persistence/drizzle/planning-repository';
 import { createDrizzleProgressRepository } from '@/persistence/drizzle/progress-repository';
@@ -28,6 +29,7 @@ const drizzleRepos = () => ({
   progress: createDrizzleProgressRepository(db),
   session: createDrizzleSessionRepository(db),
   readiness: createDrizzleReadinessRepository(db),
+  assessment: createDrizzleAssessmentRepository(db),
 });
 
 describe('seedSynthetic (Drizzle)', () => {
@@ -43,6 +45,7 @@ describe('seedSynthetic (Drizzle)', () => {
       calendarEvents: 4,
       chapterProgress: 12,
       studySessions: 4,
+      assessments: 3,
       readinessSnapshots: 12,
     });
 

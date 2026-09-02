@@ -50,6 +50,13 @@
       "when": 1788333757496,
       "tag": "0006_chunky_madame_masque",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1788344545186,
+      "tag": "0007_breezy_colossus",
+      "breakpoints": true
     }
   ]
 }

@@ -16,3 +16,4 @@ export * from './preparation-plans';
 export * from './chapter-progress';
 export * from './study-sessions';
 export * from './readiness-snapshots';
+export * from './assessments';

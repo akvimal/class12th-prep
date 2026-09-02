@@ -1,4 +1,5 @@
 import type { Repositories } from '../ports';
+import { createInMemoryAssessmentRepository } from './assessment-repository';
 import { createInMemoryCurriculumRepository } from './curriculum-repository';
 import { createInMemoryPlanningRepository } from './planning-repository';
 import { createInMemoryProgressRepository } from './progress-repository';
@@ -21,5 +22,6 @@ export function createInMemoryRepositories(): Repositories {
     progress: createInMemoryProgressRepository(),
     session: createInMemorySessionRepository(),
     readiness: createInMemoryReadinessRepository(),
+    assessment: createInMemoryAssessmentRepository(),
   };
 }
