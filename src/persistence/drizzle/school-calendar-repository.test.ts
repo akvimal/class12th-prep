@@ -1,8 +1,8 @@
 import { eq } from 'drizzle-orm';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { getCapacityRange, getDailyCapacity } from '@/app-services/calendar';
 import { academicYears, schoolCalendarEvents } from '@/persistence/schema';
-import { createTestDatabase } from '@/persistence/testing/test-db';
+import { createTestDatabase, truncateAll } from '@/persistence/testing/test-db';
 import type { DrizzleDb } from './db';
 import { createDrizzlePlanningRepository } from './planning-repository';
 import { createDrizzleSchoolCalendarRepository } from './school-calendar-repository';
@@ -12,12 +12,15 @@ let close: () => Promise<void>;
 let planning: ReturnType<typeof createDrizzlePlanningRepository>;
 let calendar: ReturnType<typeof createDrizzleSchoolCalendarRepository>;
 
-beforeEach(async () => {
+beforeAll(async () => {
   ({ db, close } = await createTestDatabase());
+});
+afterAll(() => close());
+beforeEach(async () => {
+  await truncateAll(db);
   planning = createDrizzlePlanningRepository(db);
   calendar = createDrizzleSchoolCalendarRepository(db);
 });
-afterEach(() => close());
 
 const shortPlan = {
   startDate: '2026-09-02',

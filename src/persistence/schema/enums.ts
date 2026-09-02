@@ -65,3 +65,21 @@ export const schoolChapterStatus = pgEnum('school_chapter_status', [
   'COMPLETED',
   'REVISING',
 ]);
+
+// --- Study session evidence (TASK-008) ---
+
+export const studySessionType = pgEnum('study_session_type', [
+  'LEARN',
+  'PRACTISE',
+  'ACTIVE_RECALL',
+  'REVISION',
+  'PYQ',
+  'CHAPTER_TEST',
+  'UNIT_TEST',
+  'SAMPLE_PAPER',
+  'FULL_PAPER',
+  'ERROR_CORRECTION',
+  'SCHOOL_HOMEWORK',
+]);
+
+export const sessionCompletion = pgEnum('session_completion', ['YES', 'PARTIAL', 'NO']);

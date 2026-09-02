@@ -1,8 +1,8 @@
 import { eq, sql } from 'drizzle-orm';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { PlanDateOrderError } from '@/domain/planning/plan-dates';
 import { academicYears, families, planPhases, preparationPlans, students } from '@/persistence/schema';
-import { createTestDatabase } from '@/persistence/testing/test-db';
+import { createTestDatabase, truncateAll } from '@/persistence/testing/test-db';
 import type { DrizzleDb } from './db';
 import { createDrizzlePlanningRepository } from './planning-repository';
 
@@ -10,13 +10,13 @@ let db: DrizzleDb;
 let close: () => Promise<void>;
 let repo: ReturnType<typeof createDrizzlePlanningRepository>;
 
-beforeEach(async () => {
+beforeAll(async () => {
   ({ db, close } = await createTestDatabase());
-  repo = createDrizzlePlanningRepository(db);
 });
-
-afterEach(async () => {
-  await close();
+afterAll(() => close());
+beforeEach(async () => {
+  await truncateAll(db);
+  repo = createDrizzlePlanningRepository(db);
 });
 
 const shortPlan = {

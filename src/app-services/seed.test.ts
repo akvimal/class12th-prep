@@ -1,28 +1,31 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { getCapacityRange, getDailyCapacity } from '@/app-services/calendar';
 import { getPlanOverview } from '@/app-services/plan';
 import { createDrizzleCurriculumRepository } from '@/persistence/drizzle/curriculum-repository';
 import { createDrizzlePlanningRepository } from '@/persistence/drizzle/planning-repository';
 import { createDrizzleProgressRepository } from '@/persistence/drizzle/progress-repository';
 import { createDrizzleSchoolCalendarRepository } from '@/persistence/drizzle/school-calendar-repository';
+import { createDrizzleSessionRepository } from '@/persistence/drizzle/session-repository';
 import type { DrizzleDb } from '@/persistence/drizzle/db';
 import { createInMemoryRepositories } from '@/persistence/in-memory';
-import { createTestDatabase } from '@/persistence/testing/test-db';
+import { createTestDatabase, truncateAll } from '@/persistence/testing/test-db';
 import { seedSynthetic } from './seed';
 
 let db: DrizzleDb;
 let close: () => Promise<void>;
 
-beforeEach(async () => {
+beforeAll(async () => {
   ({ db, close } = await createTestDatabase());
 });
-afterEach(() => close());
+afterAll(() => close());
+beforeEach(() => truncateAll(db));
 
 const drizzleRepos = () => ({
   planning: createDrizzlePlanningRepository(db),
   curriculum: createDrizzleCurriculumRepository(db),
   schoolCalendar: createDrizzleSchoolCalendarRepository(db),
   progress: createDrizzleProgressRepository(db),
+  session: createDrizzleSessionRepository(db),
 });
 
 describe('seedSynthetic (Drizzle)', () => {
@@ -37,12 +40,19 @@ describe('seedSynthetic (Drizzle)', () => {
       enrollments: 4,
       calendarEvents: 4,
       chapterProgress: 12,
+      studySessions: 4,
     });
 
     // chapter progress from the fixture is loaded
     const progress = await repos.progress.listChapterProgress(result.academicYearId!);
     expect(progress).toHaveLength(12);
     expect(progress.some((p) => p.schoolStatus === 'CURRENTLY_TEACHING')).toBe(true);
+
+    // study session history is loaded, newest first
+    const sessions = await repos.session.listSessions(result.academicYearId!);
+    expect(sessions).toHaveLength(4);
+    expect(sessions[0]!.sessionDate >= sessions[3]!.sessionDate).toBe(true);
+    expect(sessions.some((s) => s.completion === 'PARTIAL')).toBe(true);
 
     const hierarchy = await repos.curriculum.getHierarchy(result.curriculumVersionId);
     expect(hierarchy.map((s) => s.name)).toEqual([

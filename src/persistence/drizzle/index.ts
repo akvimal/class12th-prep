@@ -4,6 +4,7 @@ import { createDrizzleCurriculumRepository } from './curriculum-repository';
 import { createDrizzlePlanningRepository } from './planning-repository';
 import { createDrizzleProgressRepository } from './progress-repository';
 import { createDrizzleSchoolCalendarRepository } from './school-calendar-repository';
+import { createDrizzleSessionRepository } from './session-repository';
 
 /**
  * PostgreSQL repository set (via Drizzle), bound to the shared connection pool.
@@ -17,5 +18,6 @@ export function createDrizzleRepositories(): Repositories {
     curriculum: createDrizzleCurriculumRepository(db),
     schoolCalendar: createDrizzleSchoolCalendarRepository(db),
     progress: createDrizzleProgressRepository(db),
+    session: createDrizzleSessionRepository(db),
   };
 }

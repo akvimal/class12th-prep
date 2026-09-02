@@ -86,7 +86,13 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
   entirely separate from curriculum. `state` may move backward — not enforced.
   `effectiveReadiness` is null until the readiness engine (TASK-009) computes
   it. Read the hierarchy-with-progress via `getCurriculumProgress`.
-- Integration test suite is ~80s (fresh PGlite per test). A shared-instance +
-  TRUNCATE harness is a known worthwhile follow-up.
+- Study sessions (`src/persistence/schema/study-sessions.ts`, `src/domain/progress/study-session.ts`)
+  are immutable evidence — `recordSession` appends, no update. Recording one
+  NEVER changes chapter progress (that's the readiness engine, TASK-009).
+  `chapterId` implies `subjectId` (DB CHECK); the `session` app-service
+  resolves keys/ids and the subject.
+- Integration tests share one PGlite instance per file: `createTestDatabase()`
+  in `beforeAll`, `truncateAll(db)` (+ `seedTestDatabase(db)` for seeded files)
+  in `beforeEach`. Don't put `createTestDatabase` in `beforeEach`.
 - End a task with a report: files changed, migrations, tests run, acceptance
   criteria status, assumptions, follow-up dependencies.

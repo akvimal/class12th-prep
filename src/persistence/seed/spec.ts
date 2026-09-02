@@ -3,6 +3,8 @@ import { fileURLToPath } from 'node:url';
 import { z } from 'zod';
 import { SCHOOL_EVENT_TYPES } from '@/domain/planning/school-calendar';
 import { WEIGHT_SOURCE_TYPES, WEIGHT_UNITS } from '@/domain/curriculum/provenance';
+import { CONFIDENCE_LEVELS } from '@/domain/progress/chapter-progress';
+import { SESSION_COMPLETIONS, STUDY_SESSION_TYPES } from '@/domain/progress/study-session';
 
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'expected YYYY-MM-DD');
 
@@ -119,6 +121,22 @@ export const seedSpecSchema = z.object({
         chapterKey: z.string().min(1),
         readiness: z.number().min(0).max(100),
         schoolStatus: z.enum(['NOT_TAUGHT', 'CURRENTLY_TEACHING', 'COMPLETED', 'REVISING']),
+      }),
+    )
+    .default([]),
+  studySessions: z
+    .array(
+      z.object({
+        chapterKey: z.string().min(1).optional(),
+        subjectKey: z.string().min(1).optional(),
+        type: z.enum(STUDY_SESSION_TYPES),
+        completion: z.enum(SESSION_COMPLETIONS),
+        sessionDate: isoDate,
+        plannedMinutes: z.number().int().min(0).nullish(),
+        actualMinutes: z.number().int().min(0),
+        attempted: z.number().int().min(0).nullish(),
+        correct: z.number().int().min(0).nullish(),
+        confidenceAfter: z.enum(CONFIDENCE_LEVELS).nullish(),
       }),
     )
     .default([]),

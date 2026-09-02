@@ -3,13 +3,26 @@ import { createDrizzleCurriculumRepository } from '@/persistence/drizzle/curricu
 import { createDrizzlePlanningRepository } from '@/persistence/drizzle/planning-repository';
 import { createDrizzleProgressRepository } from '@/persistence/drizzle/progress-repository';
 import { createDrizzleSchoolCalendarRepository } from '@/persistence/drizzle/school-calendar-repository';
+import { createDrizzleSessionRepository } from '@/persistence/drizzle/session-repository';
 import type { DrizzleDb } from '@/persistence/drizzle/db';
 import { createTestDatabase } from './test-db';
 
+/** Load the synthetic validation seed into an already-migrated database. */
+export function seedTestDatabase(db: DrizzleDb): Promise<SeedResult> {
+  return seedSynthetic({
+    planning: createDrizzlePlanningRepository(db),
+    curriculum: createDrizzleCurriculumRepository(db),
+    schoolCalendar: createDrizzleSchoolCalendarRepository(db),
+    progress: createDrizzleProgressRepository(db),
+    session: createDrizzleSessionRepository(db),
+  });
+}
+
 /**
  * A migrated PGlite database preloaded with the synthetic validation seed
- * (docs/TEST_STRATEGY.md golden fixture). Later phases build their tests on
- * top of this instead of re-seeding by hand.
+ * (docs/TEST_STRATEGY.md golden fixture). For repeated use in one file, prefer
+ * `createTestDatabase` in `beforeAll` + `truncateAll` / `seedTestDatabase` in
+ * `beforeEach`.
  */
 export async function createSeededTestDatabase(): Promise<{
   db: DrizzleDb;
@@ -17,11 +30,6 @@ export async function createSeededTestDatabase(): Promise<{
   close: () => Promise<void>;
 }> {
   const { db, close } = await createTestDatabase();
-  const seed = await seedSynthetic({
-    planning: createDrizzlePlanningRepository(db),
-    curriculum: createDrizzleCurriculumRepository(db),
-    schoolCalendar: createDrizzleSchoolCalendarRepository(db),
-    progress: createDrizzleProgressRepository(db),
-  });
+  const seed = await seedTestDatabase(db);
   return { db, seed, close };
 }

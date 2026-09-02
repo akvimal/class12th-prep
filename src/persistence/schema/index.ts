@@ -14,3 +14,4 @@ export * from './subject-enrollments';
 export * from './school-calendar-events';
 export * from './preparation-plans';
 export * from './chapter-progress';
+export * from './study-sessions';
