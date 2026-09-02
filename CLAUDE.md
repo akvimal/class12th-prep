@@ -140,5 +140,15 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
   (gitignored; copy `config/student.example.json`). Idempotent. `getActiveProfile`
   (`src/app-services/profile.ts`) resolves first student → newest academic year
   → its ACTIVE plan.
+- Priority (`src/domain/planning/priority.ts`, config `priority-v1`,
+  ALGORITHMS §3): `raw = weakness · revisionDue · schoolUrgency · importance ·
+backlog`; `prioritize()` ranks + normalises. Pure; consumed by the daily
+  planner / Study Now.
+- Assessments (Phase 2, announce-only — no results yet): `assessments` +
+  `assessment_chapters` (`drizzle/0007`), `src/domain/assessment/`,
+  `AssessmentRepository`, `src/app-services/assessment.ts`
+  (`addAssessment` validates + resolves keys, `listUpcomingAssessments`,
+  `nextSchoolTestDaysByChapter` for the planner). `POST/GET
+/api/academic-years/[id]/assessments`. Seed loads `spec.assessments`.
 - End a task with a report: files changed, migrations, tests run, acceptance
   criteria status, assumptions, follow-up dependencies.

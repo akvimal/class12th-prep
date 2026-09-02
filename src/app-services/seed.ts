@@ -1,4 +1,5 @@
 import type { ChapterState } from '@/domain/progress/chapter-progress';
+import { ASSESSMENT_TYPES, type AssessmentType } from '@/domain/assessment/assessment';
 import { syntheticSeedSpec, type SeedSpec } from '@/persistence/seed/spec';
 import type { Repositories } from '@/persistence/ports';
 import { importCurriculum } from './curriculum-import';
@@ -6,7 +7,7 @@ import { recalculateAcademicYearReadiness } from './readiness';
 
 type SeedRepos = Pick<
   Repositories,
-  'planning' | 'curriculum' | 'schoolCalendar' | 'progress' | 'session' | 'readiness'
+  'planning' | 'curriculum' | 'schoolCalendar' | 'progress' | 'session' | 'readiness' | 'assessment'
 >;
 
 export interface SeedResult {
@@ -24,6 +25,7 @@ export interface SeedResult {
     calendarEvents: number;
     chapterProgress: number;
     studySessions: number;
+    assessments: number;
     readinessSnapshots: number;
   };
 }
@@ -160,6 +162,30 @@ export async function seedSynthetic(
     studySessionCount += 1;
   }
 
+  let assessmentCount = 0;
+  for (const a of spec.assessments) {
+    const subjectId = subjectIdByKey.get(a.subjectKey);
+    if (!subjectId) throw new Error(`seed: assessment subject "${a.subjectKey}" not found`);
+    const chapterIds = a.chapterKeys.map((key) => {
+      const id = chapterIdByKey.get(key);
+      if (!id) throw new Error(`seed: assessment chapter "${key}" not found`);
+      return id;
+    });
+    const type = (ASSESSMENT_TYPES as readonly string[]).includes(a.type)
+      ? (a.type as AssessmentType)
+      : 'SCHOOL_UNIT_TEST';
+    await repos.assessment.createAssessment({
+      academicYearId: academicYear.id,
+      subjectId,
+      type,
+      name: a.name,
+      examDate: a.date,
+      maxMarks: a.maxMarks,
+      chapterIds,
+    });
+    assessmentCount += 1;
+  }
+
   // Compute readiness as of the plan start so the seed is deterministic.
   const readinessSummary = await recalculateAcademicYearReadiness(repos, academicYear.id, {
     asOf: spec.plan.startDate,
@@ -179,6 +205,7 @@ export async function seedSynthetic(
       calendarEvents: spec.calendarEvents.length,
       chapterProgress: chapterProgressCount,
       studySessions: studySessionCount,
+      assessments: assessmentCount,
       readinessSnapshots: readinessSummary?.chaptersProcessed ?? 0,
     },
   };

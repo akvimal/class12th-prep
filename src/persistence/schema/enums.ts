@@ -91,3 +91,24 @@ export const readinessScopeType = pgEnum('readiness_scope_type', [
   'SUBJECT',
   'ACADEMIC_YEAR',
 ]);
+
+// --- Assessments (Phase 2) ---
+
+/** School tests, pre-boards, self tests, PYQ, sample papers and full mocks (SRS §14). */
+export const assessmentType = pgEnum('assessment_type', [
+  'SCHOOL_CLASS_TEST',
+  'SCHOOL_UNIT_TEST',
+  'SCHOOL_HALF_YEARLY',
+  'PREBOARD',
+  'SELF_TEST',
+  'PYQ',
+  'SAMPLE_PAPER',
+  'FULL_MOCK',
+]);
+
+/** Announce-only in Phase 2; results (COMPLETED) come with the assessment feedback loop. */
+export const assessmentStatus = pgEnum('assessment_status', [
+  'ANNOUNCED',
+  'COMPLETED',
+  'CANCELLED',
+]);

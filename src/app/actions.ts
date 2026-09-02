@@ -4,8 +4,10 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { uiContext } from '@/app-services/app-context';
+import { addAssessment } from '@/app-services/assessment';
 import { chapterIdForKey } from '@/app-services/progress';
 import { logStudy, updateChapterSelfAssessment } from '@/app-services/study-flow';
+import { ASSESSMENT_TYPES } from '@/domain/assessment/assessment';
 import {
   CHAPTER_STATES,
   CONFIDENCE_LEVELS,
@@ -70,6 +72,34 @@ export async function logStudyAction(formData: FormData): Promise<void> {
 
   revalidatePath('/', 'layout');
   redirect(input.redirectTo ?? `/subjects/${input.subjectKey}/${input.chapterKey}`);
+}
+
+const addAssessmentSchema = z.object({
+  subjectKey: z.string().min(1),
+  type: z.enum(ASSESSMENT_TYPES),
+  name: z.string().min(1),
+  examDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  maxMarks: optional(z.coerce.number().int().positive()),
+});
+
+export async function addAssessmentAction(formData: FormData): Promise<void> {
+  const input = addAssessmentSchema.parse(fields(formData));
+  const chapterKeys = formData
+    .getAll('chapterKeys')
+    .filter((v): v is string => typeof v === 'string');
+  const { repos, academicYearId } = await uiContext();
+
+  await addAssessment(repos, academicYearId, {
+    subjectKey: input.subjectKey,
+    type: input.type,
+    name: input.name,
+    examDate: input.examDate,
+    maxMarks: input.maxMarks ?? null,
+    chapterKeys,
+  });
+
+  revalidatePath('/', 'layout');
+  redirect('/tests');
 }
 
 export async function updateChapterAction(formData: FormData): Promise<void> {

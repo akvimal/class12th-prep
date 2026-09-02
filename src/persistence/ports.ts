@@ -12,6 +12,7 @@ import type {
 } from '@/domain/progress/chapter-progress';
 import type { SessionCompletion, StudySessionType } from '@/domain/progress/study-session';
 import type { ReadinessComponents } from '@/domain/readiness/readiness';
+import type { AssessmentStatus, AssessmentType } from '@/domain/assessment/assessment';
 
 /**
  * Repository ports.
@@ -406,6 +407,45 @@ export interface ReadinessRepository {
   ): Promise<ReadinessSnapshotRecord[]>;
 }
 
+// --- Assessments (Phase 2, announce-only) ---
+
+export interface NewAssessment {
+  academicYearId: string;
+  subjectId: string;
+  type: AssessmentType;
+  name: string;
+  examDate: string;
+  maxMarks?: number | null;
+  /** Chapter ids the test covers. At least one. */
+  chapterIds: string[];
+}
+
+export interface AssessmentRecord {
+  id: string;
+  academicYearId: string;
+  subjectId: string;
+  type: AssessmentType;
+  name: string;
+  examDate: string;
+  maxMarks: number | null;
+  status: AssessmentStatus;
+  chapterIds: string[];
+}
+
+export interface AssessmentFilters {
+  from?: string;
+  to?: string;
+  status?: AssessmentStatus;
+}
+
+export interface AssessmentRepository {
+  createAssessment(input: NewAssessment): Promise<AssessmentRecord>;
+  getAssessment(assessmentId: string): Promise<AssessmentRecord | null>;
+  /** Ordered by exam date ascending. Filterable by date range / status. */
+  listAssessments(academicYearId: string, filters?: AssessmentFilters): Promise<AssessmentRecord[]>;
+  setStatus(assessmentId: string, status: AssessmentStatus): Promise<AssessmentRecord>;
+}
+
 export interface Repositories {
   health: HealthProbe;
   planning: PlanningRepository;
@@ -414,4 +454,5 @@ export interface Repositories {
   progress: ProgressRepository;
   session: SessionRepository;
   readiness: ReadinessRepository;
+  assessment: AssessmentRepository;
 }
