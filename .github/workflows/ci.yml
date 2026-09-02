@@ -43,6 +43,8 @@ jobs:
         run: pnpm run db:migrate
       - name: Schema is fully generated (no pending diff)
         run: pnpm run db:generate && git diff --exit-code drizzle/
+      - name: Synthetic seed loads in one command (and is idempotent)
+        run: pnpm run db:seed && pnpm run db:seed
       - run: pnpm run test
       - run: pnpm run build
 

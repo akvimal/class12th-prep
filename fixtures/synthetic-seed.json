@@ -1,0 +1,138 @@
+{
+  "meta": {
+    "kind": "SYNTHETIC_TEST_DATA",
+    "official": false,
+    "warning": "Development / test seed for the SRS scenarios. Chapter weights and readiness figures are illustrative and must never be shown as official CBSE weightage. Consistent with fixtures/synthetic-academic-data.json.",
+    "seedKey": "synthetic-seed-v1"
+  },
+  "family": { "name": "Demo Family (SYNTHETIC)" },
+  "student": {
+    "displayName": "Demo Student",
+    "board": "CBSE",
+    "grade": 12,
+    "timezone": "Asia/Kolkata"
+  },
+  "academicYear": {
+    "yearLabel": "2026-27",
+    "startDate": "2026-04-01",
+    "endDate": "2027-03-31"
+  },
+  "curriculum": {
+    "version": {
+      "board": "CBSE",
+      "grade": 12,
+      "academicYearLabel": "2026-27",
+      "version": "synthetic-seed-v1",
+      "sourceReference": "SYNTHETIC://fixtures/synthetic-seed.json"
+    },
+    "publish": true,
+    "subjects": [
+      {
+        "key": "PHY",
+        "name": "Physics",
+        "code": "042",
+        "units": [
+          {
+            "key": "PHY-CORE",
+            "name": "Physics — Class XII Core",
+            "chapters": [
+              { "key": "PHY01", "name": "Electrostatics", "weights": [{ "value": 9, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.5, "effectiveFrom": "2026-04-01", "parserVersion": "synthetic-seed", "sourceReference": "SYNTHETIC://pyq" }] },
+              { "key": "PHY02", "name": "Current Electricity", "weights": [{ "value": 8, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.5, "effectiveFrom": "2026-04-01", "parserVersion": "synthetic-seed", "sourceReference": "SYNTHETIC://pyq" }] },
+              { "key": "PHY03", "name": "Ray Optics", "weights": [{ "value": 9, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.5, "effectiveFrom": "2026-04-01", "parserVersion": "synthetic-seed", "sourceReference": "SYNTHETIC://pyq" }] }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "CHE",
+        "name": "Chemistry",
+        "code": "043",
+        "units": [
+          {
+            "key": "CHE-CORE",
+            "name": "Chemistry — Class XII Core",
+            "chapters": [
+              { "key": "CHE01", "name": "Solutions", "weights": [{ "value": 7, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.5, "effectiveFrom": "2026-04-01", "parserVersion": "synthetic-seed", "sourceReference": "SYNTHETIC://pyq" }] },
+              { "key": "CHE02", "name": "Electrochemistry", "weights": [{ "value": 8, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.5, "effectiveFrom": "2026-04-01", "parserVersion": "synthetic-seed", "sourceReference": "SYNTHETIC://pyq" }] },
+              { "key": "CHE03", "name": "Amines", "weights": [{ "value": 6, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.5, "effectiveFrom": "2026-04-01", "parserVersion": "synthetic-seed", "sourceReference": "SYNTHETIC://pyq" }] }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "MAT",
+        "name": "Mathematics",
+        "code": "041",
+        "units": [
+          {
+            "key": "MAT-CORE",
+            "name": "Mathematics — Class XII Core",
+            "chapters": [
+              { "key": "MAT01", "name": "Matrices", "weights": [{ "value": 6, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.5, "effectiveFrom": "2026-04-01", "parserVersion": "synthetic-seed", "sourceReference": "SYNTHETIC://pyq" }] },
+              { "key": "MAT02", "name": "Integrals", "weights": [{ "value": 10, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.5, "effectiveFrom": "2026-04-01", "parserVersion": "synthetic-seed", "sourceReference": "SYNTHETIC://pyq" }] },
+              { "key": "MAT03", "name": "Probability", "weights": [{ "value": 8, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.5, "effectiveFrom": "2026-04-01", "parserVersion": "synthetic-seed", "sourceReference": "SYNTHETIC://pyq" }] }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "CS",
+        "name": "Computer Science",
+        "code": "083",
+        "units": [
+          {
+            "key": "CS-CORE",
+            "name": "Computer Science — Class XII Core",
+            "chapters": [
+              { "key": "CS01", "name": "Python Revision", "weights": [{ "value": 7, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.5, "effectiveFrom": "2026-04-01", "parserVersion": "synthetic-seed", "sourceReference": "SYNTHETIC://pyq" }] },
+              { "key": "CS02", "name": "SQL", "weights": [{ "value": 8, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.5, "effectiveFrom": "2026-04-01", "parserVersion": "synthetic-seed", "sourceReference": "SYNTHETIC://pyq" }] },
+              { "key": "CS03", "name": "Networks", "weights": [{ "value": 6, "unit": "RELATIVE", "sourceType": "DERIVED_PYQ", "confidence": 0.5, "effectiveFrom": "2026-04-01", "parserVersion": "synthetic-seed", "sourceReference": "SYNTHETIC://pyq" }] }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "enrollments": [
+    { "subjectKey": "PHY", "theoryMaxMarks": 70, "practicalMaxMarks": 30, "targetMarks": 80 },
+    { "subjectKey": "CHE", "theoryMaxMarks": 70, "practicalMaxMarks": 30, "targetMarks": 78 },
+    { "subjectKey": "MAT", "theoryMaxMarks": 80, "targetMarks": 75 },
+    { "subjectKey": "CS", "theoryMaxMarks": 70, "practicalMaxMarks": 30, "targetMarks": 85 }
+  ],
+  "plan": {
+    "startDate": "2026-09-02",
+    "syllabusTargetDate": "2026-12-20",
+    "hardCompletionDate": "2026-12-31",
+    "revisionStartDate": "2027-01-01",
+    "examWindowStart": "2027-02-01",
+    "examWindowEnd": "2027-03-31",
+    "weekdayCapacityMinutes": 120,
+    "weekendCapacityMinutes": 240,
+    "activate": true
+  },
+  "calendarEvents": [
+    { "type": "HOLIDAY", "title": "Diwali", "startDate": "2026-10-20", "endDate": "2026-10-22" },
+    { "type": "VACATION", "title": "Winter break", "startDate": "2026-12-25", "endDate": "2026-12-31" },
+    { "type": "EXAM_DAY", "title": "Physics pre-board", "startDate": "2027-01-10", "endDate": "2027-01-10" },
+    { "type": "STUDY_LEAVE", "title": "Board study leave", "startDate": "2027-01-15", "endDate": "2027-01-31" }
+  ],
+  "chapterProgress": [
+    { "chapterKey": "PHY01", "readiness": 45, "schoolStatus": "COMPLETED" },
+    { "chapterKey": "PHY02", "readiness": 72, "schoolStatus": "COMPLETED" },
+    { "chapterKey": "PHY03", "readiness": 38, "schoolStatus": "NOT_TAUGHT" },
+    { "chapterKey": "CHE01", "readiness": 75, "schoolStatus": "COMPLETED" },
+    { "chapterKey": "CHE02", "readiness": 68, "schoolStatus": "COMPLETED" },
+    { "chapterKey": "CHE03", "readiness": 55, "schoolStatus": "CURRENTLY_TEACHING" },
+    { "chapterKey": "MAT01", "readiness": 82, "schoolStatus": "COMPLETED" },
+    { "chapterKey": "MAT02", "readiness": 42, "schoolStatus": "CURRENTLY_TEACHING" },
+    { "chapterKey": "MAT03", "readiness": 61, "schoolStatus": "NOT_TAUGHT" },
+    { "chapterKey": "CS01", "readiness": 90, "schoolStatus": "COMPLETED" },
+    { "chapterKey": "CS02", "readiness": 78, "schoolStatus": "COMPLETED" },
+    { "chapterKey": "CS03", "readiness": 65, "schoolStatus": "CURRENTLY_TEACHING" }
+  ],
+  "assessments": [
+    { "date": "2026-09-07", "type": "SCHOOL_UNIT_TEST", "subjectKey": "PHY", "name": "Physics Unit Test", "chapterKeys": ["PHY01", "PHY02"], "maxMarks": 30 },
+    { "date": "2026-09-11", "type": "SCHOOL_CLASS_TEST", "subjectKey": "MAT", "name": "Mathematics Class Test", "chapterKeys": ["MAT02"], "maxMarks": 20 },
+    { "date": "2026-09-15", "type": "SCHOOL_CLASS_TEST", "subjectKey": "CHE", "name": "Chemistry Test", "chapterKeys": ["CHE03"], "maxMarks": 20 }
+  ]
+}

@@ -41,12 +41,17 @@ Prerequisites: **Node 20.11+**, **Docker**, and **pnpm** (via Corepack —
 pnpm install
 cp .env.example .env
 pnpm db:up            # start Postgres 16 in Docker
+pnpm db:migrate       # apply schema
+pnpm db:seed          # load the synthetic validation data (idempotent)
 pnpm dev              # http://localhost:3000
 ```
 
-`http://localhost:3000` and `http://localhost:3000/api/health` both report app
-and database status. There are no product features yet — this is the bootstrap
-shell (`TASK-001`).
+`pnpm db:reset` drops the volume, restarts Postgres and re-migrates for a clean
+slate; follow it with `pnpm db:seed`.
+
+`http://localhost:3000` and `http://localhost:3000/api/health` report app and
+database status. The domain, persistence and API layers exist (Phase 0
+complete); the UI is still the service shell until the coded UI shell milestone.
 
 ### Quality checks
 
@@ -60,13 +65,14 @@ CI runs the same checks plus `pnpm build` on every push and pull request
 
 ### Common commands
 
-| Command                                        | Purpose                                             |
-| ---------------------------------------------- | --------------------------------------------------- |
-| `pnpm dev` / `pnpm build` / `pnpm start`       | Next.js dev server / production build / serve build |
-| `pnpm db:up` / `pnpm db:down`                  | Start / stop the local Postgres container           |
-| `pnpm db:generate` / `pnpm db:migrate`         | Drizzle migrations (schema lands in TASK-002)       |
-| `pnpm test` / `pnpm test:watch`                | Vitest                                              |
-| `pnpm lint` / `pnpm typecheck` / `pnpm format` | Individual quality gates                            |
+| Command                                         | Purpose                                             |
+| ----------------------------------------------- | --------------------------------------------------- |
+| `pnpm dev` / `pnpm build` / `pnpm start`        | Next.js dev server / production build / serve build |
+| `pnpm db:up` / `pnpm db:down` / `pnpm db:reset` | Start / stop / wipe + recreate the local Postgres   |
+| `pnpm db:generate` / `pnpm db:migrate`          | Generate / apply Drizzle migrations                 |
+| `pnpm db:seed`                                  | Load `fixtures/synthetic-seed.json` (idempotent)    |
+| `pnpm test` / `pnpm test:watch`                 | Vitest                                              |
+| `pnpm lint` / `pnpm typecheck` / `pnpm format`  | Individual quality gates                            |
 
 ## Documents
 
@@ -86,12 +92,12 @@ CI runs the same checks plus `pnpm build` on every push and pull request
 Start with Phase 0. Do not ask an agent to implement the entire SRS at once.
 
 1. `tasks/PHASE-00/TASK-001-project-bootstrap.md` ✅
-2. `TASK-002-core-database-schema.md`
-3. `TASK-003-curriculum-model.md`
-4. `TASK-004-student-academic-year-plan.md`
-5. `TASK-005-school-calendar.md`
-6. `TASK-006-seed-validation-data.md`
-7. Continue with Phase 1.
+2. `TASK-002-core-database-schema.md` ✅
+3. `TASK-003-curriculum-model.md` ✅
+4. `TASK-004-student-academic-year-plan.md` ✅
+5. `TASK-005-school-calendar.md` ✅
+6. `TASK-006-seed-validation-data.md` ✅
+7. Continue with Phase 1 (`tasks/PHASE-01/`).
 
 Each task must be implemented independently and pass its acceptance criteria
 before moving forward. The full milestone map is in `design/build-plan.html`.

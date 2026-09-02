@@ -76,5 +76,10 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
 - Drizzle `getPlan`/`getVersion` etc. THROW on a malformed UUID (Postgres) —
   tests for "not found" must use a well-formed UUID like all-zeros. The
   in-memory repos return null.
+- Synthetic seed: `fixtures/synthetic-seed.json` (validated by `src/persistence/seed/spec.ts`),
+  loaded by `seedSynthetic()` / `pnpm db:seed` — idempotent (skips if the
+  curriculum version exists; use `pnpm db:reset` for a clean slate). Tests
+  reuse it via `createSeededTestDatabase()`. Its `chapterProgress` /
+  `assessments` sections are placeholders for Phase 1 / Phase 2.
 - End a task with a report: files changed, migrations, tests run, acceptance
   criteria status, assumptions, follow-up dependencies.
