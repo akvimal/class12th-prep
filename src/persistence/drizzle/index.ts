@@ -1,14 +1,15 @@
-import { pingDatabase } from '@/lib/db';
+import { db, pingDatabase } from '@/lib/db';
 import type { Repositories } from '../ports';
+import { createDrizzlePlanningRepository } from './planning-repository';
 
 /**
- * PostgreSQL repository set (via Drizzle). Table-backed implementations are
- * added from TASK-002 onward; for now only the health probe is wired.
+ * PostgreSQL repository set (via Drizzle), bound to the shared connection pool.
  */
 export function createDrizzleRepositories(): Repositories {
   return {
     health: {
       isReachable: () => pingDatabase(),
     },
+    planning: createDrizzlePlanningRepository(db),
   };
 }

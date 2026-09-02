@@ -1,9 +1,11 @@
 /**
- * Drizzle schema barrel. Table definitions are added here from TASK-002
- * (core database schema) onward — Family, Student, AcademicYear,
- * PreparationPlan, PlanPhase first.
- *
- * Kept as an empty export so `drizzle.config.ts` resolves before any
- * schema exists.
+ * Drizzle schema barrel. Tables are added here as tasks land:
+ *   TASK-002  families, students, academic_years, preparation_plans, plan_phases
+ *   TASK-003  curriculum_versions, subjects, units, chapters, topics, academic_weights
+ *   ...
  */
-export {};
+export * from './enums';
+export * from './families';
+export * from './students';
+export * from './academic-years';
+export * from './preparation-plans';

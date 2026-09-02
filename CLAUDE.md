@@ -51,7 +51,11 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
   build ahead into future phases.
 - Every change ships its tests: unit for domain rules, integration for
   persistence/API, regression fixtures for engine changes (`fixtures/`).
-- Use migrations for schema changes; add FK and uniqueness constraints where
-  invariants allow.
+- Use migrations for schema changes: edit `src/persistence/schema/*`, run
+  `pnpm db:generate`, commit the SQL in `drizzle/`. Add FK and uniqueness
+  constraints where invariants allow.
+- Persistence integration tests use PGlite (in-process Postgres) via
+  `src/persistence/testing/test-db.ts` — no Docker needed for `pnpm test`.
+  See `docs/DECISIONS/ADR-005`.
 - End a task with a report: files changed, migrations, tests run, acceptance
   criteria status, assumptions, follow-up dependencies.
