@@ -112,3 +112,6 @@ export const assessmentStatus = pgEnum('assessment_status', [
   'COMPLETED',
   'CANCELLED',
 ]);
+
+/** Recurrence of a study window (Phase 2). */
+export const studyWindowDayType = pgEnum('study_window_day_type', ['WEEKDAY', 'WEEKEND', 'DAILY']);

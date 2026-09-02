@@ -144,6 +144,12 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
   ALGORITHMS §3): `raw = weakness · revisionDue · schoolUrgency · importance ·
 backlog`; `prioritize()` ranks + normalises. Pure; consumed by the daily
   planner / Study Now.
+- Study windows (Phase 2): `study_windows` (`drizzle/0008`),
+  `src/domain/planning/study-window.ts` (recurrence WEEKDAY/WEEKEND/DAILY,
+  `plannedMinutesOn`), `StudyWindowRepository`, `src/app-services/study-windows.ts`
+  (`getWeeklyRhythm` = planned-vs-done adherence per day). `GET/POST
+/api/academic-years/[id]/study-windows`. `DEFAULT_STUDY_WINDOWS` created by
+  the seed and `prep:init`. Windows drive reminders + adherence, never tasks.
 - Assessments (Phase 2, announce-only — no results yet): `assessments` +
   `assessment_chapters` (`drizzle/0007`), `src/domain/assessment/`,
   `AssessmentRepository`, `src/app-services/assessment.ts`

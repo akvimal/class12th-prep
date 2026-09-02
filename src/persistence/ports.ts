@@ -13,6 +13,7 @@ import type {
 import type { SessionCompletion, StudySessionType } from '@/domain/progress/study-session';
 import type { ReadinessComponents } from '@/domain/readiness/readiness';
 import type { AssessmentStatus, AssessmentType } from '@/domain/assessment/assessment';
+import type { StudyWindowDayType } from '@/domain/planning/study-window';
 
 /**
  * Repository ports.
@@ -446,6 +447,46 @@ export interface AssessmentRepository {
   setStatus(assessmentId: string, status: AssessmentStatus): Promise<AssessmentRecord>;
 }
 
+// --- Study windows (Phase 2) ---
+
+export interface NewStudyWindow {
+  academicYearId: string;
+  dayType: StudyWindowDayType;
+  startTime: string;
+  endTime: string;
+  label?: string | null;
+  enabled?: boolean;
+  reminderEnabled?: boolean;
+}
+
+export interface StudyWindowUpdate {
+  dayType?: StudyWindowDayType;
+  startTime?: string;
+  endTime?: string;
+  label?: string | null;
+  enabled?: boolean;
+  reminderEnabled?: boolean;
+}
+
+export interface StudyWindowRecord {
+  id: string;
+  academicYearId: string;
+  dayType: StudyWindowDayType;
+  startTime: string;
+  endTime: string;
+  label: string | null;
+  enabled: boolean;
+  reminderEnabled: boolean;
+}
+
+export interface StudyWindowRepository {
+  createWindow(input: NewStudyWindow): Promise<StudyWindowRecord>;
+  updateWindow(windowId: string, patch: StudyWindowUpdate): Promise<StudyWindowRecord>;
+  deleteWindow(windowId: string): Promise<void>;
+  /** Ordered by start time. */
+  listWindows(academicYearId: string): Promise<StudyWindowRecord[]>;
+}
+
 export interface Repositories {
   health: HealthProbe;
   planning: PlanningRepository;
@@ -455,4 +496,5 @@ export interface Repositories {
   session: SessionRepository;
   readiness: ReadinessRepository;
   assessment: AssessmentRepository;
+  studyWindow: StudyWindowRepository;
 }

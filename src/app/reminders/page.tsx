@@ -1,121 +1,188 @@
 import { uiContext } from '@/app-services/app-context';
-import { getPlanOverview } from '@/app-services/plan';
+import { getWeeklyRhythm, listStudyWindows } from '@/app-services/study-windows';
+import {
+  addStudyWindowAction,
+  deleteStudyWindowAction,
+  toggleStudyWindowAction,
+} from '@/app/actions';
 import { PageHeader, Card, Chip, SectionLabel, StatTile } from '@/components/ui';
-import { ClockIcon, CheckIcon, AlertIcon } from '@/components/icons';
+import { ClockIcon } from '@/components/icons';
+import { windowMinutes } from '@/domain/planning/study-window';
+import { formatWeekday } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
-const WINDOWS = [
-  { days: 'Mon–Fri', time: '17:00 – 18:30', label: 'After school', minutes: 90 },
-  { days: 'Mon–Fri', time: '20:30 – 21:00', label: 'Recall block', minutes: 30 },
-  { days: 'Sat–Sun', time: '09:30 – 13:30', label: 'Deep work', minutes: 240 },
-];
-
-const ADHERENCE = [
-  { date: 'Mon 1 Sep', planned: 120, done: 120, status: 'met' },
-  { date: 'Sun 31 Aug', planned: 240, done: 150, status: 'short' },
-  { date: 'Sat 30 Aug', planned: 240, done: 260, status: 'met' },
-  { date: 'Fri 29 Aug', planned: 120, done: 0, status: 'missed' },
-  { date: 'Thu 28 Aug', planned: 120, done: 130, status: 'met' },
-];
-
-const STATUS: Record<string, { chip: 'ok' | 'warn' | 'bad'; label: string }> = {
-  met: { chip: 'ok', label: 'Met' },
-  short: { chip: 'warn', label: 'Short' },
-  missed: { chip: 'bad', label: 'Missed' },
+const DAY_LABEL: Record<string, string> = {
+  WEEKDAY: 'Mon–Fri',
+  WEEKEND: 'Sat–Sun',
+  DAILY: 'Every day',
 };
 
-export default async function RemindersPage() {
-  const { repos, planId, asOf } = await uiContext();
-  const plan = await getPlanOverview(repos, planId, asOf);
-  const weekday = plan?.plan.weekdayCapacityMinutes ?? 120;
+const STATUS: Record<string, { chip: 'ok' | 'warn' | 'bad' | 'default'; label: string }> = {
+  MET: { chip: 'ok', label: 'Met' },
+  SHORT: { chip: 'warn', label: 'Short' },
+  MISSED: { chip: 'bad', label: 'Missed' },
+  NONE_PLANNED: { chip: 'default', label: '—' },
+};
 
-  const met = ADHERENCE.filter((a) => a.status === 'met').length;
+function Toggle({
+  windowId,
+  field,
+  on,
+  label,
+}: {
+  windowId: string;
+  field: 'enabled' | 'reminderEnabled';
+  on: boolean;
+  label: string;
+}) {
+  return (
+    <form action={toggleStudyWindowAction}>
+      <input type="hidden" name="windowId" value={windowId} />
+      <input type="hidden" name="field" value={field} />
+      <input type="hidden" name="value" value={on ? '0' : '1'} />
+      <button
+        type="submit"
+        role="switch"
+        aria-checked={on}
+        aria-label={label}
+        className={`relative block h-6 w-11 rounded-full transition-colors ${on ? 'bg-accent' : 'bg-track'}`}
+      >
+        <span
+          className={`absolute top-0.5 h-5 w-5 rounded-full bg-card shadow-sm transition-all ${on ? 'right-0.5' : 'left-0.5'}`}
+        />
+      </button>
+    </form>
+  );
+}
+
+const FIELD = 'h-10 rounded-lg border border-line bg-card px-2 text-[13px] text-ink';
+
+export default async function RemindersPage() {
+  const { repos, academicYearId, asOf } = await uiContext();
+  const [windows, rhythm] = await Promise.all([
+    listStudyWindows(repos, academicYearId),
+    getWeeklyRhythm(repos, academicYearId, asOf),
+  ]);
+
+  const pct = rhythm ? Math.round(rhythm.adherenceRate * 100) : 0;
 
   return (
     <main>
       <PageHeader eyebrow="Rhythm & reminders" title="Study windows" back="/more" />
 
       <div className="grid grid-cols-2 gap-2.5 px-5">
-        <StatTile label="This week" value={`${met}/${ADHERENCE.length}`} sub="windows met" />
         <StatTile
-          label="Weekday target"
-          value={`${Math.floor(weekday / 60)}h ${weekday % 60}m`}
-          sub="from plan"
+          label="Adherence · 7d"
+          value={rhythm ? `${rhythm.metDays}/${rhythm.plannedDays}` : '—'}
+          sub={`${pct}% of planned days`}
         />
+        <StatTile label="Windows" value={windows.filter((w) => w.enabled).length} sub="enabled" />
       </div>
 
-      <SectionLabel className="px-5 pb-2 pt-6">Daily windows</SectionLabel>
+      <SectionLabel className="px-5 pb-2 pt-6">Your windows</SectionLabel>
       <div className="flex flex-col gap-2.5 px-5">
-        {WINDOWS.map((w) => (
-          <Card key={w.label} className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-2 text-[13px] font-semibold text-ink">
-                <ClockIcon size={15} className="text-muted" />
-                {w.time}
+        {windows.map((w) => (
+          <Card key={w.id} className="flex flex-col gap-2.5">
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="flex items-center gap-2 text-[13px] font-semibold text-ink">
+                  <ClockIcon size={15} className="text-muted" />
+                  {w.startTime} – {w.endTime}
+                </div>
+                <div className="mt-1 text-[11px] text-faint">
+                  {DAY_LABEL[w.dayType]}
+                  {w.label ? ` · ${w.label}` : ''} · {windowMinutes(w)} min
+                </div>
               </div>
-              <div className="mt-1 text-[11px] text-faint">
-                {w.days} · {w.label} · {w.minutes} min
+              <Toggle windowId={w.id} field="enabled" on={w.enabled} label="Window enabled" />
+            </div>
+            <div className="flex items-center justify-between border-t border-line-soft pt-2">
+              <span className="text-[11px] font-medium text-muted">Reminder</span>
+              <div className="flex items-center gap-3">
+                <Toggle
+                  windowId={w.id}
+                  field="reminderEnabled"
+                  on={w.reminderEnabled}
+                  label="Reminder enabled"
+                />
+                <form action={deleteStudyWindowAction}>
+                  <input type="hidden" name="windowId" value={w.id} />
+                  <button type="submit" className="text-[11px] font-semibold text-bad">
+                    Remove
+                  </button>
+                </form>
               </div>
             </div>
-            <span
-              className="relative h-6 w-11 rounded-full bg-accent"
-              aria-label="Reminder on"
-              role="switch"
-              aria-checked="true"
-            >
-              <span className="absolute right-0.5 top-0.5 h-5 w-5 rounded-full bg-card" />
-            </span>
           </Card>
         ))}
       </div>
 
-      <div className="mx-5 mt-3 flex items-center justify-between rounded-xl border border-line px-3.5 py-3">
-        <div>
-          <div className="text-[13px] font-semibold text-ink">Sync to calendar</div>
-          <div className="mt-0.5 text-[11px] text-faint">Blocks appear in Google Calendar</div>
-        </div>
-        <span
-          className="relative h-6 w-11 rounded-full bg-track"
-          aria-label="Calendar sync off"
-          role="switch"
-          aria-checked="false"
+      <details className="mx-5 mt-3 rounded-xl border border-line">
+        <summary className="cursor-pointer list-none px-4 py-3 text-[13px] font-semibold text-ink">
+          Add a window
+        </summary>
+        <form
+          action={addStudyWindowAction}
+          className="grid grid-cols-2 gap-3 border-t border-line px-4 py-4"
         >
-          <span className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-card shadow-sm" />
-        </span>
-      </div>
+          <label className="col-span-2 flex flex-col gap-1">
+            <SectionLabel>Days</SectionLabel>
+            <select name="dayType" className={FIELD} defaultValue="WEEKDAY">
+              <option value="WEEKDAY">Mon–Fri</option>
+              <option value="WEEKEND">Sat–Sun</option>
+              <option value="DAILY">Every day</option>
+            </select>
+          </label>
+          <label className="flex flex-col gap-1">
+            <SectionLabel>Start</SectionLabel>
+            <input type="time" name="startTime" className={FIELD} defaultValue="17:00" required />
+          </label>
+          <label className="flex flex-col gap-1">
+            <SectionLabel>End</SectionLabel>
+            <input type="time" name="endTime" className={FIELD} defaultValue="18:30" required />
+          </label>
+          <label className="col-span-2 flex flex-col gap-1">
+            <SectionLabel>Label</SectionLabel>
+            <input type="text" name="label" className={FIELD} placeholder="e.g. After school" />
+          </label>
+          <button
+            type="submit"
+            className="col-span-2 mt-1 h-10 rounded-xl bg-ink text-[13px] font-semibold text-paper"
+          >
+            Add window
+          </button>
+        </form>
+      </details>
 
-      <SectionLabel className="px-5 pb-2 pt-6">Adherence · last 5 days</SectionLabel>
+      <SectionLabel className="px-5 pb-2 pt-6">Adherence · last 7 days</SectionLabel>
       <div className="px-5">
-        {ADHERENCE.map((a) => {
-          const s = STATUS[a.status]!;
-          return (
-            <div
-              key={a.date}
-              className="flex items-center justify-between border-b border-line-soft py-3 last:border-0"
-            >
-              <div>
-                <div className="text-[13px] font-medium text-ink">{a.date}</div>
-                <div className="mt-0.5 font-mono text-[11px] text-faint">
-                  {a.done}/{a.planned} min
+        {rhythm?.days
+          .slice()
+          .reverse()
+          .map((d) => {
+            const s = STATUS[d.status]!;
+            return (
+              <div
+                key={d.date}
+                className="flex items-center justify-between border-b border-line-soft py-3 last:border-0"
+              >
+                <div>
+                  <div className="text-[13px] font-medium text-ink">{formatWeekday(d.date)}</div>
+                  <div className="mt-0.5 font-mono text-[11px] text-faint">
+                    {d.doneMinutes}/{d.plannedMinutes} min
+                  </div>
                 </div>
+                <Chip tone={s.chip}>{s.label}</Chip>
               </div>
-              <Chip tone={s.chip}>
-                {a.status === 'met' ? <CheckIcon size={11} /> : <AlertIcon size={11} />}
-                {s.label}
-              </Chip>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
 
-      <div className="mx-5 mt-4 flex flex-col gap-1.5 rounded-xl border border-line border-l-[3px] border-l-warn px-3.5 py-3">
-        <div className="text-[13px] font-semibold text-ink">One window missed on Fri</div>
-        <p className="text-[11px] leading-relaxed text-muted">
-          Rather than doubling Saturday, the 120 min was spread as +40 across Sat, Sun and Mon. If
-          two windows slip in a week, the plan proposes a course correction.
-        </p>
-      </div>
+      <p className="mx-5 mt-4 rounded-lg bg-sink px-3 py-2.5 font-mono text-[10px] leading-relaxed text-faint">
+        Windows drive reminders and this adherence metric — they never create tasks. Delivery
+        (calendar, push) is the notifications phase.
+      </p>
       <div className="h-6" />
     </main>
   );
