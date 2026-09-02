@@ -18,3 +18,4 @@ export * from './study-sessions';
 export * from './readiness-snapshots';
 export * from './assessments';
 export * from './study-windows';
+export * from './domain-events';

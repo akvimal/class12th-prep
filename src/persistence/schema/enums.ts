@@ -115,3 +115,24 @@ export const assessmentStatus = pgEnum('assessment_status', [
 
 /** Recurrence of a study window (Phase 2). */
 export const studyWindowDayType = pgEnum('study_window_day_type', ['WEEKDAY', 'WEEKEND', 'DAILY']);
+
+// --- Domain events (SRS §13) ---
+
+export const domainEventType = pgEnum('domain_event_type', [
+  'REVISION_DUE',
+  'REVISION_OVERDUE',
+  'SCHOOL_TEST_APPROACHING',
+  'PREBOARD_APPROACHING',
+  'STUDY_BLOCK_MISSED',
+  'PLAN_AT_RISK',
+  'WEEKLY_REVIEW_READY',
+  'REPEATED_ERROR_DETECTED',
+  'SYLLABUS_TARGET_AT_RISK',
+]);
+
+/** Events are generated now; a delivery channel is wired in Phase 7. */
+export const domainEventDelivery = pgEnum('domain_event_delivery', [
+  'PENDING',
+  'DELIVERED',
+  'SUPPRESSED',
+]);
