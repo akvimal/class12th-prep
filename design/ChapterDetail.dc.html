@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+  <style>
+    body { margin:0; background:#EFEAE2; font-family:'IBM Plex Sans', system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+    a { color:#1E5BFF; text-decoration:none; } a:hover { color:#1741c9; }
+    * { box-sizing:border-box; }
+  </style>
+</helmet>
+
+<div style="width:390px; min-height:1280px; margin:0 auto; background:#FDFCFA; color:#17140F; display:flex; flex-direction:column;">
+
+  <div style="padding:20px 20px 4px; display:flex; align-items:center; gap:12px;">
+    <a href="#" style="color:#6B655C;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6B655C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></a>
+    <div>
+      <div style="font:600 10px/1 'IBM Plex Sans'; letter-spacing:.09em; color:#9A938A;">PHYSICS &middot; ELECTRIC CHARGES &amp; FIELDS</div>
+      <div style="font:700 22px/1.15 'Space Grotesk','Segoe UI',system-ui; margin-top:4px;">Electrostatics</div>
+    </div>
+  </div>
+
+  <!-- State track -->
+  <div style="padding:20px 20px 0;">
+    <div style="display:flex; align-items:center;">
+      <span style="width:9px; height:9px; border-radius:50%; background:#17140F;"></span><span style="flex:1; height:2px; background:#17140F;"></span>
+      <span style="width:9px; height:9px; border-radius:50%; background:#17140F;"></span><span style="flex:1; height:2px; background:#17140F;"></span>
+      <span style="width:11px; height:11px; border-radius:50%; background:#17140F; outline:3px solid #ECE8E0;"></span><span style="flex:1; height:2px; background:#E7E3DB;"></span>
+      <span style="width:9px; height:9px; border-radius:50%; background:#CFC9BE;"></span><span style="flex:1; height:2px; background:#E7E3DB;"></span>
+      <span style="width:9px; height:9px; border-radius:50%; background:#CFC9BE;"></span>
+    </div>
+    <div style="display:flex; justify-content:space-between; font:500 9px/1 'IBM Plex Sans'; color:#9A938A; margin-top:6px;">
+      <span>Learning</span><span>Learned</span><span style="color:#17140F;">Practised</span><span>Tested</span><span>Exam&nbsp;ready</span>
+    </div>
+  </div>
+
+  <div style="padding:22px 20px 0; display:flex; align-items:flex-end; gap:14px;">
+    <div style="font:500 44px/1 'IBM Plex Mono',monospace; color:#B26B00;">45</div>
+    <div style="padding-bottom:6px; font:400 12px/1.4 'IBM Plex Sans'; color:#6B655C;">effective readiness / 100<br>raw 43 &times; recency 1.00</div>
+  </div>
+
+  <!-- Components -->
+  <div style="padding:22px 20px 6px; font:600 12px/1 'IBM Plex Sans'; letter-spacing:.08em; color:#9A938A;">READINESS COMPONENTS</div>
+  <div style="padding:0 20px; display:flex; flex-direction:column; gap:12px;">
+    <div style="display:flex; align-items:center; gap:11px;">
+      <span style="flex:0 0 78px; font:500 12px/1.2 'IBM Plex Sans';">Concept</span>
+      <span style="flex:1; height:5px; background:#ECE8E0; border-radius:999px; overflow:hidden;"><span style="display:block; width:60%; height:100%; background:#17140F;"></span></span>
+      <span style="flex:0 0 60px; text-align:right; font:500 11px/1 'IBM Plex Mono',monospace; color:#6B655C;">60 &middot;20%</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:11px;">
+      <span style="flex:0 0 78px; font:500 12px/1.2 'IBM Plex Sans';">Practice</span>
+      <span style="flex:1; height:5px; background:#ECE8E0; border-radius:999px; overflow:hidden;"><span style="display:block; width:42%; height:100%; background:#17140F;"></span></span>
+      <span style="flex:0 0 60px; text-align:right; font:500 11px/1 'IBM Plex Mono',monospace; color:#6B655C;">42 &middot;25%</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:11px;">
+      <span style="flex:0 0 78px; font:500 12px/1.2 'IBM Plex Sans';">Test</span>
+      <span style="flex:1; height:5px; background:#ECE8E0; border-radius:999px; overflow:hidden;"><span style="display:block; width:38%; height:100%; background:#C0392B;"></span></span>
+      <span style="flex:0 0 60px; text-align:right; font:500 11px/1 'IBM Plex Mono',monospace; color:#6B655C;">38 &middot;30%</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:11px;">
+      <span style="flex:0 0 78px; font:500 12px/1.2 'IBM Plex Sans';">Recall</span>
+      <span style="flex:1; height:5px; background:#ECE8E0; border-radius:999px; overflow:hidden;"><span style="display:block; width:30%; height:100%; background:#C0392B;"></span></span>
+      <span style="flex:0 0 60px; text-align:right; font:500 11px/1 'IBM Plex Mono',monospace; color:#6B655C;">30 &middot;15%</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:11px;">
+      <span style="flex:0 0 78px; font:500 12px/1.2 'IBM Plex Sans';">Revision</span>
+      <span style="flex:1; height:5px; background:#ECE8E0; border-radius:999px; overflow:hidden;"><span style="display:block; width:25%; height:100%; background:#C0392B;"></span></span>
+      <span style="flex:0 0 60px; text-align:right; font:500 11px/1 'IBM Plex Mono',monospace; color:#6B655C;">25 &middot;10%</span>
+    </div>
+  </div>
+  <div style="padding:10px 20px 0; font:400 10px/1.4 'IBM Plex Sans'; color:#9A938A;">Weights from config <span style="font-family:'IBM Plex Mono',monospace;">readiness-v1</span>. Test &amp; recall are low &mdash; practice and a timed retest will move this most.</div>
+
+  <!-- Facts -->
+  <div style="padding:22px 20px 0; display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px;">
+    <div style="border:1px solid #E7E3DB; border-radius:10px; padding:11px 12px;"><div style="font:500 10px/1 'IBM Plex Sans'; color:#9A938A;">SCHOOL STATUS</div><div style="font:600 13px/1.2 'IBM Plex Sans'; margin-top:5px;">Completed</div></div>
+    <div style="border:1px solid #E7E3DB; border-radius:10px; padding:11px 12px;"><div style="font:500 10px/1 'IBM Plex Sans'; color:#9A938A;">NEXT TEST</div><div style="font:600 13px/1.2 'IBM Plex Sans'; margin-top:5px;">Unit test &middot; 7 Sep</div></div>
+    <div style="border:1px solid #E7E3DB; border-radius:10px; padding:11px 12px;"><div style="font:500 10px/1 'IBM Plex Sans'; color:#9A938A;">CONFIDENCE</div><div style="font:600 13px/1.2 'IBM Plex Sans'; margin-top:5px;">Moderate</div></div>
+    <div style="border:1px solid #E7E3DB; border-radius:10px; padding:11px 12px;"><div style="font:500 10px/1 'IBM Plex Sans'; color:#9A938A;">BOARD WEIGHT</div><div style="font:600 13px/1.2 'IBM Plex Sans'; margin-top:5px;">~9 &middot; <span style="color:#9A938A; font-weight:500;">derived</span></div></div>
+  </div>
+
+  <!-- Activity -->
+  <div style="padding:22px 20px 6px; font:600 12px/1 'IBM Plex Sans'; letter-spacing:.08em; color:#9A938A;">RECENT ACTIVITY</div>
+  <div style="padding:0 20px; display:flex; flex-direction:column;">
+    <div style="display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid #ECE8E0;"><span style="font:500 12px/1.3 'IBM Plex Sans';">Practise &middot; 42 min &middot; 5/8 correct</span><span style="font:400 11px/1 'IBM Plex Mono',monospace; color:#9A938A;">Today</span></div>
+    <div style="display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid #ECE8E0;"><span style="font:500 12px/1.3 'IBM Plex Sans';">Learn &middot; 30 min</span><span style="font:400 11px/1 'IBM Plex Mono',monospace; color:#9A938A;">30 Aug</span></div>
+    <div style="display:flex; justify-content:space-between; padding:11px 0;"><span style="font:500 12px/1.3 'IBM Plex Sans';">Active recall &middot; 15 min &middot; weak</span><span style="font:400 11px/1 'IBM Plex Mono',monospace; color:#9A938A;">26 Aug</span></div>
+  </div>
+
+  <div style="padding:22px 20px 0; display:flex; gap:10px;">
+    <button style="flex:1; appearance:none; border:0; background:#1E5BFF; color:#fff; font:600 13px 'IBM Plex Sans'; height:46px; border-radius:11px;">Study this</button>
+    <button style="flex:1; appearance:none; border:1px solid #17140F; background:#FDFCFA; color:#17140F; font:600 13px 'IBM Plex Sans'; height:46px; border-radius:11px;">Add to Today</button>
+  </div>
+
+  <div style="flex:1;"></div>
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+  <style>
+    body { margin:0; background:#EFEAE2; font-family:'IBM Plex Sans', system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+    a { color:#1E5BFF; text-decoration:none; } a:hover { color:#1741c9; }
+    * { box-sizing:border-box; }
+    .field { border:1px solid #E7E3DB; border-radius:10px; padding:12px 13px; display:flex; align-items:center; justify-content:space-between; }
+    .field .v { font:600 14px/1 'IBM Plex Sans'; }
+  </style>
+</helmet>
+
+<div style="width:390px; min-height:1200px; margin:0 auto; background:#FDFCFA; color:#17140F; display:flex; flex-direction:column;">
+
+  <div style="padding:20px 20px 6px; display:flex; align-items:center; gap:12px;">
+    <a href="#" style="color:#6B655C;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6B655C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></a>
+    <div style="font:700 20px/1.1 'Space Grotesk','Segoe UI',system-ui;">Set up your plan</div>
+  </div>
+
+  <div style="padding:8px 20px 0;">
+    <div style="display:flex; align-items:center; justify-content:space-between; font:600 11px/1 'IBM Plex Sans'; color:#9A938A;">
+      <span>STEP 5 OF 9</span><span style="color:#17140F;">Key dates</span>
+    </div>
+    <div style="margin-top:10px; display:flex; gap:4px;">
+      <span style="flex:1; height:4px; border-radius:2px; background:#17140F;"></span>
+      <span style="flex:1; height:4px; border-radius:2px; background:#17140F;"></span>
+      <span style="flex:1; height:4px; border-radius:2px; background:#17140F;"></span>
+      <span style="flex:1; height:4px; border-radius:2px; background:#17140F;"></span>
+      <span style="flex:1; height:4px; border-radius:2px; background:#17140F;"></span>
+      <span style="flex:1; height:4px; border-radius:2px; background:#E7E3DB;"></span>
+      <span style="flex:1; height:4px; border-radius:2px; background:#E7E3DB;"></span>
+      <span style="flex:1; height:4px; border-radius:2px; background:#E7E3DB;"></span>
+      <span style="flex:1; height:4px; border-radius:2px; background:#E7E3DB;"></span>
+    </div>
+    <div style="margin-top:8px; font:400 10px/1.4 'IBM Plex Sans'; color:#9A938A;">Board &amp; class &middot; Curriculum &middot; Subjects &middot; Start &middot; <b style="color:#17140F;">Key dates</b> &middot; Capacity &middot; School calendar &middot; Review</div>
+  </div>
+
+  <div style="padding:22px 20px 0; font:400 12px/1.5 'IBM Plex Sans'; color:#6B655C;">
+    These dates &mdash; not the calendar month &mdash; drive every phase. Any window works: 90 days, July&ndash;February, or a full year.
+  </div>
+
+  <div style="padding:18px 20px 0; display:flex; flex-direction:column; gap:10px;">
+    <div class="field"><span style="font:500 12px/1.2 'IBM Plex Sans'; color:#6B655C;">Plan start</span><span class="v">2 Sep 2026</span></div>
+    <div class="field"><span style="font:500 12px/1.2 'IBM Plex Sans'; color:#6B655C;">Syllabus target</span><span class="v">20 Dec 2026</span></div>
+    <div class="field"><span style="font:500 12px/1.2 'IBM Plex Sans'; color:#6B655C;">Hard completion</span><span class="v">31 Dec 2026</span></div>
+    <div class="field"><span style="font:500 12px/1.2 'IBM Plex Sans'; color:#6B655C;">Revision starts</span><span class="v">1 Jan 2027</span></div>
+    <div class="field"><span style="font:500 12px/1.2 'IBM Plex Sans'; color:#6B655C;">Exam window</span><span class="v">1 Feb &ndash; 31 Mar 2027</span></div>
+  </div>
+
+  <!-- Phase preview -->
+  <div style="padding:24px 20px 8px; font:600 12px/1 'IBM Plex Sans'; letter-spacing:.08em; color:#9A938A;">RESOLVED PHASES</div>
+  <div style="padding:0 20px; display:flex; flex-direction:column; gap:0;">
+    <div style="display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid #ECE8E0;"><span style="width:8px; height:8px; border-radius:2px; background:#17140F;"></span><span style="flex:1; font:600 12px/1.2 'IBM Plex Sans';">Syllabus coverage</span><span style="font:400 11px/1 'IBM Plex Mono',monospace; color:#9A938A;">2 Sep &ndash; 20 Dec</span></div>
+    <div style="display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid #ECE8E0;"><span style="width:8px; height:8px; border-radius:2px; background:#6B655C;"></span><span style="flex:1; font:600 12px/1.2 'IBM Plex Sans';">Consolidation</span><span style="font:400 11px/1 'IBM Plex Mono',monospace; color:#9A938A;">20 &ndash; 31 Dec</span></div>
+    <div style="display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid #ECE8E0;"><span style="width:8px; height:8px; border-radius:2px; background:#6B655C;"></span><span style="flex:1; font:600 12px/1.2 'IBM Plex Sans';">Revision</span><span style="font:400 11px/1 'IBM Plex Mono',monospace; color:#9A938A;">1 &ndash; 25 Jan</span></div>
+    <div style="display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid #ECE8E0;"><span style="width:8px; height:8px; border-radius:2px; background:#6B655C;"></span><span style="flex:1; font:600 12px/1.2 'IBM Plex Sans';">Pre&#8209;board</span><span style="font:400 11px/1 'IBM Plex Mono',monospace; color:#9A938A;">25 &ndash; 31 Jan</span></div>
+    <div style="display:flex; align-items:center; gap:10px; padding:9px 0;"><span style="width:8px; height:8px; border-radius:2px; background:#6B655C;"></span><span style="flex:1; font:600 12px/1.2 'IBM Plex Sans';">Board exams</span><span style="font:400 11px/1 'IBM Plex Mono',monospace; color:#9A938A;">from 1 Feb</span></div>
+  </div>
+  <div style="padding:10px 20px 0; font:400 10px/1.4 'IBM Plex Sans'; color:#9A938A;">Subject&#8209;specific board dates, when added, override the generic window for that subject.</div>
+
+  <div style="padding:24px 20px 0; display:flex; gap:10px;">
+    <button style="flex:0 0 90px; appearance:none; border:1px solid #E7E3DB; background:#FDFCFA; color:#6B655C; font:600 14px 'IBM Plex Sans'; height:48px; border-radius:12px;">Back</button>
+    <button style="flex:1; appearance:none; border:0; background:#1E5BFF; color:#fff; font:600 15px 'IBM Plex Sans'; height:48px; border-radius:12px;">Continue</button>
+  </div>
+
+  <div style="flex:1;"></div>
+</div>
+</x-dc>
+</body>
+</html>

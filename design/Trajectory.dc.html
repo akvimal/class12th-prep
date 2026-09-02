@@ -1,0 +1,135 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+  <style>
+    body { margin:0; background:#EFEAE2; font-family:'IBM Plex Sans', system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+    a { color:#1E5BFF; text-decoration:none; } a:hover { color:#1741c9; }
+    * { box-sizing:border-box; }
+  </style>
+</helmet>
+
+<div style="width:390px; min-height:1220px; margin:0 auto; background:#FDFCFA; color:#17140F; display:flex; flex-direction:column;">
+
+  <div style="padding:20px 20px 4px; display:flex; align-items:center; gap:12px;">
+    <a href="#" style="color:#6B655C;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6B655C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></a>
+    <div>
+      <div style="font:600 10px/1 'IBM Plex Sans'; letter-spacing:.09em; color:#9A938A;">PLAN &middot; TRAJECTORY</div>
+      <div style="font:700 22px/1.15 'Space Grotesk','Segoe UI',system-ui; margin-top:4px;">Impact on your goal</div>
+    </div>
+  </div>
+
+  <div style="padding:16px 20px 0; font:400 12px/1.5 'IBM Plex Sans'; color:#6B655C;">
+    Where your weighted syllabus readiness is heading, against the path that reaches your targets.
+  </div>
+
+  <!-- Projection chart -->
+  <figure style="margin:16px 20px 0; padding:0;">
+    <svg viewBox="0 0 320 176" width="100%" role="img" aria-label="Weighted readiness projection on a 45 to 85 scale: 78 target by exams; 69 projected at current pace, 76 with the plan change" style="display:block;">
+      <!-- gridlines (y window 45-85) -->
+      <g stroke="#ECE8E0" stroke-width="1">
+        <line x1="28" y1="42" x2="312" y2="42"/><line x1="28" y1="67" x2="312" y2="67"/>
+        <line x1="28" y1="91" x2="312" y2="91"/><line x1="28" y1="116" x2="312" y2="116"/>
+      </g>
+      <line x1="28" y1="128" x2="312" y2="128" stroke="#D8D2C6" stroke-width="1"/>
+      <g font-family="'IBM Plex Mono', monospace" font-size="8" fill="#9A938A" text-anchor="end">
+        <text x="22" y="45">80</text><text x="22" y="70">70</text><text x="22" y="94">60</text><text x="22" y="119">50</text>
+      </g>
+      <!-- shortfall wash: gap between projected line and target -->
+      <polygon points="28,89 175,79 312,69 312,47 28,47" fill="#17140F" opacity="0.05"/>
+      <!-- target line -->
+      <line x1="28" y1="47" x2="312" y2="47" stroke="#B7B0A4" stroke-width="1.5" stroke-dasharray="2 3"/>
+      <text x="28" y="41" font-family="'IBM Plex Sans', sans-serif" font-size="8.5" fill="#8a8378">target 78 &middot; combined subject goal</text>
+      <!-- syllabus target date guide -->
+      <line x1="226" y1="30" x2="226" y2="128" stroke="#CFC9BE" stroke-width="1" stroke-dasharray="2 3"/>
+      <!-- with plan change -->
+      <polyline points="28,89 140,60 312,52" fill="none" stroke="#1E5BFF" stroke-width="2" stroke-dasharray="5 4" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- projected now -->
+      <polyline points="28,89 175,79 312,69" fill="none" stroke="#17140F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- markers -->
+      <circle cx="28" cy="89" r="3.5" fill="#17140F" stroke="#FDFCFA" stroke-width="2"/>
+      <circle cx="312" cy="52" r="4" fill="#1E5BFF" stroke="#FDFCFA" stroke-width="2"/>
+      <circle cx="312" cy="69" r="4" fill="#17140F" stroke="#FDFCFA" stroke-width="2"/>
+      <!-- end labels -->
+      <g font-family="'IBM Plex Mono', monospace" font-size="9.5" font-weight="500">
+        <text x="304" y="52" fill="#1E5BFF" text-anchor="end">76</text>
+        <text x="304" y="80" fill="#17140F" text-anchor="end">69</text>
+      </g>
+      <!-- x labels -->
+      <g font-family="'IBM Plex Sans', sans-serif" font-size="9" fill="#9A938A">
+        <text x="28" y="144">now &middot; 61</text>
+        <text x="226" y="144" text-anchor="middle">20 Dec</text>
+        <text x="312" y="144" text-anchor="end">1 Feb</text>
+      </g>
+      <g font-family="'IBM Plex Sans', sans-serif" font-size="8.5" fill="#9A938A">
+        <text x="226" y="157" text-anchor="middle">syllabus target</text>
+        <text x="312" y="157" text-anchor="end">exams</text>
+      </g>
+      <text x="28" y="171" font-family="'IBM Plex Sans', sans-serif" font-size="8" fill="#B7B0A4">weighted readiness, 45&ndash;85 shown</text>
+    </svg>
+    <figcaption style="display:flex; gap:14px; flex-wrap:wrap; margin-top:8px; font:500 10px/1 'IBM Plex Sans'; color:#6B655C;">
+      <span style="display:flex; align-items:center; gap:5px;"><span style="width:14px; height:2px; background:#17140F;"></span> Projected now</span>
+      <span style="display:flex; align-items:center; gap:5px;"><span style="width:14px; height:0; border-top:2px dashed #1E5BFF;"></span> With plan change</span>
+      <span style="display:flex; align-items:center; gap:5px;"><span style="width:14px; height:0; border-top:2px dashed #B7B0A4;"></span> Target</span>
+    </figcaption>
+  </figure>
+
+  <div style="margin:18px 20px 0; padding:13px 14px; background:#F8EFDE; border-radius:12px; font:400 12px/1.5 'IBM Plex Sans'; color:#6B655C;">
+    At the current pace you reach <b style="color:#17140F;">~69/100</b> by exams &mdash; about <b style="color:#17140F;">9 points</b> short of your combined subject target. The gap is still recoverable now.
+  </div>
+
+  <!-- Plan pressure meter -->
+  <div style="padding:24px 20px 6px; font:600 12px/1 'IBM Plex Sans'; letter-spacing:.08em; color:#9A938A;">PLAN PRESSURE</div>
+  <div style="padding:0 20px;">
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#B26B00" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+      <span style="font:700 15px/1 'Space Grotesk','Segoe UI',system-ui;">High</span>
+      <span style="font:400 11px/1 'IBM Plex Sans'; color:#9A938A;">&mdash; needs a small adjustment</span>
+    </div>
+    <div style="display:flex; gap:2px;">
+      <span style="flex:1; height:8px; border-radius:3px 0 0 3px; background:#E7E3DB;"></span>
+      <span style="flex:1; height:8px; background:#E7E3DB;"></span>
+      <span style="flex:1; height:8px; background:#B26B00;"></span>
+      <span style="flex:1; height:8px; border-radius:0 3px 3px 0; background:#F1D9C0;"></span>
+    </div>
+    <div style="display:flex; justify-content:space-between; font:500 9px/1 'IBM Plex Sans'; color:#9A938A; margin-top:6px;">
+      <span>Low</span><span>Normal</span><span style="color:#B26B00;">High</span><span>Critical</span>
+    </div>
+  </div>
+
+  <!-- Drivers -->
+  <div style="padding:22px 20px 6px; font:600 12px/1 'IBM Plex Sans'; letter-spacing:.08em; color:#9A938A;">WHAT&rsquo;S DRIVING IT</div>
+  <div style="padding:0 20px; display:flex; flex-direction:column;">
+    <div style="display:flex; gap:10px; padding:11px 0; border-bottom:1px solid #ECE8E0;">
+      <span style="font:500 12px/1.4 'IBM Plex Mono',monospace; color:#C0392B; flex:0 0 44px;">&minus;9 wt</span>
+      <span style="font:400 12px/1.4 'IBM Plex Sans'; color:#6B655C;">Ray Optics not started &mdash; high derived board weight, not yet taught</span>
+    </div>
+    <div style="display:flex; gap:10px; padding:11px 0; border-bottom:1px solid #ECE8E0;">
+      <span style="font:500 12px/1.4 'IBM Plex Mono',monospace; color:#B26B00; flex:0 0 44px;">8 d</span>
+      <span style="font:400 12px/1.4 'IBM Plex Sans'; color:#6B655C;">Physics coverage is 8 days behind the syllabus line</span>
+    </div>
+    <div style="display:flex; gap:10px; padding:11px 0;">
+      <span style="font:500 12px/1.4 'IBM Plex Mono',monospace; color:#B26B00; flex:0 0 44px;">3</span>
+      <span style="font:400 12px/1.4 'IBM Plex Sans'; color:#6B655C;">revision items running overdue, mostly Chemistry</span>
+    </div>
+  </div>
+
+  <div style="padding:24px 20px 0;">
+    <button style="appearance:none; border:0; background:#1E5BFF; color:#fff; font:600 15px 'IBM Plex Sans'; height:48px; border-radius:12px; width:100%; display:flex; align-items:center; justify-content:center; gap:8px;">
+      See course correction
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+    <div style="font:400 11px/1.5 'IBM Plex Sans'; color:#9A938A; margin-top:12px;">Projection is a planning estimate, not a predicted score. It updates with every test result and recalculates if you change plan dates.</div>
+  </div>
+
+  <div style="flex:1;"></div>
+</div>
+</x-dc>
+</body>
+</html>

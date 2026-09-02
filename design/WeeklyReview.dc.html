@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+  <style>
+    body { margin:0; background:#EFEAE2; font-family:'IBM Plex Sans', system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+    a { color:#1E5BFF; text-decoration:none; } a:hover { color:#1741c9; }
+    * { box-sizing:border-box; }
+  </style>
+</helmet>
+
+<div style="width:390px; min-height:1520px; margin:0 auto; background:#FDFCFA; color:#17140F; display:flex; flex-direction:column;">
+
+  <div style="padding:20px 20px 4px; display:flex; align-items:center; gap:12px;">
+    <a href="#" style="color:#6B655C;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6B655C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></a>
+    <div>
+      <div style="font:600 10px/1 'IBM Plex Sans'; letter-spacing:.09em; color:#9A938A;">25&ndash;31 AUGUST</div>
+      <div style="font:700 22px/1.15 'Space Grotesk','Segoe UI',system-ui; margin-top:4px;">Weekly review</div>
+    </div>
+  </div>
+
+  <div style="padding:20px 20px 0; font:600 18px/1.35 'Space Grotesk','Segoe UI',system-ui;">A steady week &mdash; Physics moved the most, Chemistry needs a look.</div>
+
+  <!-- Stat grid -->
+  <div style="padding:20px 20px 0; display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px;">
+    <div style="border:1px solid #E7E3DB; border-radius:11px; padding:13px;"><div style="font:500 10px/1 'IBM Plex Sans'; color:#9A938A;">TASKS DONE</div><div style="font:500 20px/1 'IBM Plex Mono',monospace; margin-top:7px;">11<span style="font-size:12px; color:#9A938A;"> / 14</span></div></div>
+    <div style="border:1px solid #E7E3DB; border-radius:11px; padding:13px;"><div style="font:500 10px/1 'IBM Plex Sans'; color:#9A938A;">REVISION DONE</div><div style="font:500 20px/1 'IBM Plex Mono',monospace; margin-top:7px;">6<span style="font-size:12px; color:#9A938A;"> / 8</span></div></div>
+    <div style="border:1px solid #E7E3DB; border-radius:11px; padding:13px;"><div style="font:500 10px/1 'IBM Plex Sans'; color:#9A938A;">FOCUS TIME</div><div style="font:500 20px/1 'IBM Plex Mono',monospace; margin-top:7px;">7h 40m</div></div>
+    <div style="border:1px solid #E7E3DB; border-radius:11px; padding:13px;"><div style="font:500 10px/1 'IBM Plex Sans'; color:#9A938A;">READINESS</div><div style="font:500 20px/1 'IBM Plex Mono',monospace; margin-top:7px;">61<span style="font-size:12px; color:#2F7D4F;"> +2</span></div></div>
+  </div>
+
+  <!-- Study rhythm / adherence -->
+  <div style="padding:24px 20px 8px; font:600 12px/1 'IBM Plex Sans'; letter-spacing:.08em; color:#9A938A;">STUDY RHYTHM</div>
+  <div style="padding:0 20px;">
+    <div style="display:flex; align-items:center; gap:11px;">
+      <span style="font:500 12px/1 'IBM Plex Sans'; flex:0 0 96px;">Blocks kept</span>
+      <span style="flex:1; height:14px; background:#ECE8E0; border-radius:5px; overflow:hidden;"><span style="display:block; width:73%; height:100%; background:#17140F;"></span></span>
+      <span style="flex:0 0 46px; text-align:right; font:500 11px/1 'IBM Plex Mono',monospace; color:#6B655C;">11/15</span>
+    </div>
+    <div style="font:400 11px/1.5 'IBM Plex Sans'; color:#9A938A; margin-top:9px;">2 you moved yourself, 2 slipped. Fridays remain the weak spot &mdash; the plan has shifted Friday load to Saturday morning.</div>
+  </div>
+
+  <!-- Readiness changes -->
+  <div style="padding:24px 20px 8px; font:600 12px/1 'IBM Plex Sans'; letter-spacing:.08em; color:#9A938A;">READINESS CHANGE</div>
+  <div style="padding:0 20px; display:flex; flex-direction:column;">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid #ECE8E0;">
+      <span style="font:500 13px/1 'IBM Plex Sans';">Physics</span>
+      <span style="font:600 13px/1 'IBM Plex Mono',monospace; color:#2F7D4F;">&uarr; +4</span>
+    </div>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid #ECE8E0;">
+      <span style="font:500 13px/1 'IBM Plex Sans';">Mathematics</span>
+      <span style="font:600 13px/1 'IBM Plex Mono',monospace; color:#2F7D4F;">&uarr; +2</span>
+    </div>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid #ECE8E0;">
+      <span style="font:500 13px/1 'IBM Plex Sans';">Computer Science</span>
+      <span style="font:600 13px/1 'IBM Plex Mono',monospace; color:#6B655C;">&ndash; 0</span>
+    </div>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 0;">
+      <span style="font:500 13px/1 'IBM Plex Sans';">Chemistry</span>
+      <span style="font:600 13px/1 'IBM Plex Mono',monospace; color:#C0392B;">&darr; &minus;1</span>
+    </div>
+  </div>
+
+  <div style="margin:22px 20px 0; padding:14px; background:#F4F1EA; border-radius:12px;">
+    <div style="font:500 10px/1 'IBM Plex Sans'; color:#9A938A;">BIGGEST IMPROVEMENT</div>
+    <div style="font:700 15px/1.2 'Space Grotesk','Segoe UI',system-ui; margin-top:6px;">Current Electricity &nbsp;<span style="color:#2F7D4F;">+12</span></div>
+    <div style="font:400 11px/1.4 'IBM Plex Sans'; color:#6B655C; margin-top:4px;">Strong class-test result + two recall sessions.</div>
+  </div>
+
+  <!-- Weak areas -->
+  <div style="padding:22px 20px 8px; font:600 12px/1 'IBM Plex Sans'; letter-spacing:.08em; color:#9A938A;">STILL WEAK</div>
+  <div style="padding:0 20px; display:flex; gap:8px; flex-wrap:wrap;">
+    <span style="font:600 12px/1 'IBM Plex Sans'; color:#17140F; background:#F8E7E5; padding:8px 11px; border-radius:8px;">Ray Optics &middot; 38</span>
+    <span style="font:600 12px/1 'IBM Plex Sans'; color:#17140F; background:#F8E7E5; padding:8px 11px; border-radius:8px;">Integrals &middot; 42</span>
+    <span style="font:600 12px/1 'IBM Plex Sans'; color:#17140F; background:#F8EFDE; padding:8px 11px; border-radius:8px;">Amines &middot; 55</span>
+  </div>
+
+  <!-- Marks lost -->
+  <div style="padding:24px 20px 8px; font:600 12px/1 'IBM Plex Sans'; letter-spacing:.08em; color:#9A938A;">WHERE MARKS WENT</div>
+  <div style="padding:0 20px; display:flex; flex-direction:column; gap:10px;">
+    <div style="display:flex; align-items:center; gap:11px;">
+      <span style="flex:0 0 92px; font:500 12px/1 'IBM Plex Sans';">Calculation</span>
+      <span style="flex:1; height:16px; background:#ECE8E0; border-radius:5px; overflow:hidden;"><span style="display:block; width:40%; height:100%; background:#17140F;"></span></span>
+      <span style="flex:0 0 30px; text-align:right; font:500 11px/1 'IBM Plex Mono',monospace; color:#6B655C;">40%</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:11px;">
+      <span style="flex:0 0 92px; font:500 12px/1 'IBM Plex Sans';">Concept</span>
+      <span style="flex:1; height:16px; background:#ECE8E0; border-radius:5px; overflow:hidden;"><span style="display:block; width:30%; height:100%; background:#17140F;"></span></span>
+      <span style="flex:0 0 30px; text-align:right; font:500 11px/1 'IBM Plex Mono',monospace; color:#6B655C;">30%</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:11px;">
+      <span style="flex:0 0 92px; font:500 12px/1 'IBM Plex Sans';">Misread Q</span>
+      <span style="flex:1; height:16px; background:#ECE8E0; border-radius:5px; overflow:hidden;"><span style="display:block; width:20%; height:100%; background:#17140F;"></span></span>
+      <span style="flex:0 0 30px; text-align:right; font:500 11px/1 'IBM Plex Mono',monospace; color:#6B655C;">20%</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:11px;">
+      <span style="flex:0 0 92px; font:500 12px/1 'IBM Plex Sans';">Time mgmt</span>
+      <span style="flex:1; height:16px; background:#ECE8E0; border-radius:5px; overflow:hidden;"><span style="display:block; width:10%; height:100%; background:#17140F;"></span></span>
+      <span style="flex:0 0 30px; text-align:right; font:500 11px/1 'IBM Plex Mono',monospace; color:#6B655C;">10%</span>
+    </div>
+  </div>
+
+  <!-- Next week -->
+  <div style="padding:24px 20px 8px; font:600 12px/1 'IBM Plex Sans'; letter-spacing:.08em; color:#9A938A;">NEXT WEEK&rsquo;S FOCUS</div>
+  <div style="padding:0 20px; display:flex; flex-direction:column; gap:10px;">
+    <div style="display:flex; gap:10px; align-items:flex-start;"><span style="font:600 12px/1.4 'IBM Plex Mono',monospace; color:#9A938A;">01</span><span style="font:500 13px/1.4 'IBM Plex Sans';">Electrostatics practice before the 7 Sep unit test</span></div>
+    <div style="display:flex; gap:10px; align-items:flex-start;"><span style="font:600 12px/1.4 'IBM Plex Mono',monospace; color:#9A938A;">02</span><span style="font:500 13px/1.4 'IBM Plex Sans';">Integrals concept-building while it&rsquo;s taught in class</span></div>
+    <div style="display:flex; gap:10px; align-items:flex-start;"><span style="font:600 12px/1.4 'IBM Plex Mono',monospace; color:#9A938A;">03</span><span style="font:500 13px/1.4 'IBM Plex Sans';">Recover the Solutions revision (3 short sessions)</span></div>
+  </div>
+
+  <div style="padding:24px 20px 0;">
+    <button style="appearance:none; border:1.5px solid #17140F; background:#FDFCFA; color:#17140F; font:600 14px 'IBM Plex Sans'; height:46px; border-radius:12px; width:100%;">Carry focus into next week&rsquo;s plan</button>
+  </div>
+
+  <div style="flex:1;"></div>
+</div>
+</x-dc>
+</body>
+</html>

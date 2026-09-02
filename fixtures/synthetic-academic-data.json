@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "kind": "SYNTHETIC_TEST_DATA",
+    "official": false,
+    "warning": "Illustrative development fixture. Not official CBSE chapter-wise marks."
+  },
+  "student": {
+    "displayName": "Demo Student",
+    "board": "CBSE",
+    "grade": 12,
+    "timezone": "Asia/Kolkata"
+  },
+  "plan": {
+    "startDate": "2026-09-02",
+    "syllabusTargetDate": "2026-12-20",
+    "hardCompletionDate": "2026-12-31",
+    "revisionStartDate": "2027-01-01",
+    "examWindowStart": "2027-02-01",
+    "examWindowEnd": "2027-03-31",
+    "weekdayStudyMinutes": 120,
+    "weekendStudyMinutes": 240
+  },
+  "chapters": [
+    {"id":"PHY01","subject":"Physics","chapter":"Electrostatics","derivedWeight":9,"readiness":45,"schoolStatus":"COMPLETED"},
+    {"id":"PHY02","subject":"Physics","chapter":"Current Electricity","derivedWeight":8,"readiness":72,"schoolStatus":"COMPLETED"},
+    {"id":"PHY03","subject":"Physics","chapter":"Ray Optics","derivedWeight":9,"readiness":38,"schoolStatus":"NOT_TAUGHT"},
+    {"id":"CHE01","subject":"Chemistry","chapter":"Solutions","derivedWeight":7,"readiness":75,"schoolStatus":"COMPLETED"},
+    {"id":"CHE02","subject":"Chemistry","chapter":"Electrochemistry","derivedWeight":8,"readiness":68,"schoolStatus":"COMPLETED"},
+    {"id":"CHE03","subject":"Chemistry","chapter":"Amines","derivedWeight":6,"readiness":55,"schoolStatus":"CURRENTLY_TEACHING"},
+    {"id":"MAT01","subject":"Mathematics","chapter":"Matrices","derivedWeight":6,"readiness":82,"schoolStatus":"COMPLETED"},
+    {"id":"MAT02","subject":"Mathematics","chapter":"Integrals","derivedWeight":10,"readiness":42,"schoolStatus":"CURRENTLY_TEACHING"},
+    {"id":"MAT03","subject":"Mathematics","chapter":"Probability","derivedWeight":8,"readiness":61,"schoolStatus":"NOT_TAUGHT"},
+    {"id":"CS01","subject":"Computer Science","chapter":"Python Revision","derivedWeight":7,"readiness":90,"schoolStatus":"COMPLETED"},
+    {"id":"CS02","subject":"Computer Science","chapter":"SQL","derivedWeight":8,"readiness":78,"schoolStatus":"COMPLETED"},
+    {"id":"CS03","subject":"Computer Science","chapter":"Networks","derivedWeight":6,"readiness":65,"schoolStatus":"CURRENTLY_TEACHING"}
+  ],
+  "assessments": [
+    {"date":"2026-09-07","type":"SCHOOL_UNIT_TEST","subject":"Physics","name":"Physics Unit Test","chapters":["PHY01","PHY02"],"maxMarks":30},
+    {"date":"2026-09-11","type":"SCHOOL_CLASS_TEST","subject":"Mathematics","name":"Mathematics Class Test","chapters":["MAT02"],"maxMarks":20},
+    {"date":"2026-09-15","type":"SCHOOL_CLASS_TEST","subject":"Chemistry","name":"Chemistry Test","chapters":["CHE03"],"maxMarks":20}
+  ]
+}

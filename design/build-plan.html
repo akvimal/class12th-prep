@@ -1,0 +1,462 @@
+<title>Board Prep Tracker Build Plan</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --paper:#FDFCFA; --sink:#F4F1EA; --card:#FFFFFF;
+    --ink:#17140F; --muted:#5f5a51; --faint:#8a8378;
+    --line:#E5E0D6; --line-soft:#EEEAE1;
+    --accent:#1E5BFF; --accent-soft:#EEF2FF;
+    --done:#2F7D4F; --done-soft:#E7F0E9;
+    --now:#B26B00; --now-soft:#F8EFDE;
+    --later:#9A938A;
+    --shadow:0 1px 2px rgba(23,20,15,.04), 0 14px 34px -18px rgba(23,20,15,.16);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#17140F; --sink:#1C1915; --card:#211D18;
+      --ink:#F3EFE7; --muted:#B7B0A4; --faint:#8f8779;
+      --line:#332E26; --line-soft:#2A251F;
+      --accent:#6f93ff; --accent-soft:#1e2437;
+      --done:#6BBF8A; --done-soft:#1b2a22;
+      --now:#D69A4A; --now-soft:#2c2419;
+      --later:#7c7568;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 16px 38px -20px rgba(0,0,0,.55);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#17140F; --sink:#1C1915; --card:#211D18;
+    --ink:#F3EFE7; --muted:#B7B0A4; --faint:#8f8779;
+    --line:#332E26; --line-soft:#2A251F;
+    --accent:#6f93ff; --accent-soft:#1e2437;
+    --done:#6BBF8A; --done-soft:#1b2a22;
+    --now:#D69A4A; --now-soft:#2c2419;
+    --later:#7c7568;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 16px 38px -20px rgba(0,0,0,.55);
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size:15px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  code, .mono{ font-family:'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace; }
+  a{ color:var(--accent); text-decoration:none; }
+  a:hover{ text-decoration:underline; }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:2px; border-radius:3px; }
+
+  /* ---- top nav ---- */
+  nav.top{
+    position:sticky; top:0; z-index:10;
+    display:flex; gap:4px; flex-wrap:wrap; align-items:center;
+    padding:11px 22px; background:color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter:blur(8px); border-bottom:1px solid var(--line);
+  }
+  nav.top .brand{ font:600 13px/1 'Space Grotesk', 'Segoe UI', system-ui; letter-spacing:-.01em; margin-right:auto; }
+  nav.top a{ padding:6px 9px; border-radius:7px; color:var(--muted); font:500 12px/1 'IBM Plex Sans', sans-serif; }
+  nav.top a:hover{ background:var(--sink); text-decoration:none; color:var(--ink); }
+  nav.top a.active{ color:var(--ink); background:var(--sink); }
+
+  main{ max-width:768px; margin:0 auto; padding:0 22px 96px; }
+
+  header.doc{ padding:52px 0 30px; border-bottom:1px solid var(--line); }
+  header.doc .eyebrow{ font:600 11px/1 'IBM Plex Mono', monospace; letter-spacing:.14em; color:var(--faint); text-transform:uppercase; }
+  header.doc h1{
+    font:700 34px/1.1 'Space Grotesk', 'Segoe UI', system-ui; letter-spacing:-.02em;
+    margin:14px 0 12px; text-wrap:balance;
+  }
+  header.doc p.lede{ margin:0; max-width:60ch; color:var(--muted); font-size:16px; }
+  header.doc .meta{ margin-top:18px; font:500 12px/1.5 'IBM Plex Mono', monospace; color:var(--faint); }
+
+  h2{
+    font:600 12px/1 'IBM Plex Mono', monospace; letter-spacing:.13em; text-transform:uppercase;
+    color:var(--faint); margin:56px 0 20px; padding-bottom:9px; border-bottom:1px solid var(--line);
+  }
+  h2:first-of-type{ margin-top:44px; }
+  p{ max-width:66ch; }
+  strong{ font-weight:600; }
+
+  /* ---- timeline strip ---- */
+  .timeline{
+    display:flex; align-items:flex-start; gap:0; overflow-x:auto; padding:6px 2px 4px;
+    margin:26px 0 8px; scrollbar-width:thin;
+  }
+  .tnode{ flex:0 0 auto; display:flex; flex-direction:column; align-items:center; gap:8px; width:84px; position:relative; }
+  .tnode::before{ content:""; position:absolute; top:10px; right:50%; width:100%; height:2px; background:var(--line); z-index:0; }
+  .tnode:first-child::before{ display:none; }
+  .tnode .dot{
+    width:22px; height:22px; border-radius:50%; background:var(--card); border:2px solid var(--line);
+    z-index:1; display:grid; place-items:center; font:600 9px/1 'IBM Plex Mono', monospace; color:var(--faint);
+  }
+  .tnode.mvp .dot{ border-color:var(--accent); color:var(--accent); }
+  .tnode.now .dot{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  .tnode.post .dot{ opacity:.55; }
+  .tnode.post .lab{ opacity:.7; }
+  .tnode .lab{ font:500 10px/1.3 'IBM Plex Sans', sans-serif; color:var(--muted); text-align:center; width:80px; }
+  .tnode.now .lab{ color:var(--ink); font-weight:600; }
+  .here{ margin:2px 0 30px; font:600 11px/1 'IBM Plex Mono', monospace; color:var(--accent); }
+
+  /* ---- principle list ---- */
+  ul.plain{ list-style:none; padding:0; margin:16px 0 0; display:flex; flex-direction:column; gap:11px; }
+  ul.plain li{ padding-left:20px; position:relative; max-width:66ch; color:var(--muted); }
+  ul.plain li::before{ content:""; position:absolute; left:2px; top:9px; width:6px; height:6px; border-radius:2px; background:var(--accent); }
+  ul.plain li strong{ color:var(--ink); }
+
+  /* ---- stack table ---- */
+  .table-wrap{ overflow-x:auto; margin-top:18px; border:1px solid var(--line); border-radius:12px; }
+  table{ border-collapse:collapse; width:100%; font-size:13.5px; }
+  th, td{ text-align:left; padding:11px 14px; vertical-align:top; border-bottom:1px solid var(--line-soft); }
+  th{ font:600 11px/1.2 'IBM Plex Mono', monospace; letter-spacing:.06em; text-transform:uppercase; color:var(--faint); background:var(--sink); }
+  tr:last-child td{ border-bottom:0; }
+  td:first-child{ font-weight:600; white-space:nowrap; }
+  td .why{ color:var(--muted); display:block; margin-top:3px; font-size:12.5px; }
+
+  .modules{
+    margin-top:18px; padding:16px 18px; background:var(--sink); border:1px solid var(--line); border-radius:12px;
+    font:500 12.5px/1.75 'IBM Plex Mono', monospace; color:var(--muted); overflow-x:auto; white-space:pre;
+  }
+  .modules b{ color:var(--ink); font-weight:600; }
+
+  /* ---- phase blocks ---- */
+  .phase{ padding:26px 0; border-bottom:1px solid var(--line-soft); }
+  .phase:last-of-type{ border-bottom:0; }
+  .phase-head{ display:flex; align-items:baseline; gap:16px; }
+  .phase-head .pnum{
+    font:700 26px/1 'Space Grotesk', 'Segoe UI', system-ui; color:var(--faint);
+    letter-spacing:-.01em; flex:0 0 auto; font-variant-numeric:tabular-nums;
+  }
+  .phase-head h3{ font:600 19px/1.25 'Space Grotesk','Segoe UI',system-ui; margin:0; flex:1; letter-spacing:-.01em; }
+  .chip{ font:600 10px/1 'IBM Plex Mono', monospace; letter-spacing:.05em; padding:5px 8px; border-radius:6px; flex:0 0 auto; text-transform:uppercase; }
+  .chip.mvp{ background:var(--accent-soft); color:var(--accent); }
+  .chip.high{ background:var(--now-soft); color:var(--now); }
+  .chip.post{ background:var(--sink); color:var(--later); }
+  .chip.now{ background:var(--accent); color:#fff; }
+
+  .phase-goal{ margin:12px 0 0; color:var(--muted); max-width:64ch; }
+
+  dl.grid{ margin:18px 0 0; display:grid; grid-template-columns:1fr; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); border-radius:11px; overflow:hidden; }
+  dl.grid > div{ background:var(--card); padding:12px 15px; display:grid; grid-template-columns:112px 1fr; gap:14px; }
+  dl.grid dt{ font:600 10.5px/1.5 'IBM Plex Mono', monospace; letter-spacing:.05em; text-transform:uppercase; color:var(--faint); }
+  dl.grid dd{ margin:0; color:var(--muted); font-size:13.5px; }
+  dl.grid dd code{ font-size:12px; background:var(--sink); padding:1px 5px; border-radius:4px; color:var(--ink); }
+  dl.grid > div.exit dd{ color:var(--ink); }
+
+  .scr{ display:inline-block; font:500 11px/1 'IBM Plex Sans', sans-serif; padding:4px 8px; border-radius:6px; background:var(--sink); color:var(--muted); margin:0 4px 4px 0; }
+
+  /* ---- checklist ---- */
+  ul.check{ list-style:none; padding:0; margin:16px 0 0; display:grid; grid-template-columns:repeat(auto-fill, minmax(230px,1fr)); gap:8px; }
+  ul.check li{ display:flex; gap:9px; align-items:flex-start; font-size:13px; color:var(--muted); padding:9px 11px; border:1px solid var(--line); border-radius:9px; }
+  ul.check li svg{ flex:0 0 15px; margin-top:2px; color:var(--done); }
+
+  ol.steps{ counter-reset:s; list-style:none; padding:0; margin:16px 0 0; display:flex; flex-direction:column; gap:12px; }
+  ol.steps li{ counter-increment:s; padding-left:38px; position:relative; max-width:64ch; color:var(--muted); }
+  ol.steps li::before{
+    content:counter(s); position:absolute; left:0; top:-1px; width:24px; height:24px;
+    display:grid; place-items:center; border-radius:7px; background:var(--ink); color:var(--paper);
+    font:600 12px/1 'IBM Plex Mono', monospace;
+  }
+  ol.steps li strong{ color:var(--ink); }
+
+  .note{ margin-top:14px; padding:12px 15px; border-left:3px solid var(--now); background:var(--now-soft); border-radius:0 9px 9px 0; font-size:13px; color:var(--muted); max-width:64ch; }
+  .note strong{ color:var(--ink); }
+
+  footer{ margin-top:60px; padding-top:22px; border-top:1px solid var(--line); font:500 12px/1.7 'IBM Plex Mono', monospace; color:var(--faint); }
+
+  @media (max-width:560px){
+    header.doc h1{ font-size:27px; }
+    .phase-head{ flex-wrap:wrap; gap:10px; }
+    dl.grid > div{ grid-template-columns:1fr; gap:5px; }
+  }
+</style>
+
+<nav class="top">
+  <span class="brand">Board Prep Tracker</span>
+  <a href="#approach">Approach</a>
+  <a href="#stack">Stack</a>
+  <a href="#phases">Phases</a>
+  <a href="#crosscutting">Cross-cutting</a>
+  <a href="#risks">Risks</a>
+  <a href="#next">Next</a>
+</nav>
+
+<main>
+  <header class="doc">
+    <div class="eyebrow">Implementation plan &middot; v1</div>
+    <h1>From the UI shell to a production MVP</h1>
+    <p class="lede">How the CBSE board-preparation tracker gets built: a coded UI shell first, then the SRS phases filled in behind it one deterministic slice at a time.</p>
+    <div class="meta">Sources: docs/SRS.md &middot; ARCHITECTURE.md &middot; DOMAIN_MODEL.md &middot; ALGORITHMS.md &middot; TEST_STRATEGY.md &middot; tasks/PHASE-00&ndash;01<br>Target first student: CBSE Class XII 2026&ndash;27 (English excluded for that student; schema stays general)</div>
+  </header>
+
+  <div class="timeline" aria-label="Delivery timeline">
+    <div class="tnode now"><span class="dot">M0</span><span class="lab">Design</span></div>
+    <div class="tnode now"><span class="dot">M1</span><span class="lab">UI shell</span></div>
+    <div class="tnode mvp"><span class="dot">0</span><span class="lab">Foundation</span></div>
+    <div class="tnode mvp"><span class="dot">1</span><span class="lab">Tracker</span></div>
+    <div class="tnode mvp"><span class="dot">2</span><span class="lab">Planner</span></div>
+    <div class="tnode mvp"><span class="dot">3</span><span class="lab">Revision</span></div>
+    <div class="tnode mvp"><span class="dot">4</span><span class="lab">Assessment</span></div>
+    <div class="tnode mvp"><span class="dot">5</span><span class="lab">Exam mode</span></div>
+    <div class="tnode post"><span class="dot">6</span><span class="lab">Parent</span></div>
+    <div class="tnode post"><span class="dot">7</span><span class="lab">Notify</span></div>
+    <div class="tnode post"><span class="dot">8</span><span class="lab">AI</span></div>
+  </div>
+  <div class="here">&#9650; you are here &mdash; design review, before M1</div>
+  <p style="color:var(--muted); font-size:13.5px;">Phases&nbsp;0&ndash;5 plus the cross-cutting workstreams are the MVP (<abbr title="Software Requirements Specification">SRS</abbr> &sect;15 definition of done). Phases&nbsp;6&ndash;8 are post-MVP and already have design screens waiting.</p>
+
+  <h2 id="approach">Operating principles</h2>
+  <p>Every phase is built against these. They come straight from the ADRs and <code>AGENTS.md</code> &mdash; a change to any of them is an architecture decision, not an implementation detail.</p>
+  <ul class="plain">
+    <li><strong>Shell first, behaviour later.</strong> Build all screens against mock data, then replace the mock with real services phase by phase. The screen code talks to real service signatures from day one.</li>
+    <li><strong>Deterministic core, no AI in the critical path.</strong> Priority, planning, readiness, revision and pressure are pure functions of versioned config + evidence. Same inputs &rarr; same output, always.</li>
+    <li><strong>Dates drive everything.</strong> Phases and scheduling derive from <code>PreparationPlan</code> / <code>PlanPhase</code> dates. No branching on calendar month &mdash; ever.</li>
+    <li><strong>Config is versioned data.</strong> Weights, recency factors, urgency multipliers and intervals live in records like <code>readiness-v1</code>; every snapshot stores the version that produced it.</li>
+    <li><strong>Evidence is immutable.</strong> Sessions, assessments, errors and readiness snapshots are never overwritten. Recalculation produces new rows; corrections are auditable.</li>
+    <li><strong>Official &ne; derived.</strong> Board-official weightage and app-derived importance are different columns with different <code>source_type</code>s, and never rendered as each other.</li>
+    <li><strong>Never silently exceed capacity.</strong> When the plan can&rsquo;t fit, it surfaces trade-offs; it does not quietly overbook the student.</li>
+    <li><strong>Every task ships its tests.</strong> Unit tests for domain rules, integration for persistence, and the regression fixture for anything touching the engines &mdash; in the same change.</li>
+  </ul>
+
+  <h2 id="stack">Stack &amp; structure</h2>
+  <p>The stack was deferred to this point on purpose. Now settled &mdash; Next.js + TypeScript + <strong>Drizzle</strong> + PostgreSQL, pnpm, Vitest / Playwright.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Layer</th><th>Choice</th></tr></thead>
+      <tbody>
+        <tr><td>UI runtime</td><td>Next.js 15 (App Router) + TypeScript (strict) + Tailwind<span class="why">Server components for read screens, client components for the interactive ones. PWA manifest from the start.</span></td></tr>
+        <tr><td>Domain</td><td><code>src/domain/*</code> &mdash; plain TypeScript<span class="why">Zero imports of Next, the DB, or HTTP. Runs in Vitest with no browser and no database.</span></td></tr>
+        <tr><td>Application services</td><td><code>src/app-services/*</code><span class="why">Orchestrate domain + repositories. The only thing route handlers and RSC loaders are allowed to call.</span></td></tr>
+        <tr><td>Persistence</td><td><strong>Drizzle ORM</strong> + PostgreSQL&nbsp;16 &mdash; confirmed<span class="why">SQL-first migrations, lighter runtime, precise control for engine queries and deterministic fixtures. Ports in <code>src/persistence/ports.ts</code>; <code>InMemoryRepository</code> (fixture-backed) and <code>PostgresRepository</code> implement them.</span></td></tr>
+        <tr><td>Config</td><td><code>src/config/*</code> &mdash; versioned records<span class="why"><code>readiness-v1</code>, <code>planner-v1</code>, <code>revision-v1</code>. Immutable objects with a <code>version</code> string.</span></td></tr>
+        <tr><td>Background jobs</td><td><code>src/jobs/*</code> &mdash; plain functions<span class="why">Run via a worker entrypoint (node-cron locally). Phase&nbsp;3 onward: revision-due, plan-risk, event generation.</span></td></tr>
+        <tr><td>Domain events</td><td><code>domain_event</code> table + <code>src/domain/events/*</code><span class="why">Persisted from Phase&nbsp;0, even with no delivery channel wired.</span></td></tr>
+        <tr><td>Tooling</td><td>pnpm &middot; Vitest &middot; Playwright (critical journeys only) &middot; ESLint + Prettier &middot; Docker Compose (Postgres) &middot; GitHub Actions CI</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modules">src/
+  <b>app/</b>            Next.js routes &mdash; the 18 screens, thin
+  <b>app-services/</b>   use-cases called by routes (plan, planner, readiness, review&hellip;)
+  <b>domain/</b>
+    curriculum/    versioned master data + provenance
+    planning/      plan, phases, capacity, priority, daily planner, Study Now
+    revision/      schedules, intervals, outcomes
+    assessment/    results, errors, recalibration, projection
+    readiness/     component model, recency, snapshots
+    events/        domain event types + emit
+  <b>persistence/</b>    ports + InMemoryRepository + PostgresRepository (Drizzle)
+  <b>jobs/</b>           revision-due, plan-risk, event generation
+  <b>config/</b>         readiness-v1, planner-v1, revision-v1</div>
+
+  <h2 id="phases">Milestones &amp; phases</h2>
+
+  <div class="phase" id="m0">
+    <div class="phase-head"><span class="pnum">M0</span><h3>Design sign-off</h3><span class="chip now">now</span></div>
+    <p class="phase-goal">Lock the 18 screens and the exact shape of the sample data they read, so the coded shell has a fixed target.</p>
+    <dl class="grid">
+      <div><dt>Build</dt><dd>Review pass on the screen gallery; fold in change requests.</dd></div>
+      <div><dt>Data</dt><dd>Extend <code>fixtures/synthetic-academic-data.json</code> with the fields the newer screens need &mdash; study windows, <code>planned_start_time</code>, adherence history, projection inputs &mdash; as a documented shape.</dd></div>
+      <div class="exit"><dt>Exit</dt><dd>Screens approved; fixture shape frozen and documented.</dd></div>
+    </dl>
+  </div>
+
+  <div class="phase" id="m1">
+    <div class="phase-head"><span class="pnum">M1</span><h3>Coded UI shell</h3><span class="chip now">next</span></div>
+    <p class="phase-goal">The &ldquo;UI shell with best UX and sample data&rdquo; deliverable. Every screen is a real route, wired to an in-memory repository, with the design system extracted into components. No database.</p>
+    <dl class="grid">
+      <div><dt>Maps to</dt><dd><code>TASK-001</code> (bootstrap) + the shell itself</dd></div>
+      <div><dt>Build</dt><dd>Repo scaffold: app starts, health check, lint / typecheck / test, Docker Compose, CI. Component library: <code>ReadinessBar</code>, <code>PhaseStrip</code>, <code>TaskCard</code>, <code>WhyThis</code>, <code>ProvenanceBadge</code>, bottom nav, projection chart. All 18 screens as routes.</dd></div>
+      <div><dt>Persistence</dt><dd><code>InMemoryRepository</code> seeded from the fixture. <code>app-services</code> return real view-model shapes so screens already call the true signatures.</dd></div>
+      <div><dt>Screens</dt><dd><span class="scr">all 18</span> navigable with sample data</dd></div>
+      <div class="exit"><dt>Exit</dt><dd><code>pnpm dev</code> serves every screen; mobile-first + responsive + theme-aware + keyboard-navigable; Playwright smoke of the tab nav and the daily-loop path.</dd></div>
+    </dl>
+  </div>
+
+  <div class="phase" id="phase-0">
+    <div class="phase-head"><span class="pnum">00</span><h3>Product foundation</h3><span class="chip mvp">MVP</span></div>
+    <p class="phase-goal">The product-ready data model and the two date-driven services everything else leans on: phase resolution and daily capacity.</p>
+    <dl class="grid">
+      <div><dt>Maps to</dt><dd><code>TASK-001</code> &hellip; <code>TASK-006</code></dd></div>
+      <div><dt>Domain</dt><dd>Curriculum hierarchy (Version &rarr; Subject &rarr; Unit &rarr; Chapter &rarr; Topic) + <code>AcademicWeight</code> with source types; <code>resolvePhase(plan, date)</code> pure &amp; tested; <code>availableMinutes(date)</code> capacity service with documented overlap precedence.</dd></div>
+      <div><dt>Persistence</dt><dd>Schema: Family, Student, AcademicYear, PreparationPlan, PlanPhase, SubjectEnrollment, SchoolCalendarEvent. Ownership FKs; one active plan per year; plan-date ordering validation; migrations infra. <code>PostgresRepository</code> implements the ports the shell already uses &mdash; flip a config flag.</dd></div>
+      <div><dt>Services / UI</dt><dd>Plan-setup create/read/update; idempotent seed loader with stable IDs.</dd></div>
+      <div><dt>Events</dt><dd><code>domain_event</code> table live (no emitters yet)</dd></div>
+      <div><dt>Screens</dt><dd><span class="scr">Plan Setup</span><span class="scr">Subjects</span><span class="scr">Subject detail</span><span class="scr">Chapter detail (curriculum side)</span></dd></div>
+      <div class="exit"><dt>Exit</dt><dd>All three plan shapes &mdash; short, Jul&ndash;Feb, 90-day &mdash; create and resolve phases with no month branching; seed loads in one command; regression scenarios&nbsp;13 &amp; 15 green.</dd></div>
+    </dl>
+  </div>
+
+  <div class="phase" id="phase-1">
+    <div class="phase-head"><span class="pnum">01</span><h3>Student tracker</h3><span class="chip mvp">MVP</span></div>
+    <p class="phase-goal">The student can record what they did and see where they stand. Readiness becomes real.</p>
+    <dl class="grid">
+      <div><dt>Maps to</dt><dd><code>TASK-007</code> &hellip; <code>TASK-011</code></dd></div>
+      <div><dt>Domain</dt><dd>Readiness engine v1: <code>raw = &Sigma; component&middot;weight</code>, recency factor, <code>effective = raw&middot;recency</code>. Confidence is an input, never a dominator. Chapter state machine (may move backward on contradictory evidence).</dd></div>
+      <div><dt>Persistence</dt><dd>ChapterProgress (5 component scores 0&ndash;100, confidence, interest, school status); StudySession (types, completion, planned/actual minutes, optional attempted/correct); ReadinessSnapshot (immutable, stores <code>algorithm_version</code>).</dd></div>
+      <div><dt>Services / UI</dt><dd>Dashboard aggregation with deterministic needs-attention ordering; manual Today (&le;3 primary) + session flow; partial work never auto-completes a chapter.</dd></div>
+      <div><dt>Config</dt><dd><code>readiness-v1</code> (20 / 25 / 30 / 15 / 10 + recency bands)</dd></div>
+      <div><dt>Screens</dt><dd><span class="scr">Dashboard</span><span class="scr">Chapter detail (components)</span><span class="scr">Session logging</span><span class="scr">Today (manual)</span></dd></div>
+      <div class="exit"><dt>Exit</dt><dd>Formula + recency-boundary + 0/100 + determinism tests pass; snapshot history never overwritten; scenario&nbsp;7 (confidence can&rsquo;t beat objective test evidence) green.</dd></div>
+    </dl>
+  </div>
+
+  <div class="phase" id="phase-2">
+    <div class="phase-head"><span class="pnum">02</span><h3>School alignment + planner</h3><span class="chip mvp">MVP</span></div>
+    <p class="phase-goal">The plan starts making the daily call: a capacity-aware Today and a Study&nbsp;Now that returns one defensible task.</p>
+    <dl class="grid">
+      <div><dt>Maps to</dt><dd>SRS &sect;14 Phase&nbsp;2 (new task files)</dd></div>
+      <div><dt>Domain</dt><dd>Priority engine: <code>normalize(weightage &middot; weakness &middot; revisionDue &middot; schoolUrgency &middot; boardImportance &middot; backlog)</code>. Daily planner: candidates &rarr; score &rarr; guardrails (prereq, time-fit, subject diversity, revision starvation, school urgency, low-priority starvation, capacity) &rarr; &le;3 cards. Study&nbsp;Now: minutes &rarr; one task + reason codes + micro-plan, deterministic.</dd></div>
+      <div><dt>Persistence</dt><dd>Assessment + AssessmentScope (announce only); <strong>StudyWindow</strong> (per weekday/weekend time ranges) and <code>StudyTask.planned_start_time</code>.</dd></div>
+      <div><dt>Config</dt><dd><code>planner-v1</code> (school-urgency multipliers, guardrail thresholds)</dd></div>
+      <div><dt>Events</dt><dd><code>SCHOOL_TEST_APPROACHING</code>, <code>STUDY_BLOCK_DUE</code>, <code>STUDY_BLOCK_MISSED</code>; a missed block returns to the candidate queue &mdash; never stacked onto tomorrow.</dd></div>
+      <div><dt>Screens</dt><dd><span class="scr">Today (smart)</span><span class="scr">Study Now</span><span class="scr">Add a test</span><span class="scr">Rhythm &amp; reminders (windows + adherence read)</span></dd></div>
+      <div class="exit"><dt>Exit</dt><dd>Scenarios&nbsp;1, 2, 3, 12 green (test in 3 days raises priority; cancelling restores ranking; a missed day doesn&rsquo;t double the next; Study&nbsp;Now picks a time-compatible urgent task).</dd></div>
+    </dl>
+  </div>
+
+  <div class="phase" id="phase-3">
+    <div class="phase-head"><span class="pnum">03</span><h3>Revision + errors</h3><span class="chip mvp">MVP</span></div>
+    <p class="phase-goal">The retrieval loop and the marks-lost loop close. The background worker starts running.</p>
+    <dl class="grid">
+      <div><dt>Maps to</dt><dd>SRS &sect;14 Phase&nbsp;3</dd></div>
+      <div><dt>Domain</dt><dd>RevisionSchedule with intervals <code>1,3,7,14,30</code>; outcome mapping STRONG / MODERATE / WEAK / FAILED &rarr; extend / standard / shorten / relearn. QuestionError state machine <code>NEW &rarr; REVIEWED &rarr; CORRECTED &rarr; RETEST_DUE &rarr; MASTERED</code> (no skip to MASTERED without a passed retest). Full missed-work reprioritization.</dd></div>
+      <div><dt>Jobs</dt><dd>Worker: revision-due processing, domain-event generation &mdash; runs with delivery channels off.</dd></div>
+      <div><dt>Config</dt><dd><code>revision-v1</code> (intervals, extend/shorten factors)</dd></div>
+      <div><dt>Metrics</dt><dd>Rolling adherence rate (from StudyWindow vs StudySession)</dd></div>
+      <div><dt>Screens</dt><dd><span class="scr">Revision (groups + recovery plan)</span><span class="scr">After the test (result + error tagging)</span><span class="scr">Weekly review (rhythm row)</span></dd></div>
+      <div class="exit"><dt>Exit</dt><dd>Scenarios&nbsp;4, 5, 6, 8, 18 green (successful learning schedules revisions; weak recall shortens; poor assessment creates remediation and lowers readiness; repeated errors detected; event generated with channels disabled).</dd></div>
+    </dl>
+  </div>
+
+  <div class="phase" id="phase-4">
+    <div class="phase-head"><span class="pnum">04</span><h3>Assessment intelligence</h3><span class="chip high">high</span></div>
+    <p class="phase-goal">Test results recalibrate the right scopes with the right weight, and the projection becomes trustworthy enough to show.</p>
+    <dl class="grid">
+      <div><dt>Maps to</dt><dd>SRS &sect;14 Phase&nbsp;4</dd></div>
+      <div><dt>Domain</dt><dd>Recalibration: evidence affects tested scopes; pre-board / full mock weighted above a class test (by type, configurable); update component evidence, never replace readiness with the percentage. Marks opportunity = <code>max(0, target &minus; projected)</code>. Projected score: conservative, versioned, only once evidence is sufficient. Repeated-error pattern detection.</dd></div>
+      <div><dt>Persistence</dt><dd>AssessmentResult, AssessmentScopeResult; WeeklyReview stored for audit/comparison.</dd></div>
+      <div><dt>Screens</dt><dd><span class="scr">Impact on your goal (projection line)</span><span class="scr">Weekly review (full)</span><span class="scr">Chapter detail (evidence history)</span></dd></div>
+      <div class="exit"><dt>Exit</dt><dd>Scenario&nbsp;11 green (pre-board evidence materially changes affected priorities); projection deterministic and version-stamped.</dd></div>
+    </dl>
+  </div>
+
+  <div class="phase" id="phase-5">
+    <div class="phase-head"><span class="pnum">05</span><h3>Exam mode</h3><span class="chip high">high</span></div>
+    <p class="phase-goal">The plan watches its own trajectory and proposes course corrections &mdash; the last piece of the MVP.</p>
+    <dl class="grid">
+      <div><dt>Maps to</dt><dd>SRS &sect;14 Phase&nbsp;5</dd></div>
+      <div><dt>Domain</dt><dd>Plan pressure (remaining days &middot; capacity &middot; weighted syllabus remaining &middot; revision burden &middot; assessment burden) &rarr; LOW / NORMAL / HIGH / CRITICAL + explanatory drivers. Trajectory risk: expected vs actual weighted completion &rarr; <code>PLAN_AT_RISK</code>, <code>SYLLABUS_TARGET_AT_RISK</code>, raised before the hard deadline. Course-correction generator: 2&ndash;3 adjustments each with its trade-off; applied only on explicit accept; a capacity increase needs confirmation; forward plan only, evidence untouched.</dd></div>
+      <div><dt>Domain</dt><dd>Subject-specific board dates override the generic window; a subject drops out of planning after its exam.</dd></div>
+      <div><dt>Screens</dt><dd><span class="scr">Impact on your goal (pressure + drivers)</span><span class="scr">Course correction</span><span class="scr">Plan-risk banners (Dashboard / Today)</span></dd></div>
+      <div class="exit"><dt>Exit</dt><dd>Scenarios&nbsp;9, 14, 16 green (target risk raised before deadline; 90-day plan reports pressure without silently exceeding capacity; subject removed after its exam date).</dd></div>
+    </dl>
+  </div>
+
+  <div class="phase" id="phase-6">
+    <div class="phase-head"><span class="pnum">06</span><h3>Parent dashboard</h3><span class="chip post">post-MVP</span></div>
+    <p class="phase-goal">An aggregate, non-surveillance view for a parent &mdash; built on its own projection endpoints, not a filtered student feed.</p>
+    <dl class="grid">
+      <div><dt>Maps to</dt><dd>SRS &sect;14 Phase&nbsp;6</dd></div>
+      <div><dt>Build</dt><dd>Parent-safe projection services, structurally separate from detailed activity. ON&nbsp;TRACK / ATTENTION view: overall readiness, subject risk, trajectory, revision consistency, upcoming events &mdash; no logs, no timestamps. Parent role in RBAC, projection-only.</dd></div>
+      <div><dt>Screens</dt><dd><span class="scr">Parent view</span></dd></div>
+      <div class="exit"><dt>Exit</dt><dd>Scenario&nbsp;17 green (parent-safe projection excludes detailed activity &mdash; enforced server-side, not hidden client-side).</dd></div>
+    </dl>
+  </div>
+
+  <div class="phase" id="phase-7">
+    <div class="phase-head"><span class="pnum">07</span><h3>Notification channels</h3><span class="chip post">post-MVP</span></div>
+    <p class="phase-goal">Deliver the domain events that have been generated all along. Calendar first &mdash; it&rsquo;s the reliable one.</p>
+    <dl class="grid">
+      <div><dt>Maps to</dt><dd>SRS &sect;14 Phase&nbsp;7</dd></div>
+      <div><dt>Tier 1</dt><dd>Calendar export &mdash; <code>.ics</code> subscription feed + Google Calendar &mdash; and in-app reminder banners. Works with the app closed; cross-platform.</dd></div>
+      <div><dt>Tier 2</dt><dd>PWA push (service worker + push service): solid on Android / desktop, installed-PWA only on iOS.</dd></div>
+      <div><dt>Build</dt><dd>Per-user channel prefs; quiet, no-repeat, snooze-twice-then-defer policy; no delivery without consent.</dd></div>
+      <div><dt>Screens</dt><dd><span class="scr">Rhythm &amp; reminders (full &mdash; toggle, lead time, calendar sync, snooze)</span></dd></div>
+      <div class="exit"><dt>Exit</dt><dd>A due block produces a calendar event and an in-app nudge; opt-in; the domain-event stream is unchanged.</dd></div>
+    </dl>
+  </div>
+
+  <div class="phase" id="phase-8">
+    <div class="phase-head"><span class="pnum">08</span><h3>AI / teacher / institution</h3><span class="chip post">later</span></div>
+    <p class="phase-goal">AI assists explanation and classification &mdash; strictly outside the deterministic core. Institution surfaces come after.</p>
+    <dl class="grid">
+      <div><dt>Maps to</dt><dd>SRS &sect;14 Phase&nbsp;8</dd></div>
+      <div><dt>Build</dt><dd>AI adapters for explanation text, error-type suggestions, question classification &mdash; advisory only, never authoritative for official curriculum, weightage or scheduling. Teacher / institution roles and views.</dd></div>
+      <div class="exit"><dt>Exit</dt><dd>Not scoped further until Phases&nbsp;0&ndash;7 are in production.</dd></div>
+    </dl>
+  </div>
+
+  <h2 id="crosscutting">Cross-cutting workstreams</h2>
+  <p>These aren&rsquo;t phases &mdash; they run through every phase and are part of each task&rsquo;s definition of done.</p>
+  <ul class="plain">
+    <li><strong>Config versioning</strong> &mdash; no magic constants in UI or API code; snapshots record the version used.</li>
+    <li><strong>Domain events</strong> &mdash; persisted from Phase&nbsp;0, emitted as each engine comes online, delivered only in Phase&nbsp;7.</li>
+    <li><strong>Auth &amp; RBAC</strong> &mdash; server-side role checks; single family in the MVP but tenant boundaries in the schema; parent-safe endpoints separate by construction.</li>
+    <li><strong>Determinism harness</strong> &mdash; scheduler / readiness tests freeze current date, timezone, config version and fixture.</li>
+    <li><strong>Regression suite</strong> &mdash; the 18 scenarios in <code>TEST_STRATEGY.md</code> are the acceptance gate; a task isn&rsquo;t done until its scenarios and the relevant existing ones pass.</li>
+    <li><strong>Migrations discipline</strong> &mdash; reversible migrations; FKs and uniqueness constraints wherever a domain invariant allows.</li>
+    <li><strong>Provenance integrity</strong> &mdash; <code>OFFICIAL</code> and <code>DERIVED_*</code> never conflated, in data or UI; synthetic data stays labelled.</li>
+  </ul>
+
+  <h2 id="risks">Risks &amp; open decisions</h2>
+  <ul class="plain">
+    <li><strong>Real curriculum data.</strong> Everything today is synthetic. Before production, a real CBSE curriculum + official unit weightage import pass is needed, with full provenance. This is its own mini-project inside Phase&nbsp;0 / later.</li>
+    <li><strong>iOS reminder reliability.</strong> Web push on iOS is weak. Tier&nbsp;1 calendar export is the dependable path &mdash; set that expectation rather than promising alarm-grade push.</li>
+    <li><strong>Projected-score trust.</strong> Keep the model conservative and versioned; the bigger risk is users over-trusting a planning estimate as a predicted result.</li>
+    <li><strong>UI-shell rework.</strong> View-model seams limit churn, but expect real refactors when the planner (Phase&nbsp;2) and projection (Phase&nbsp;4) replace their mocks.</li>
+    <li><strong>Auth provider.</strong> Phase&nbsp;6 forces the choice; pick it earlier if the team has a preference, so the seam is in place.</li>
+  </ul>
+
+  <h2 id="dod">MVP definition of done</h2>
+  <p>From SRS &sect;15 &mdash; delivered by Phases&nbsp;0&ndash;5 plus the cross-cutting workstreams.</p>
+  <ul class="check">
+    <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Arbitrary plan dates &amp; windows</li>
+    <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Curriculum &amp; versioning with provenance</li>
+    <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> School progress &amp; tests in one plan</li>
+    <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Capacity-aware daily planning</li>
+    <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Study&nbsp;Now with a compact &ldquo;Why this?&rdquo;</li>
+    <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Spaced revision, date-driven</li>
+    <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Assessment &amp; error feedback loop</li>
+    <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Chapter / subject / overall readiness</li>
+    <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Weekly review</li>
+    <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Plan-risk detection before the deadline</li>
+    <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Date-derived revision &amp; exam behaviour</li>
+    <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Automated validation across all of it</li>
+  </ul>
+
+  <h2 id="next">Immediate next actions</h2>
+  <ol class="steps">
+    <li><strong>Run <code>TASK-001</code></strong> &mdash; scaffold the repo (pnpm, Next.js, Drizzle, Docker Compose, CI) to its acceptance criteria.</li>
+    <li><strong>Build M1</strong> &mdash; the coded UI shell from the approved design, all 18 screens on the in-memory repository.</li>
+    <li><strong>Extend the fixture</strong> &mdash; add study windows, <code>planned_start_time</code>, adherence history and projection inputs; document the shape.</li>
+    <li><strong>Then Phase&nbsp;0</strong> &mdash; swap in Postgres behind the ports the shell already uses.</li>
+  </ol>
+  <div class="note"><strong>One rule for the build:</strong> implement one task at a time against its acceptance criteria. Don&rsquo;t ask an agent to build a whole phase, and never a whole SRS, in one pass.</div>
+
+  <footer>
+    Board Prep Tracker &middot; implementation plan v1 &middot; generated 2026-09-02<br>
+    Revise when the stack call is confirmed or the SRS phase order changes.
+  </footer>
+</main>
+
+<script>
+  // resting state: first nav link active; update on scroll
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('nav.top a'));
+    var map = links.map(function (a) {
+      return { a: a, el: document.getElementById(a.getAttribute('href').slice(1)) };
+    }).filter(function (m) { return m.el; });
+    if (!map.length) return;
+    map[0].a.classList.add('active');
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        links.forEach(function (l) { l.classList.remove('active'); });
+        var hit = map.filter(function (m) { return m.el === e.target; })[0];
+        if (hit) hit.a.classList.add('active');
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    map.forEach(function (m) { io.observe(m.el); });
+  })();
+</script>

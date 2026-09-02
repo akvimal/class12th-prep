@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+  <style>
+    body { margin:0; background:#EFEAE2; font-family:'IBM Plex Sans', system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+    a { color:#1E5BFF; text-decoration:none; } a:hover { color:#1741c9; }
+    * { box-sizing:border-box; }
+  </style>
+</helmet>
+
+<div style="width:390px; min-height:1080px; margin:0 auto; background:#FDFCFA; color:#17140F; display:flex; flex-direction:column;">
+
+  <div style="padding:20px 20px 4px; display:flex; align-items:center; gap:12px;">
+    <a href="#" style="color:#6B655C;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6B655C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></a>
+    <div>
+      <div style="font:600 10px/1 'IBM Plex Sans'; letter-spacing:.09em; color:#9A938A;">PHYSICS &middot; UNIT TEST &middot; 7 SEP</div>
+      <div style="font:700 20px/1.15 'Space Grotesk','Segoe UI',system-ui; margin-top:4px;">Enter your result</div>
+    </div>
+  </div>
+
+  <!-- Score -->
+  <div style="padding:22px 20px 0;">
+    <div style="font:600 11px/1 'IBM Plex Sans'; letter-spacing:.06em; color:#9A938A;">SCORE</div>
+    <div style="margin-top:12px; display:flex; align-items:baseline; gap:6px;">
+      <span style="font:500 44px/1 'IBM Plex Mono',monospace;">22</span>
+      <span style="font:500 22px/1 'IBM Plex Mono',monospace; color:#9A938A;">/ 30</span>
+      <span style="flex:1;"></span>
+      <span style="font:500 13px/1 'IBM Plex Mono',monospace; color:#6B655C;">73%</span>
+    </div>
+    <div style="height:6px; background:#ECE8E0; border-radius:999px; overflow:hidden; margin-top:12px;"><div style="width:73%; height:100%; background:#17140F;"></div></div>
+  </div>
+
+  <div style="padding:18px 20px 0; display:flex; gap:10px;">
+    <div style="flex:1; border:1px solid #E7E3DB; border-radius:10px; padding:11px 12px;"><div style="font:500 10px/1 'IBM Plex Sans'; color:#9A938A;">TIME TAKEN</div><div style="font:500 15px/1 'IBM Plex Mono',monospace; margin-top:6px;">55 min</div></div>
+    <div style="flex:1; border:1px solid #E7E3DB; border-radius:10px; padding:11px 12px;"><div style="font:500 10px/1 'IBM Plex Sans'; color:#9A938A;">UNATTEMPTED</div><div style="font:500 15px/1 'IBM Plex Mono',monospace; margin-top:6px;">1</div></div>
+  </div>
+
+  <!-- Chapter split -->
+  <div style="padding:22px 20px 0;">
+    <div style="font:600 11px/1 'IBM Plex Sans'; letter-spacing:.06em; color:#9A938A;">BY CHAPTER <span style="color:#CFC9BE;">(optional)</span></div>
+    <div style="margin-top:12px; display:flex; flex-direction:column; gap:11px;">
+      <div style="display:flex; align-items:center; gap:11px;">
+        <span style="flex:0 0 120px; font:500 12px/1.2 'IBM Plex Sans';">Electrostatics</span>
+        <span style="flex:1; height:5px; background:#ECE8E0; border-radius:999px; overflow:hidden;"><span style="display:block; width:62%; height:100%; background:#B26B00;"></span></span>
+        <span style="flex:0 0 42px; text-align:right; font:500 11px/1 'IBM Plex Mono',monospace; color:#6B655C;">10/16</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:11px;">
+        <span style="flex:0 0 120px; font:500 12px/1.2 'IBM Plex Sans';">Current Electricity</span>
+        <span style="flex:1; height:5px; background:#ECE8E0; border-radius:999px; overflow:hidden;"><span style="display:block; width:86%; height:100%; background:#17140F;"></span></span>
+        <span style="flex:0 0 42px; text-align:right; font:500 11px/1 'IBM Plex Mono',monospace; color:#6B655C;">12/14</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Marks lost -->
+  <div style="padding:24px 20px 0;">
+    <div style="font:700 16px/1.2 'Space Grotesk','Segoe UI',system-ui;">Where were marks lost?</div>
+    <div style="font:400 11px/1.4 'IBM Plex Sans'; color:#9A938A; margin-top:4px;">Tag each slip once. Per&#8209;question detail is optional.</div>
+
+    <div style="margin-top:14px; display:flex; flex-direction:column; gap:9px;">
+      <div style="border:1px solid #E7E3DB; border-radius:11px; padding:12px 13px; display:flex; align-items:center; justify-content:space-between;">
+        <div>
+          <div style="font:600 13px/1.2 'IBM Plex Sans';">&minus;3 marks &middot; Electrostatics</div>
+          <div style="font:400 11px/1 'IBM Plex Sans'; color:#6B655C; margin-top:4px;">Calculation slip &mdash; sign error in potential</div>
+        </div>
+        <span style="width:9px; height:9px; border-radius:50%; background:#B26B00;"></span>
+      </div>
+      <div style="border:1px solid #E7E3DB; border-radius:11px; padding:12px 13px; display:flex; align-items:center; justify-content:space-between;">
+        <div>
+          <div style="font:600 13px/1.2 'IBM Plex Sans';">&minus;3 marks &middot; Electrostatics</div>
+          <div style="font:400 11px/1 'IBM Plex Sans'; color:#6B655C; margin-top:4px;">Concept &mdash; Gauss&rsquo;s law surface choice</div>
+        </div>
+        <span style="width:9px; height:9px; border-radius:50%; background:#C0392B;"></span>
+      </div>
+      <div style="border:1px solid #E7E3DB; border-radius:11px; padding:12px 13px; display:flex; align-items:center; justify-content:space-between;">
+        <div>
+          <div style="font:600 13px/1.2 'IBM Plex Sans';">&minus;2 marks &middot; Current Electricity</div>
+          <div style="font:400 11px/1 'IBM Plex Sans'; color:#6B655C; margin-top:4px;">Incomplete steps &mdash; no unit in final answer</div>
+        </div>
+        <span style="width:9px; height:9px; border-radius:50%; background:#6B655C;"></span>
+      </div>
+      <button style="appearance:none; background:#FDFCFA; border:1px dashed #D8D2C6; color:#6B655C; font:600 12px 'IBM Plex Sans'; height:42px; border-radius:11px; width:100%;">+ Add a lost&#8209;marks item</button>
+    </div>
+  </div>
+
+  <div style="padding:26px 20px 0;">
+    <button style="appearance:none; border:0; background:#1E5BFF; color:#fff; font:600 15px 'IBM Plex Sans'; height:48px; border-radius:12px; width:100%;">Save result</button>
+    <div style="font:400 11px/1.5 'IBM Plex Sans'; color:#9A938A; margin-top:12px;">Updates Electrostatics test evidence, schedules a retest for the concept error, and shortens the next Current Electricity revision.</div>
+  </div>
+
+  <div style="flex:1;"></div>
+</div>
+</x-dc>
+</body>
+</html>

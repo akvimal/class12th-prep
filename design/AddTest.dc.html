@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+  <style>
+    body { margin:0; background:#EFEAE2; font-family:'IBM Plex Sans', system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+    a { color:#1E5BFF; text-decoration:none; } a:hover { color:#1741c9; }
+    * { box-sizing:border-box; }
+    .chip { font:600 12px/1 'IBM Plex Sans'; padding:9px 12px; border:1px solid #E7E3DB; border-radius:9px; color:#6B655C; }
+    .chip.on { border:1.5px solid #17140F; color:#17140F; background:#17140F; color:#FDFCFA; }
+  </style>
+</helmet>
+
+<div style="width:390px; min-height:920px; margin:0 auto; background:#FDFCFA; color:#17140F; display:flex; flex-direction:column;">
+
+  <div style="padding:20px 20px 8px; display:flex; align-items:center; justify-content:space-between;">
+    <div style="font:700 22px/1.1 'Space Grotesk','Segoe UI',system-ui;">Add a test</div>
+    <a href="#" style="color:#6B655C;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6B655C" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></a>
+  </div>
+  <div style="padding:0 20px; font:400 12px/1.4 'IBM Plex Sans'; color:#9A938A;">Takes under 30 seconds. Marks can wait until after the test.</div>
+
+  <div style="padding:22px 20px 0;">
+    <div style="font:600 11px/1 'IBM Plex Sans'; letter-spacing:.06em; color:#9A938A;">SUBJECT</div>
+    <div style="display:flex; gap:7px; flex-wrap:wrap; margin-top:10px;">
+      <span class="chip">Physics</span>
+      <span class="chip">Chemistry</span>
+      <span style="font:600 12px/1 'IBM Plex Sans'; padding:9px 12px; border:1.5px solid #17140F; border-radius:9px; background:#17140F; color:#FDFCFA;">Mathematics</span>
+      <span class="chip">Computer Sci.</span>
+    </div>
+  </div>
+
+  <div style="padding:20px 20px 0;">
+    <div style="font:600 11px/1 'IBM Plex Sans'; letter-spacing:.06em; color:#9A938A;">TYPE</div>
+    <div style="display:flex; gap:7px; flex-wrap:wrap; margin-top:10px;">
+      <span style="font:600 12px/1 'IBM Plex Sans'; padding:9px 12px; border:1.5px solid #17140F; border-radius:9px; background:#17140F; color:#FDFCFA;">Class test</span>
+      <span class="chip">Unit test</span>
+      <span class="chip">Term exam</span>
+      <span class="chip">Pre&#8209;board</span>
+      <span class="chip">Practical</span>
+    </div>
+  </div>
+
+  <div style="padding:20px 20px 0;">
+    <div style="font:600 11px/1 'IBM Plex Sans'; letter-spacing:.06em; color:#9A938A;">DATE</div>
+    <div style="margin-top:10px; border:1px solid #E7E3DB; border-radius:10px; padding:13px 14px; display:flex; align-items:center; justify-content:space-between;">
+      <span style="font:600 14px/1 'IBM Plex Sans';">Thu, 11 Sept 2026</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B655C" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+    </div>
+  </div>
+
+  <div style="padding:20px 20px 0;">
+    <div style="font:600 11px/1 'IBM Plex Sans'; letter-spacing:.06em; color:#9A938A;">CHAPTERS</div>
+    <div style="display:flex; gap:7px; flex-wrap:wrap; margin-top:10px;">
+      <span style="font:600 12px/1 'IBM Plex Sans'; padding:9px 12px; border:1.5px solid #17140F; border-radius:9px; background:#17140F; color:#FDFCFA; display:flex; align-items:center; gap:6px;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FDFCFA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Integrals
+      </span>
+      <span class="chip">Matrices</span>
+      <span class="chip">Probability</span>
+      <span class="chip">Application of Integrals</span>
+    </div>
+  </div>
+
+  <div style="padding:20px 20px 0;">
+    <div style="font:600 11px/1 'IBM Plex Sans'; letter-spacing:.06em; color:#9A938A;">MAX MARKS <span style="color:#CFC9BE;">(optional)</span></div>
+    <div style="margin-top:10px; border:1px solid #E7E3DB; border-radius:10px; padding:13px 14px; font:500 15px/1 'IBM Plex Mono',monospace; color:#17140F;">20</div>
+  </div>
+
+  <div style="padding:26px 20px 0;">
+    <button style="appearance:none; border:0; background:#1E5BFF; color:#fff; font:600 15px 'IBM Plex Sans'; height:48px; border-radius:12px; width:100%;">Save test</button>
+    <div style="font:400 11px/1.5 'IBM Plex Sans'; color:#9A938A; margin-top:12px; display:flex; gap:7px; align-items:flex-start;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9A938A" stroke-width="2" stroke-linecap="round" style="margin-top:1px; flex:0 0 13px;"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+      Saving this re&#8209;prioritises Today and Study Now for Integrals. Nothing exceeds your daily capacity.
+    </div>
+  </div>
+
+  <div style="flex:1;"></div>
+</div>
+</x-dc>
+</body>
+</html>

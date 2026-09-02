@@ -1,0 +1,36 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",          "x": 0,    "y": 0,    "w": 390, "h": 940 },
+    { "file": "Today.dc.html",          "x": 520,  "y": 0,    "w": 390, "h": 1130 },
+    { "file": "StudyNow.dc.html",       "x": 1040, "y": 0,    "w": 390, "h": 880 },
+    { "file": "Session.dc.html",        "x": 1560, "y": 0,    "w": 390, "h": 1060 },
+
+    { "file": "Subjects.dc.html",       "x": 0,    "y": 1320, "w": 390, "h": 960 },
+    { "file": "SubjectDetail.dc.html",  "x": 520,  "y": 1320, "w": 390, "h": 1140 },
+    { "file": "ChapterDetail.dc.html",  "x": 1040, "y": 1320, "w": 390, "h": 1340 },
+
+    { "file": "Revision.dc.html",       "x": 0,    "y": 2820, "w": 390, "h": 1100 },
+    { "file": "Tests.dc.html",          "x": 520,  "y": 2820, "w": 390, "h": 1000 },
+    { "file": "AddTest.dc.html",        "x": 1040, "y": 2820, "w": 390, "h": 980 },
+    { "file": "AfterTest.dc.html",      "x": 1560, "y": 2820, "w": 390, "h": 1140 },
+
+    { "file": "WeeklyReview.dc.html",   "x": 0,    "y": 4120, "w": 390, "h": 1580 },
+    { "file": "PlanSetup.dc.html",      "x": 520,  "y": 4120, "w": 390, "h": 1260 },
+    { "file": "Parent.dc.html",         "x": 1040, "y": 4120, "w": 390, "h": 1040 },
+    { "file": "More.dc.html",           "x": 1560, "y": 4120, "w": 390, "h": 960 },
+
+    { "file": "Reminders.dc.html",      "x": 0,    "y": 5860, "w": 390, "h": 1300 },
+    { "file": "Trajectory.dc.html",     "x": 520,  "y": 5860, "w": 390, "h": 1280 },
+    { "file": "CourseCorrect.dc.html",  "x": 1040, "y": 5860, "w": 390, "h": 1380 }
+  ],
+  "annotations": [
+    { "id": "row-daily",    "x": 0,    "y": -96,   "w": 900, "text": "DAILY LOOP  —  open → Dashboard → Today (max 3 cards, missed blocks reschedule calmly) → Study Now (time-boxed pick) → run & log the session in under 2 minutes" },
+    { "id": "row-subjects", "x": 0,    "y": 1224,  "w": 900, "text": "SUBJECTS & READINESS  —  subject list → chapters with state + school status → chapter readiness split into concept / practice / test / recall / revision, with data provenance" },
+    { "id": "row-assess",   "x": 0,    "y": 2724,  "w": 900, "text": "REVISION & ASSESSMENT  —  spaced-retrieval queue with a calm recovery plan · add a school test in <30s (plan recalculates) · enter result & tag where marks were lost" },
+    { "id": "row-review",   "x": 0,    "y": 4024,  "w": 900, "text": "REVIEW, PLAN & MORE  —  weekly review (now with study-rhythm adherence) · date-driven plan setup with a live phase preview · aggregate parent view (later phase) · More menu" },
+    { "id": "row-rhythm",   "x": 0,    "y": 5764,  "w": 900, "text": "DISCIPLINE & COURSE CORRECTION  —  study windows + reminders + calendar sync + adherence · impact on goal: readiness projection vs target with plan-pressure drivers · course-correction sheet where you accept/decline the trade-offs (capacity is never raised silently)" },
+    { "id": "note-data",    "x": 2100, "y": 0,     "w": 320, "text": "All figures come from fixtures/synthetic-academic-data.json — illustrative derived weights, not official CBSE chapter marks. Context date = 2 Sep 2026, so the plan sits in the Syllabus-coverage phase." },
+    { "id": "note-style",   "x": 2100, "y": 220,   "w": 320, "text": "Direction: focused high-contrast. Near-black ink on warm paper, Space Grotesk headings + IBM Plex Sans/Mono, one electric-blue accent reserved for the single next action. No gamification, calm language, mobile-first at 390px." }
+  ],
+  "launch": { "view": "canvas" }
+}

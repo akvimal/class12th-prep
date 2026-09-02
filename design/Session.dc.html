@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+  <style>
+    body { margin:0; background:#EFEAE2; font-family:'IBM Plex Sans', system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+    a { color:#1E5BFF; text-decoration:none; } a:hover { color:#1741c9; }
+    * { box-sizing:border-box; }
+  </style>
+</helmet>
+
+<div style="width:390px; min-height:1000px; margin:0 auto; background:#FDFCFA; color:#17140F; display:flex; flex-direction:column;">
+
+  <div style="padding:20px 20px 16px; background:#17140F; color:#FDFCFA;">
+    <div style="font:600 10px/1 'IBM Plex Sans'; letter-spacing:.09em; color:#B9B2A6;">PHYSICS &middot; PRACTISE</div>
+    <div style="font:700 20px/1.2 'Space Grotesk','Segoe UI',system-ui; margin-top:6px;">Electrostatics</div>
+    <div style="display:flex; align-items:center; gap:8px; margin-top:12px;">
+      <span style="font:500 26px/1 'IBM Plex Mono',monospace;">42:07</span>
+      <span style="font:500 11px/1 'IBM Plex Sans'; color:#B9B2A6;">elapsed &middot; 45 planned</span>
+      <span style="flex:1;"></span>
+      <span style="font:600 12px/1 'IBM Plex Sans'; color:#FDFCFA; border:1px solid #46413A; padding:7px 11px; border-radius:8px;">Pause</span>
+    </div>
+  </div>
+
+  <div style="padding:22px 20px 6px; font:700 17px/1.2 'Space Grotesk','Segoe UI',system-ui;">How did it go?</div>
+
+  <div style="padding:12px 20px 0; display:flex; gap:8px;">
+    <span style="flex:1; text-align:center; font:600 13px/1 'IBM Plex Sans'; padding:12px 0; border:1.5px solid #17140F; border-radius:10px; background:#17140F; color:#FDFCFA;">Complete</span>
+    <span style="flex:1; text-align:center; font:600 13px/1 'IBM Plex Sans'; padding:12px 0; border:1px solid #E7E3DB; border-radius:10px; color:#6B655C;">Partial</span>
+    <span style="flex:1; text-align:center; font:600 13px/1 'IBM Plex Sans'; padding:12px 0; border:1px solid #E7E3DB; border-radius:10px; color:#6B655C;">Skip</span>
+  </div>
+
+  <!-- Time spent -->
+  <div style="padding:20px 20px 0; display:flex; align-items:center; justify-content:space-between;">
+    <span style="font:600 13px/1 'IBM Plex Sans';">Time spent</span>
+    <span style="display:flex; align-items:center; gap:14px;">
+      <span style="width:34px; height:34px; border:1px solid #E7E3DB; border-radius:9px; display:flex; align-items:center; justify-content:center; font:600 16px/1 'IBM Plex Sans'; color:#6B655C;">&minus;</span>
+      <span style="font:500 16px/1 'IBM Plex Mono',monospace; min-width:52px; text-align:center;">42 m</span>
+      <span style="width:34px; height:34px; border:1px solid #E7E3DB; border-radius:9px; display:flex; align-items:center; justify-content:center; font:600 16px/1 'IBM Plex Sans'; color:#6B655C;">+</span>
+    </span>
+  </div>
+
+  <!-- Questions -->
+  <div style="padding:16px 20px 0;">
+    <div style="font:600 11px/1 'IBM Plex Sans'; letter-spacing:.06em; color:#9A938A;">QUESTIONS <span style="color:#CFC9BE;">(optional)</span></div>
+    <div style="display:flex; gap:12px; margin-top:10px;">
+      <div style="flex:1; border:1px solid #E7E3DB; border-radius:10px; padding:11px 12px; display:flex; align-items:center; justify-content:space-between;">
+        <span style="font:500 12px/1 'IBM Plex Sans'; color:#6B655C;">Attempted</span>
+        <span style="font:500 15px/1 'IBM Plex Mono',monospace;">8</span>
+      </div>
+      <div style="flex:1; border:1px solid #E7E3DB; border-radius:10px; padding:11px 12px; display:flex; align-items:center; justify-content:space-between;">
+        <span style="font:500 12px/1 'IBM Plex Sans'; color:#6B655C;">Correct</span>
+        <span style="font:500 15px/1 'IBM Plex Mono',monospace;">5</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confidence -->
+  <div style="padding:20px 20px 0;">
+    <div style="font:600 13px/1 'IBM Plex Sans';">Confidence now</div>
+    <div style="display:flex; gap:8px; margin-top:10px;">
+      <span style="flex:1; text-align:center; font:600 12px/1 'IBM Plex Sans'; padding:11px 0; border:1px solid #E7E3DB; border-radius:9px; color:#6B655C;">Weak</span>
+      <span style="flex:1; text-align:center; font:600 12px/1 'IBM Plex Sans'; padding:11px 0; border:1.5px solid #17140F; border-radius:9px;">Moderate</span>
+      <span style="flex:1; text-align:center; font:600 12px/1 'IBM Plex Sans'; padding:11px 0; border:1px solid #E7E3DB; border-radius:9px; color:#6B655C;">Strong</span>
+    </div>
+    <div style="font:400 10px/1.4 'IBM Plex Sans'; color:#9A938A; margin-top:7px;">Confidence guides planning, but your test result carries more weight in readiness.</div>
+  </div>
+
+  <!-- Errors -->
+  <div style="padding:20px 20px 0;">
+    <div style="font:600 13px/1 'IBM Plex Sans';">Where did marks go? <span style="font-weight:400; color:#9A938A;">3 marked</span></div>
+    <div style="display:flex; gap:7px; flex-wrap:wrap; margin-top:11px;">
+      <span style="font:600 11px/1 'IBM Plex Sans'; color:#17140F; background:#F4F1EA; padding:8px 11px; border-radius:8px;">Calculation &middot; 2</span>
+      <span style="font:600 11px/1 'IBM Plex Sans'; color:#17140F; background:#F4F1EA; padding:8px 11px; border-radius:8px;">Concept &middot; 1</span>
+      <span style="font:600 11px/1 'IBM Plex Sans'; color:#9A938A; border:1px dashed #D8D2C6; padding:8px 11px; border-radius:8px;">+ Formula recall</span>
+      <span style="font:600 11px/1 'IBM Plex Sans'; color:#9A938A; border:1px dashed #D8D2C6; padding:8px 11px; border-radius:8px;">+ Misread</span>
+      <span style="font:600 11px/1 'IBM Plex Sans'; color:#9A938A; border:1px dashed #D8D2C6; padding:8px 11px; border-radius:8px;">+ Time</span>
+    </div>
+  </div>
+
+  <div style="padding:24px 20px 0;">
+    <button style="appearance:none; border:0; background:#1E5BFF; color:#fff; font:600 15px 'IBM Plex Sans'; height:48px; border-radius:12px; width:100%;">Save &amp; continue</button>
+    <div style="font:400 11px/1.5 'IBM Plex Sans'; color:#9A938A; margin-top:12px;">This is saved as evidence. A partial session updates your scores but never marks a chapter finished on its own.</div>
+  </div>
+
+  <div style="flex:1;"></div>
+</div>
+</x-dc>
+</body>
+</html>
