@@ -15,6 +15,7 @@ import type { ReadinessComponents } from '@/domain/readiness/readiness';
 import type { AssessmentStatus, AssessmentType } from '@/domain/assessment/assessment';
 import type { StudyWindowDayType } from '@/domain/planning/study-window';
 import type { DeliveryStatus, DomainEventType } from '@/domain/events/events';
+import type { RevisionMethod, RevisionOutcome, RevisionStatus } from '@/domain/revision/revision';
 
 /**
  * Repository ports.
@@ -523,6 +524,55 @@ export interface EventRepository {
   setDeliveryStatus(eventId: string, status: DeliveryStatus): Promise<DomainEventRecord>;
 }
 
+// --- Spaced revision (Phase 3) ---
+
+export interface NewRevisionSchedule {
+  academicYearId: string;
+  chapterId: string;
+  revisionNumber: number;
+  dueDate: string;
+  method: RevisionMethod;
+  algorithmVersion?: string | null;
+}
+
+export interface RevisionScheduleRecord {
+  id: string;
+  academicYearId: string;
+  chapterId: string;
+  revisionNumber: number;
+  dueDate: string;
+  method: RevisionMethod;
+  status: RevisionStatus;
+  outcome: RevisionOutcome | null;
+  completedOn: string | null;
+  createdAt: string;
+}
+
+export interface RevisionFilters {
+  status?: RevisionStatus;
+  chapterId?: string;
+  dueOnOrBefore?: string;
+  limit?: number;
+}
+
+export interface RevisionRepository {
+  /** Create a SCHEDULED row. Throws if one is already active for the chapter. */
+  schedule(input: NewRevisionSchedule): Promise<RevisionScheduleRecord>;
+  /** The SCHEDULED row for a chapter, or null. */
+  getActive(academicYearId: string, chapterId: string): Promise<RevisionScheduleRecord | null>;
+  /** Ordered by due date ascending. */
+  listSchedules(
+    academicYearId: string,
+    filters?: RevisionFilters,
+  ): Promise<RevisionScheduleRecord[]>;
+  /** Mark a SCHEDULED row DONE with its outcome. */
+  complete(
+    scheduleId: string,
+    input: { outcome: RevisionOutcome; completedOn: string; sourceSessionId?: string | null },
+  ): Promise<RevisionScheduleRecord>;
+  setStatus(scheduleId: string, status: RevisionStatus): Promise<RevisionScheduleRecord>;
+}
+
 export interface Repositories {
   health: HealthProbe;
   planning: PlanningRepository;
@@ -534,4 +584,5 @@ export interface Repositories {
   assessment: AssessmentRepository;
   studyWindow: StudyWindowRepository;
   events: EventRepository;
+  revision: RevisionRepository;
 }

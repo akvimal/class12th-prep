@@ -2,6 +2,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { getCapacityRange, getDailyCapacity } from '@/app-services/calendar';
 import { getPlanOverview } from '@/app-services/plan';
 import { createDrizzleAssessmentRepository } from '@/persistence/drizzle/assessment-repository';
+import { createDrizzleRevisionRepository } from '@/persistence/drizzle/revision-repository';
 import { createDrizzleStudyWindowRepository } from '@/persistence/drizzle/study-window-repository';
 import { createDrizzleCurriculumRepository } from '@/persistence/drizzle/curriculum-repository';
 import { createDrizzlePlanningRepository } from '@/persistence/drizzle/planning-repository';
@@ -32,6 +33,7 @@ const drizzleRepos = () => ({
   readiness: createDrizzleReadinessRepository(db),
   assessment: createDrizzleAssessmentRepository(db),
   studyWindow: createDrizzleStudyWindowRepository(db),
+  revision: createDrizzleRevisionRepository(db),
 });
 
 describe('seedSynthetic (Drizzle)', () => {

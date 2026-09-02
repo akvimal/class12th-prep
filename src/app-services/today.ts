@@ -9,7 +9,13 @@ import { getCapacityRange } from './calendar';
 
 type TodayRepos = Pick<
   Repositories,
-  'progress' | 'planning' | 'curriculum' | 'readiness' | 'assessment' | 'schoolCalendar'
+  | 'progress'
+  | 'planning'
+  | 'curriculum'
+  | 'readiness'
+  | 'assessment'
+  | 'schoolCalendar'
+  | 'revision'
 >;
 
 export const PLANNER_ENERGIES: PlannerEnergy[] = ['LOW', 'OK', 'HIGH'];

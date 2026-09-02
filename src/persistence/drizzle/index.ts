@@ -3,6 +3,7 @@ import type { Repositories } from '../ports';
 import { createDrizzleAssessmentRepository } from './assessment-repository';
 import { createDrizzleStudyWindowRepository } from './study-window-repository';
 import { createDrizzleEventRepository } from './event-repository';
+import { createDrizzleRevisionRepository } from './revision-repository';
 import { createDrizzleCurriculumRepository } from './curriculum-repository';
 import { createDrizzlePlanningRepository } from './planning-repository';
 import { createDrizzleProgressRepository } from './progress-repository';
@@ -27,5 +28,6 @@ export function createDrizzleRepositories(): Repositories {
     assessment: createDrizzleAssessmentRepository(db),
     studyWindow: createDrizzleStudyWindowRepository(db),
     events: createDrizzleEventRepository(db),
+    revision: createDrizzleRevisionRepository(db),
   };
 }
