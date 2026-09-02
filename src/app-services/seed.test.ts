@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { getCapacityRange, getDailyCapacity } from '@/app-services/calendar';
 import { getPlanOverview } from '@/app-services/plan';
 import { createDrizzleCurriculumRepository } from '@/persistence/drizzle/curriculum-repository';
@@ -7,16 +7,17 @@ import { createDrizzleProgressRepository } from '@/persistence/drizzle/progress-
 import { createDrizzleSchoolCalendarRepository } from '@/persistence/drizzle/school-calendar-repository';
 import type { DrizzleDb } from '@/persistence/drizzle/db';
 import { createInMemoryRepositories } from '@/persistence/in-memory';
-import { createTestDatabase } from '@/persistence/testing/test-db';
+import { createTestDatabase, truncateAll } from '@/persistence/testing/test-db';
 import { seedSynthetic } from './seed';
 
 let db: DrizzleDb;
 let close: () => Promise<void>;
 
-beforeEach(async () => {
+beforeAll(async () => {
   ({ db, close } = await createTestDatabase());
 });
-afterEach(() => close());
+afterAll(() => close());
+beforeEach(() => truncateAll(db));
 
 const drizzleRepos = () => ({
   planning: createDrizzlePlanningRepository(db),

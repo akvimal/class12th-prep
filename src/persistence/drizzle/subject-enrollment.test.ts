@@ -1,8 +1,8 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { importCurriculum } from '@/app-services/curriculum-import';
 import { createDrizzleCurriculumRepository } from '@/persistence/drizzle/curriculum-repository';
 import { syntheticCurriculum } from '@/persistence/testing/curriculum-fixture';
-import { createTestDatabase } from '@/persistence/testing/test-db';
+import { createTestDatabase, truncateAll } from '@/persistence/testing/test-db';
 import type { DrizzleDb } from './db';
 import { createDrizzlePlanningRepository } from './planning-repository';
 
@@ -10,11 +10,14 @@ let db: DrizzleDb;
 let close: () => Promise<void>;
 let planning: ReturnType<typeof createDrizzlePlanningRepository>;
 
-beforeEach(async () => {
+beforeAll(async () => {
   ({ db, close } = await createTestDatabase());
+});
+afterAll(() => close());
+beforeEach(async () => {
+  await truncateAll(db);
   planning = createDrizzlePlanningRepository(db);
 });
-afterEach(() => close());
 
 async function scenario() {
   const curriculum = createDrizzleCurriculumRepository(db);

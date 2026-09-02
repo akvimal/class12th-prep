@@ -1,12 +1,13 @@
 import { eq } from 'drizzle-orm';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { ChapterProgressError } from '@/domain/progress/chapter-progress';
 import { getCurriculumProgress } from '@/app-services/progress';
 import { academicYears, chapterProgress, chapters } from '@/persistence/schema';
 import { createDrizzleCurriculumRepository } from './curriculum-repository';
 import { createDrizzlePlanningRepository } from './planning-repository';
 import { createDrizzleProgressRepository } from './progress-repository';
-import { createSeededTestDatabase } from '@/persistence/testing/seeded-db';
+import { seedTestDatabase } from '@/persistence/testing/seeded-db';
+import { createTestDatabase, truncateAll } from '@/persistence/testing/test-db';
 import type { DrizzleDb } from './db';
 
 let db: DrizzleDb;
@@ -19,19 +20,21 @@ let repos: {
   curriculum: ReturnType<typeof createDrizzleCurriculumRepository>;
 };
 
+beforeAll(async () => {
+  ({ db, close } = await createTestDatabase());
+});
+afterAll(() => close());
 beforeEach(async () => {
-  const seeded = await createSeededTestDatabase();
-  db = seeded.db;
-  close = seeded.close;
-  academicYearId = seeded.seed.academicYearId!;
-  curriculumVersionId = seeded.seed.curriculumVersionId;
+  await truncateAll(db);
+  const seed = await seedTestDatabase(db);
+  academicYearId = seed.academicYearId!;
+  curriculumVersionId = seed.curriculumVersionId;
   repos = {
     progress: createDrizzleProgressRepository(db),
     planning: createDrizzlePlanningRepository(db),
     curriculum: createDrizzleCurriculumRepository(db),
   };
 });
-afterEach(() => close());
 
 async function firstChapterId() {
   const tree = await repos.curriculum.getHierarchy(curriculumVersionId);
