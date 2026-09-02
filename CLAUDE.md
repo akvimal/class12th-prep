@@ -106,12 +106,13 @@ algorithm configuration. `jobs/` is background work (Phase 3+).
   immutable `readiness_snapshots` row and cache `chapter_progress.effectiveReadiness`.
   Recalc never rewrites history.
 - UI screens render from `uiContext()` (`src/app-services/app-context.ts`),
-  never from a repo directly. It resolves `{ repos, academicYearId, planId,
-  asOf, studentName, isDemo }`. `APP_DATA_SOURCE` (`memory` | `database`;
-  default `memory` unless `NODE_ENV=production` + a `DATABASE_URL`) picks
-  between the throwaway synthetic seed and the real profile. `memory` mode
-  pins `asOf` to `DEMO_DATE`; `database` mode uses today. `uiContext()`
-  redirects to `/welcome` when the DB is selected but has no profile.
+  never from a repo directly — it resolves the repos plus `academicYearId`,
+  `planId`, `asOf`, `studentName`, `isDemo`. `APP_DATA_SOURCE`
+  (`memory` | `database`; default `memory` unless `NODE_ENV=production` + a
+  `DATABASE_URL`) picks between the throwaway synthetic seed and the real
+  profile. `memory` mode pins `asOf` to `DEMO_DATE`; `database` mode uses
+  today. `uiContext()` redirects to `/welcome` when the DB is selected but
+  has no profile.
 - The single real student profile is created by `pnpm prep:init` (script →
   `initRealProfile`, `src/app-services/init.ts`) from `config/student.json`
   (gitignored; copy `config/student.example.json`). Idempotent. `getActiveProfile`
