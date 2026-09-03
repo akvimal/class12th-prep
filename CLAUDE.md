@@ -266,5 +266,12 @@ micro-plan`. Deterministic. `src/app-services/study-now.ts` `getStudyNow`;
   `REPEATED_ERROR_DETECTED` once per pattern (error type folded into the dedupe
   key). `/tests` shows a "Recurring" section; chapter detail shows readiness
   history + that chapter's test errors (`getChapterView`).
+- Plan pressure (Phase 5, ALGORITHMS §8, config `plan-pressure-v1`):
+  `src/domain/planning/plan-pressure.ts` `computePlanPressure` (pure) weighs
+  weighted-syllabus-remaining + revision + assessment burden against real
+  capacity to the syllabus target → LOW/NORMAL/HIGH/CRITICAL + drivers. On a
+  deficit it returns concrete `tradeoffs` (defer N chapters / +min per day /
+  move target D days) — never silently exceeds capacity.
+  `src/app-services/plan-pressure.ts` `getPlanPressure`; `/trajectory` renders it.
 - End a task with a report: files changed, migrations, tests run, acceptance
   criteria status, assumptions, follow-up dependencies.
