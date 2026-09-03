@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { uiContext } from '@/app-services/app-context';
 import { getStudentOverview } from '@/app-services/overview';
+import { getTrajectoryRisks } from '@/app-services/trajectory-risk';
 import { syncTodayPlan } from '@/app-services/today';
+import { RiskBanner } from '@/components/risk-banner';
 import { logStudyAction } from '@/app/actions';
 import { ClockIcon, InfoIcon, PlayIcon, CheckIcon } from '@/components/icons';
 import { Card, SectionLabel } from '@/components/ui';
@@ -37,9 +39,10 @@ export default async function TodayPage({
     ? (requested as PlannerEnergy)
     : 'OK';
 
-  const [plan, overview] = await Promise.all([
+  const [plan, overview, risks] = await Promise.all([
     syncTodayPlan(repos, academicYearId, planId, asOf, energy),
     getStudentOverview(repos, academicYearId, planId, asOf),
+    getTrajectoryRisks(repos, academicYearId, planId, asOf),
   ]);
   if (!plan) return <p className="p-5 text-sm text-muted">No plan.</p>;
 
@@ -53,6 +56,8 @@ export default async function TodayPage({
         </SectionLabel>
         <h1 className="mt-1 font-display text-[30px] font-bold leading-tight text-ink">Today</h1>
       </header>
+
+      <RiskBanner risks={risks ?? []} />
 
       <div className="mx-5 mt-1.5 flex flex-col gap-3 rounded-xl border border-line px-3.5 py-3.5">
         <div className="flex items-center justify-between">

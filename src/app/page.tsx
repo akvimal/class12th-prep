@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { uiContext } from '@/app-services/app-context';
 import { getStudentOverview } from '@/app-services/overview';
+import { getTrajectoryRisks } from '@/app-services/trajectory-risk';
 import { PhaseStrip } from '@/components/phase-strip';
+import { RiskBanner } from '@/components/risk-banner';
 import { Bar, Chip, SectionLabel, StatTile, SyntheticNote } from '@/components/ui';
 import { GearIcon } from '@/components/icons';
 import { formatDate, formatWeekday } from '@/lib/format';
@@ -22,7 +24,10 @@ const NUM_COLOR: Record<'ink' | 'warn' | 'bad', string> = {
 
 export default async function DashboardPage() {
   const { repos, academicYearId, planId, asOf, studentName } = await uiContext();
-  const overview = await getStudentOverview(repos, academicYearId, planId, asOf);
+  const [overview, risks] = await Promise.all([
+    getStudentOverview(repos, academicYearId, planId, asOf),
+    getTrajectoryRisks(repos, academicYearId, planId, asOf),
+  ]);
   if (!overview) return <p className="p-5 text-sm text-muted">No data.</p>;
 
   const onTrack = overview.overallReadiness >= 55;
@@ -50,6 +55,8 @@ export default async function DashboardPage() {
       <div className="px-5">
         <PhaseStrip phases={overview.phases} current={overview.currentPhase} />
       </div>
+
+      <RiskBanner risks={risks ?? []} />
 
       <section className="flex flex-col gap-3 px-5 pt-6">
         <div className="flex items-end justify-between">

@@ -273,5 +273,15 @@ micro-plan`. Deterministic. `src/app-services/study-now.ts` `getStudyNow`;
   deficit it returns concrete `tradeoffs` (defer N chapters / +min per day /
   move target D days) — never silently exceeds capacity.
   `src/app-services/plan-pressure.ts` `getPlanPressure`; `/trajectory` renders it.
+- Trajectory risk (Phase 5, ALGORITHMS §9, config `trajectory-risk-v1`):
+  `src/domain/planning/trajectory-risk.ts` `assessTrajectoryRisk` (pure) — expected
+  weighted completion (linear ramp to the syllabus target) vs. actual; a lag past
+  `planLagWatch`/`planLagAtRisk` → `PLAN_AT_RISK` (WATCH/AT_RISK). Projects the
+  finish date at the average pace; past `hardCompletion − buffer` (while still
+  before the deadline) → `SYLLABUS_TARGET_AT_RISK`. Quiet before
+  `minElapsedFraction`. `src/app-services/trajectory-risk.ts` `getTrajectoryRisks`
+  (weighted completion = Σ weight·readiness ÷ Σ weight). `detectDailyEvents` emits
+  the risk events (dedupe folds severity in — re-fires only on escalation).
+  `src/components/risk-banner.tsx` on `/` and `/today`.
 - End a task with a report: files changed, migrations, tests run, acceptance
   criteria status, assumptions, follow-up dependencies.
