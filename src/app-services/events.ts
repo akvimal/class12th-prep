@@ -5,6 +5,7 @@ import type { DomainEventFilters, DomainEventRecord, Repositories } from '@/pers
 import { buildDailyCandidates } from './candidates';
 import { getWeeklyRhythm } from './study-windows';
 import { getErrorPatterns } from './error-patterns';
+import { getTrajectoryRisks } from './trajectory-risk';
 
 type EventRepos = Pick<
   Repositories,
@@ -102,6 +103,29 @@ export async function detectDailyEvents(
       on: asOf,
       payload: { subjectKey: c.subjectKey, chapterName: c.chapterName },
     });
+  }
+
+  // Trajectory risk (docs/ALGORITHMS.md §9).
+  const activePlan = await repos.planning.getActivePlan(academicYearId);
+  if (activePlan) {
+    const risks = (await getTrajectoryRisks(repos, academicYearId, activePlan.id, asOf)) ?? [];
+    for (const r of risks) {
+      drafts.push({
+        studentId,
+        eventType: r.type,
+        aggregateType: 'academicYear',
+        aggregateId: academicYearId,
+        // Re-fires only when severity escalates, not every day.
+        on: r.severity,
+        payload: {
+          severity: r.severity,
+          actualCompletion: r.actualCompletion,
+          lag: r.lag,
+          projectedFinish: r.projectedFinish,
+          drivers: r.drivers,
+        },
+      });
+    }
   }
 
   // Repeated error patterns (docs/SRS.md §12).
