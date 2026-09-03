@@ -1,6 +1,8 @@
+import Link from 'next/link';
 import { uiContext } from '@/app-services/app-context';
 import { getStudentOverview } from '@/app-services/overview';
 import { getBoardProjection } from '@/app-services/projection';
+import { getPlanPressure } from '@/app-services/plan-pressure';
 import { getReadinessTrend } from '@/app-services/readiness';
 import { PageHeader, Card, SectionLabel } from '@/components/ui';
 import { TrajectoryChart, type TrajectoryPoint } from '@/components/trajectory-chart';
@@ -9,13 +11,27 @@ import { formatDate } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
+const PRESSURE_TONE: Record<string, string> = {
+  LOW: 'text-ok',
+  NORMAL: 'text-ok',
+  HIGH: 'text-warn',
+  CRITICAL: 'text-bad',
+};
+const PRESSURE_BAR: Record<string, string> = {
+  LOW: 'bg-ok',
+  NORMAL: 'bg-ok',
+  HIGH: 'bg-warn',
+  CRITICAL: 'bg-bad',
+};
+
 export default async function TrajectoryPage() {
   const { repos, academicYearId, planId, asOf } = await uiContext();
-  const [overview, projection, plan, trend] = await Promise.all([
+  const [overview, projection, plan, trend, pressure] = await Promise.all([
     getStudentOverview(repos, academicYearId, planId, asOf),
     getBoardProjection(repos, academicYearId),
     repos.planning.getPlan(planId),
     getReadinessTrend(repos, academicYearId),
+    getPlanPressure(repos, academicYearId, planId, asOf),
   ]);
   if (!overview || !projection || !plan) {
     return <p className="p-5 text-sm text-muted">No data.</p>;
@@ -105,6 +121,58 @@ export default async function TrajectoryPage() {
           </p>
         </Card>
       </div>
+
+      {pressure && (
+        <>
+          <SectionLabel className="px-5 pb-2 pt-6">Plan pressure</SectionLabel>
+          <div className="px-5">
+            <div className="flex items-baseline justify-between">
+              <span
+                className={`font-display text-[18px] font-bold ${PRESSURE_TONE[pressure.band]}`}
+              >
+                {pressure.band}
+              </span>
+              <span className="font-mono text-[11px] text-faint">
+                {Math.round(pressure.demandMinutes / 60)}h work ·{' '}
+                {Math.round(pressure.capacityMinutes / 60)}h capacity
+              </span>
+            </div>
+            <div className="mt-1.5 h-2.5 overflow-hidden rounded-full bg-track">
+              <div
+                className={`h-full rounded-full ${PRESSURE_BAR[pressure.band]}`}
+                style={{ width: `${Math.min(100, Math.round(pressure.ratio * 100))}%` }}
+              />
+            </div>
+            <ul className="mt-2 flex flex-col gap-1">
+              {pressure.drivers.map((d) => (
+                <li key={d} className="text-[11px] leading-relaxed text-muted">
+                  · {d}
+                </li>
+              ))}
+            </ul>
+            {pressure.tradeoffs.length > 0 && (
+              <div className="mt-2.5 rounded-xl border border-line border-l-[3px] border-l-warn px-3.5 py-3">
+                <div className="text-[12px] font-semibold text-ink">
+                  Demand is over capacity — pick a lever, don&apos;t just add hours:
+                </div>
+                <ul className="mt-1 flex flex-col gap-1">
+                  {pressure.tradeoffs.map((t) => (
+                    <li key={t.kind} className="text-[11px] leading-relaxed text-muted">
+                      · {t.label}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/course-correction"
+                  className="mt-2 inline-block text-[12px] font-semibold text-accent"
+                >
+                  See course corrections →
+                </Link>
+              </div>
+            )}
+          </div>
+        </>
+      )}
 
       <SectionLabel className="px-5 pb-2 pt-6">By subject</SectionLabel>
       <div className="flex flex-col gap-2.5 px-5">
