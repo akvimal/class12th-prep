@@ -35,17 +35,25 @@ export async function buildDailyCandidates(
   const progress = await getCurriculumProgress(repos, academicYearId);
   if (!progress) return [];
 
-  const [snapshots, testDays, revisions, missedByChapter] = await Promise.all([
+  const [snapshots, testDays, revisions, missedByChapter, enrollments] = await Promise.all([
     getAcademicYearReadiness(repos, academicYearId),
     nextSchoolTestDaysByChapter(repos, academicYearId, asOf),
     repos.revision.listSchedules(academicYearId, { status: 'SCHEDULED' }),
     repos.studyTask.missedCountByChapter(academicYearId),
+    repos.planning.listEnrollments(academicYearId),
   ]);
   const readinessById = new Map((snapshots ?? []).map((s) => [s.scopeId, s.readiness]));
   const revisionDueById = new Map(revisions.map((r) => [r.chapterId, r.dueDate]));
+  // A subject drops out of planning once its board paper has been written.
+  const doneSubjects = new Set(
+    enrollments
+      .filter((e) => e.boardExamDate != null && e.boardExamDate < asOf)
+      .map((e) => e.subjectId),
+  );
 
   const candidates: PlannerCandidate[] = [];
   for (const subject of progress.subjects) {
+    if (doneSubjects.has(subject.id)) continue;
     for (const unit of subject.units) {
       for (const chapter of unit.chapters) {
         const p = chapter.progress;

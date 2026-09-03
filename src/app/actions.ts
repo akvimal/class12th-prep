@@ -6,11 +6,13 @@ import { z } from 'zod';
 import { uiContext } from '@/app-services/app-context';
 import { addAssessment } from '@/app-services/assessment';
 import { advanceQuestionError, recordAssessmentResult } from '@/app-services/assessment-results';
+import { applyCourseCorrection } from '@/app-services/course-correction';
 import { chapterIdForKey } from '@/app-services/progress';
 import { logStudy, updateChapterSelfAssessment } from '@/app-services/study-flow';
 import { addStudyWindow, removeStudyWindow, updateStudyWindow } from '@/app-services/study-windows';
 import { ASSESSMENT_TYPES } from '@/domain/assessment/assessment';
 import { ERROR_TRANSITIONS, ERROR_TYPES } from '@/domain/errors/errors';
+import { COURSE_CORRECTION_KINDS } from '@/domain/planning/course-correction';
 import { STUDY_WINDOW_DAY_TYPES } from '@/domain/planning/study-window';
 import {
   CHAPTER_STATES,
@@ -223,4 +225,28 @@ export async function updateChapterAction(formData: FormData): Promise<void> {
 
   revalidatePath('/', 'layout');
   redirect(`/subjects/${input.subjectKey}/${input.chapterKey}`);
+}
+
+const courseCorrectionSchema = z.object({
+  kind: z.enum(COURSE_CORRECTION_KINDS),
+  weekdayMinutesDelta: optional(z.coerce.number().int().min(1).max(180)),
+  targetShiftDays: optional(z.coerce.number().int().min(1).max(60)),
+  // ADD_CAPACITY needs an explicit confirm step.
+  confirmed: optional(z.enum(['yes'])),
+});
+
+export async function applyCourseCorrectionAction(formData: FormData): Promise<void> {
+  const input = courseCorrectionSchema.parse(fields(formData));
+  if (input.kind === 'ADD_CAPACITY' && input.confirmed !== 'yes') {
+    redirect('/course-correction?confirm=capacity');
+  }
+
+  const { repos, planId } = await uiContext();
+  await applyCourseCorrection(repos, planId, input.kind, {
+    weekdayMinutesDelta: input.weekdayMinutesDelta,
+    targetShiftDays: input.targetShiftDays,
+  });
+
+  revalidatePath('/', 'layout');
+  redirect(input.kind === 'REPRIORITISE' ? '/today' : '/trajectory');
 }

@@ -283,5 +283,17 @@ micro-plan`. Deterministic. `src/app-services/study-now.ts` `getStudyNow`;
   (weighted completion = Σ weight·readiness ÷ Σ weight). `detectDailyEvents` emits
   the risk events (dedupe folds severity in — re-fires only on escalation).
   `src/components/risk-banner.tsx` on `/` and `/today`.
+- Course correction (Phase 5, config `course-correction-v1`):
+  `src/domain/planning/course-correction.ts` `generateCourseCorrections` (pure) —
+  empty unless pressure ∈ `triggerBands`; else REPRIORITISE (no time cost) +, on
+  a deficit, ADD_CAPACITY (requiresConfirmation) + MOVE_TARGET. Each carries a
+  `tradeoff` and machine `params`. `src/app-services/course-correction.ts`
+  `getCourseCorrections`, `applyCourseCorrection` — forward-plan-only via
+  `updatePlan` (REPRIORITISE is a no-op; MOVE_TARGET shifts syllabus/hard/revision
+  dates together, clamped to the exam window). `applyCourseCorrectionAction`
+  (`src/app/actions.ts`) gates ADD_CAPACITY behind `?confirm=capacity`. Real
+  `/course-correction`.
+- Subject exam drop-off (Phase 5): `buildDailyCandidates` skips a subject whose
+  `subject_enrollments.boardExamDate` is before `asOf` (scenario 16).
 - End a task with a report: files changed, migrations, tests run, acceptance
   criteria status, assumptions, follow-up dependencies.
