@@ -12,6 +12,7 @@ import { createInMemorySchoolCalendarRepository } from './school-calendar-reposi
 import { createInMemorySessionRepository } from './session-repository';
 import { createInMemoryStudyTaskRepository } from './study-task-repository';
 import { createInMemoryWeeklyReviewRepository } from './weekly-review-repository';
+import { createInMemorySatPrepRepository } from './sat-prep-repository';
 
 /**
  * In-memory repository set. Backs the UI shell (before Postgres lands) and
@@ -38,5 +39,6 @@ export function createInMemoryRepositories(): Repositories {
     ),
     studyTask: createInMemoryStudyTaskRepository(),
     weeklyReview: createInMemoryWeeklyReviewRepository(),
+    satPrep: createInMemorySatPrepRepository(),
   };
 }

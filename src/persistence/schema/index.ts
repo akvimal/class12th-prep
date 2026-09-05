@@ -23,3 +23,4 @@ export * from './revision-schedules';
 export * from './assessment-results';
 export * from './study-tasks';
 export * from './weekly-reviews';
+export * from './sat-prep';

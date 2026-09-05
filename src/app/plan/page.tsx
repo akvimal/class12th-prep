@@ -1,11 +1,14 @@
 import { uiContext } from '@/app-services/app-context';
 import { getPlanOverview } from '@/app-services/plan';
+import { updatePlanAction } from '@/app/actions';
 import { daysBetween } from '@/domain/planning/dates';
 import { PageHeader, Card, SectionLabel, StatTile } from '@/components/ui';
 import { PhaseStrip } from '@/components/phase-strip';
 import { formatDate, titleCase } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
+
+const FIELD = 'h-10 rounded-lg border border-line bg-card px-2 text-[13px] text-ink';
 
 export default async function PlanPage() {
   const { repos, planId, asOf } = await uiContext();
@@ -59,6 +62,108 @@ export default async function PlanPage() {
           })}
         </ol>
       </div>
+
+      <SectionLabel className="px-5 pb-2 pt-6">Edit plan</SectionLabel>
+      <details className="mx-5 rounded-xl border border-line">
+        <summary className="cursor-pointer list-none px-4 py-3 text-[13px] font-semibold text-ink">
+          Change dates or capacity
+        </summary>
+        <form
+          action={updatePlanAction}
+          className="grid grid-cols-2 gap-3 border-t border-line px-4 py-4"
+        >
+          <label className="flex flex-col gap-1">
+            <SectionLabel>Plan start</SectionLabel>
+            <input
+              type="date"
+              name="startDate"
+              defaultValue={p.startDate}
+              className={FIELD}
+              required
+            />
+          </label>
+          <label className="flex flex-col gap-1">
+            <SectionLabel>Syllabus target</SectionLabel>
+            <input
+              type="date"
+              name="syllabusTargetDate"
+              defaultValue={p.syllabusTargetDate}
+              className={FIELD}
+              required
+            />
+          </label>
+          <label className="flex flex-col gap-1">
+            <SectionLabel>Hard completion</SectionLabel>
+            <input
+              type="date"
+              name="hardCompletionDate"
+              defaultValue={p.hardCompletionDate}
+              className={FIELD}
+              required
+            />
+          </label>
+          <label className="flex flex-col gap-1">
+            <SectionLabel>Revision starts</SectionLabel>
+            <input
+              type="date"
+              name="revisionStartDate"
+              defaultValue={p.revisionStartDate}
+              className={FIELD}
+              required
+            />
+          </label>
+          <label className="flex flex-col gap-1">
+            <SectionLabel>Board window opens</SectionLabel>
+            <input
+              type="date"
+              name="examWindowStart"
+              defaultValue={p.examWindowStart}
+              className={FIELD}
+              required
+            />
+          </label>
+          <label className="flex flex-col gap-1">
+            <SectionLabel>Board window ends</SectionLabel>
+            <input
+              type="date"
+              name="examWindowEnd"
+              defaultValue={p.examWindowEnd}
+              className={FIELD}
+              required
+            />
+          </label>
+          <label className="flex flex-col gap-1">
+            <SectionLabel>Weekday capacity (min)</SectionLabel>
+            <input
+              type="number"
+              name="weekdayCapacityMinutes"
+              defaultValue={p.weekdayCapacityMinutes}
+              min={0}
+              max={600}
+              className={FIELD}
+              required
+            />
+          </label>
+          <label className="flex flex-col gap-1">
+            <SectionLabel>Weekend capacity (min)</SectionLabel>
+            <input
+              type="number"
+              name="weekendCapacityMinutes"
+              defaultValue={p.weekendCapacityMinutes}
+              min={0}
+              max={600}
+              className={FIELD}
+              required
+            />
+          </label>
+          <button
+            type="submit"
+            className="col-span-2 mt-1 h-10 rounded-xl bg-ink text-[13px] font-semibold text-paper"
+          >
+            Save changes
+          </button>
+        </form>
+      </details>
 
       <SectionLabel className="px-5 pb-2 pt-6">Resolved phases</SectionLabel>
       <div className="flex flex-col gap-2 px-5">

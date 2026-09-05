@@ -192,3 +192,23 @@ export const studyTaskStatus = pgEnum('study_task_status', [
 
 /** Whether the task was a primary card or optional extra in the day's plan. */
 export const studyTaskSlot = pgEnum('study_task_slot', ['PRIMARY', 'OPTIONAL']);
+
+// --- SAT competitive-exam prep ---
+
+/** College Board "Knowledge and Skills" content domains. */
+export const satDomain = pgEnum('sat_domain', [
+  'INFORMATION_AND_IDEAS',
+  'CRAFT_AND_STRUCTURE',
+  'EXPRESSION_OF_IDEAS',
+  'STANDARD_ENGLISH_CONVENTIONS',
+  'ALGEBRA',
+  'ADVANCED_MATH',
+  'PROBLEM_SOLVING_DATA_ANALYSIS',
+  'GEOMETRY_TRIGONOMETRY',
+]);
+
+export const satPrepPlanStatus = pgEnum('sat_prep_plan_status', [
+  'ACTIVE',
+  'COMPLETED',
+  'CANCELLED',
+]);

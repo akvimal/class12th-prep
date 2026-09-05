@@ -13,6 +13,7 @@ import { createDrizzleSchoolCalendarRepository } from './school-calendar-reposit
 import { createDrizzleSessionRepository } from './session-repository';
 import { createDrizzleStudyTaskRepository } from './study-task-repository';
 import { createDrizzleWeeklyReviewRepository } from './weekly-review-repository';
+import { createDrizzleSatPrepRepository } from './sat-prep-repository';
 
 /**
  * PostgreSQL repository set (via Drizzle), bound to the shared connection pool.
@@ -35,5 +36,6 @@ export function createDrizzleRepositories(): Repositories {
     assessmentResult: createDrizzleAssessmentResultRepository(db),
     studyTask: createDrizzleStudyTaskRepository(db),
     weeklyReview: createDrizzleWeeklyReviewRepository(db),
+    satPrep: createDrizzleSatPrepRepository(db),
   };
 }

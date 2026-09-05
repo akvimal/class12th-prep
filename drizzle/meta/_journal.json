@@ -99,6 +99,13 @@
       "when": 1788357238319,
       "tag": "0013_loose_sleeper",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1788623685827,
+      "tag": "0014_ordinary_moon_knight",
+      "breakpoints": true
     }
   ]
 }

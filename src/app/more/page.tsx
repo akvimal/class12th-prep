@@ -37,6 +37,12 @@ const ITEMS: {
     sub: 'Study windows, adherence, calendar sync',
     icon: ClockIcon,
   },
+  {
+    href: '/exam-prep',
+    title: 'SAT prep',
+    sub: 'Domain priorities, weekly plan, session log',
+    icon: TestsIcon,
+  },
   { href: '/parent', title: 'Parent view', sub: 'Aggregate summary — later phase', icon: BookIcon },
   {
     href: '/course-correction',

@@ -8,6 +8,7 @@ import { seedSynthetic } from './seed';
 
 export interface AppContext {
   repos: Repositories;
+  studentId: string;
   studentName: string;
   academicYearId: string;
   planId: string;
@@ -42,6 +43,7 @@ function demoContext(): Promise<AppContext> {
     const seed = await seedSynthetic(repos);
     return {
       repos,
+      studentId: seed.studentId!,
       studentName: 'Demo Student',
       academicYearId: seed.academicYearId!,
       planId: seed.planId!,
@@ -78,6 +80,7 @@ export async function appContext(): Promise<AppContext> {
 
   return {
     repos,
+    studentId: profile.studentId,
     studentName: profile.studentName,
     academicYearId: profile.academicYearId,
     planId: profile.planId,

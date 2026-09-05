@@ -23,6 +23,7 @@ import type {
   StudyTaskStatus,
 } from '@/domain/planning/study-task';
 import type { WeeklyReview } from '@/domain/review/weekly-review';
+import type { SatDomain } from '@/domain/sat/sat-domain';
 
 /**
  * Repository ports.
@@ -726,6 +727,93 @@ export interface WeeklyReviewRepository {
   list(academicYearId: string, filters?: { limit?: number }): Promise<WeeklyReviewRecord[]>;
 }
 
+// --- SAT competitive-exam prep ---
+
+export interface NewSatDomainScore {
+  domain: SatDomain;
+  performanceLow: number;
+  performanceHigh: number;
+}
+
+export interface NewSatAttempt {
+  studentId: string;
+  attemptNumber: number;
+  testDate: string;
+  totalScore: number;
+  readingWritingScore: number;
+  mathScore: number;
+  domainScores: NewSatDomainScore[];
+}
+
+export interface SatAttemptRecord {
+  id: string;
+  studentId: string;
+  attemptNumber: number;
+  testDate: string;
+  totalScore: number;
+  readingWritingScore: number;
+  mathScore: number;
+  domainScores: (NewSatDomainScore & { id: string })[];
+  createdAt: string;
+}
+
+export type SatPrepPlanStatus = 'ACTIVE' | 'COMPLETED' | 'CANCELLED';
+
+export interface NewSatPrepPlan {
+  studentId: string;
+  testDate: string;
+  startDate: string;
+  weeklyTargetMinutes: number;
+}
+
+export interface SatPrepPlanRecord {
+  id: string;
+  studentId: string;
+  testDate: string;
+  startDate: string;
+  weeklyTargetMinutes: number;
+  status: SatPrepPlanStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SatPrepPlanUpdate {
+  weeklyTargetMinutes?: number;
+  status?: SatPrepPlanStatus;
+}
+
+export interface NewSatPrepSession {
+  planId: string;
+  domain?: SatDomain | null;
+  sessionDate: string;
+  actualMinutes: number;
+  fullPracticeTest?: boolean;
+  notes?: string | null;
+}
+
+export interface SatPrepSessionRecord {
+  id: string;
+  planId: string;
+  domain: SatDomain | null;
+  sessionDate: string;
+  actualMinutes: number;
+  fullPracticeTest: boolean;
+  notes: string | null;
+  createdAt: string;
+}
+
+export interface SatPrepRepository {
+  /** Ordered ascending by attemptNumber. */
+  addAttempt(input: NewSatAttempt): Promise<SatAttemptRecord>;
+  listAttempts(studentId: string): Promise<SatAttemptRecord[]>;
+  createPlan(input: NewSatPrepPlan): Promise<SatPrepPlanRecord>;
+  getActivePlan(studentId: string): Promise<SatPrepPlanRecord | null>;
+  updatePlan(planId: string, patch: SatPrepPlanUpdate): Promise<SatPrepPlanRecord>;
+  recordSession(input: NewSatPrepSession): Promise<SatPrepSessionRecord>;
+  /** Newest first. */
+  listSessions(planId: string): Promise<SatPrepSessionRecord[]>;
+}
+
 export interface Repositories {
   health: HealthProbe;
   planning: PlanningRepository;
@@ -741,4 +829,5 @@ export interface Repositories {
   assessmentResult: AssessmentResultRepository;
   studyTask: StudyTaskRepository;
   weeklyReview: WeeklyReviewRepository;
+  satPrep: SatPrepRepository;
 }

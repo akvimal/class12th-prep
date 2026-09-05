@@ -7,7 +7,9 @@ import { uiContext } from '@/app-services/app-context';
 import { addAssessment } from '@/app-services/assessment';
 import { advanceQuestionError, recordAssessmentResult } from '@/app-services/assessment-results';
 import { applyCourseCorrection } from '@/app-services/course-correction';
+import { updatePreparationPlan } from '@/app-services/plan';
 import { chapterIdForKey } from '@/app-services/progress';
+import { logSatPrepSession } from '@/app-services/sat-prep';
 import { logStudy, updateChapterSelfAssessment } from '@/app-services/study-flow';
 import { addStudyWindow, removeStudyWindow, updateStudyWindow } from '@/app-services/study-windows';
 import { ASSESSMENT_TYPES } from '@/domain/assessment/assessment';
@@ -20,6 +22,7 @@ import {
   SCHOOL_CHAPTER_STATUSES,
 } from '@/domain/progress/chapter-progress';
 import { SESSION_COMPLETIONS, STUDY_SESSION_TYPES } from '@/domain/progress/study-session';
+import { SAT_DOMAINS } from '@/domain/sat/sat-domain';
 
 /** "" (an untouched form field) → undefined, then run the inner schema. */
 function optional<T extends z.ZodTypeAny>(schema: T) {
@@ -147,6 +150,49 @@ export async function deleteStudyWindowAction(formData: FormData): Promise<void>
   redirect('/reminders');
 }
 
+export async function editStudyWindowAction(formData: FormData): Promise<void> {
+  const input = z
+    .object({
+      windowId: z.string().min(1),
+      dayType: z.enum(STUDY_WINDOW_DAY_TYPES),
+      startTime: hhmm,
+      endTime: hhmm,
+      label: optional(z.string()),
+    })
+    .parse(fields(formData));
+  const { repos } = await uiContext();
+  await updateStudyWindow(repos, input.windowId, {
+    dayType: input.dayType,
+    startTime: input.startTime,
+    endTime: input.endTime,
+    label: input.label ?? null,
+  });
+  revalidatePath('/', 'layout');
+  redirect('/reminders');
+}
+
+const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'expected YYYY-MM-DD');
+const planCapacityMinutes = z.coerce.number().int().min(0).max(600);
+
+const updatePlanFormSchema = z.object({
+  startDate: isoDate,
+  syllabusTargetDate: isoDate,
+  hardCompletionDate: isoDate,
+  revisionStartDate: isoDate,
+  examWindowStart: isoDate,
+  examWindowEnd: isoDate,
+  weekdayCapacityMinutes: planCapacityMinutes,
+  weekendCapacityMinutes: planCapacityMinutes,
+});
+
+export async function updatePlanAction(formData: FormData): Promise<void> {
+  const input = updatePlanFormSchema.parse(fields(formData));
+  const { repos, planId } = await uiContext();
+  await updatePreparationPlan(repos, planId, input);
+  revalidatePath('/', 'layout');
+  redirect('/plan');
+}
+
 const errorRowRe = /^error\.([A-Za-z0-9-]+)\.marks$/;
 
 export async function recordResultAction(formData: FormData): Promise<void> {
@@ -249,4 +295,28 @@ export async function applyCourseCorrectionAction(formData: FormData): Promise<v
 
   revalidatePath('/', 'layout');
   redirect(input.kind === 'REPRIORITISE' ? '/today' : '/trajectory');
+}
+
+const logSatPrepSessionSchema = z.object({
+  planId: z.string().min(1),
+  domain: optional(z.enum(SAT_DOMAINS)),
+  sessionDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'expected YYYY-MM-DD'),
+  actualMinutes: z.coerce.number().int().min(1).max(600),
+  fullPracticeTest: optional(z.enum(['on'])),
+  notes: optional(z.string()),
+});
+
+export async function logSatPrepSessionAction(formData: FormData): Promise<void> {
+  const input = logSatPrepSessionSchema.parse(fields(formData));
+  const { repos } = await uiContext();
+  await logSatPrepSession(repos, {
+    planId: input.planId,
+    domain: input.domain ?? null,
+    sessionDate: input.sessionDate,
+    actualMinutes: input.actualMinutes,
+    fullPracticeTest: input.fullPracticeTest === 'on',
+    notes: input.notes ?? null,
+  });
+  revalidatePath('/', 'layout');
+  redirect('/exam-prep');
 }

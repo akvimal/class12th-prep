@@ -3,6 +3,7 @@ import { getWeeklyRhythm, listStudyWindows } from '@/app-services/study-windows'
 import {
   addStudyWindowAction,
   deleteStudyWindowAction,
+  editStudyWindowAction,
   toggleStudyWindowAction,
 } from '@/app/actions';
 import { PageHeader, Card, Chip, SectionLabel, StatTile } from '@/components/ui';
@@ -114,6 +115,58 @@ export default async function RemindersPage() {
                 </form>
               </div>
             </div>
+            <details className="border-t border-line-soft pt-2">
+              <summary className="cursor-pointer list-none text-[11px] font-semibold text-ink">
+                Edit
+              </summary>
+              <form action={editStudyWindowAction} className="mt-2 grid grid-cols-2 gap-3 pb-1">
+                <input type="hidden" name="windowId" value={w.id} />
+                <label className="col-span-2 flex flex-col gap-1">
+                  <SectionLabel>Days</SectionLabel>
+                  <select name="dayType" className={FIELD} defaultValue={w.dayType}>
+                    <option value="WEEKDAY">Mon–Fri</option>
+                    <option value="WEEKEND">Sat–Sun</option>
+                    <option value="DAILY">Every day</option>
+                  </select>
+                </label>
+                <label className="flex flex-col gap-1">
+                  <SectionLabel>Start</SectionLabel>
+                  <input
+                    type="time"
+                    name="startTime"
+                    className={FIELD}
+                    defaultValue={w.startTime}
+                    required
+                  />
+                </label>
+                <label className="flex flex-col gap-1">
+                  <SectionLabel>End</SectionLabel>
+                  <input
+                    type="time"
+                    name="endTime"
+                    className={FIELD}
+                    defaultValue={w.endTime}
+                    required
+                  />
+                </label>
+                <label className="col-span-2 flex flex-col gap-1">
+                  <SectionLabel>Label</SectionLabel>
+                  <input
+                    type="text"
+                    name="label"
+                    className={FIELD}
+                    defaultValue={w.label ?? ''}
+                    placeholder="e.g. After school"
+                  />
+                </label>
+                <button
+                  type="submit"
+                  className="col-span-2 mt-1 h-10 rounded-xl bg-ink text-[13px] font-semibold text-paper"
+                >
+                  Save changes
+                </button>
+              </form>
+            </details>
           </Card>
         ))}
       </div>
